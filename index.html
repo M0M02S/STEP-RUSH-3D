@@ -265,16 +265,18 @@
     }
 
     .touch-btn {
-      width: 74px;
-      height: 74px;
+      width: 78px;
+      height: 78px;
       border-radius: 50%;
       border: 2px solid rgba(255, 255, 255, 0.35);
       background: rgba(15, 23, 42, 0.74);
       color: white;
       font-weight: 800;
-      font-size: 13px;
+      font-size: 12px;
       display: grid;
       place-items: center;
+      text-align: center;
+      line-height: 1.2;
       box-shadow: 0 8px 24px rgba(0, 0, 0, 0.55);
       backdrop-filter: blur(6px);
       touch-action: none;
@@ -290,6 +292,11 @@
       border-color: rgba(249, 115, 22, 0.65);
       color: #fdba74;
     }
+
+    #jumpBtn {
+      border-color: rgba(34, 211, 238, 0.75);
+      color: #67e8f9;
+    }
   </style>
 </head>
 <body>
@@ -299,18 +306,18 @@
     <div class="menu-card">
       <h1 class="menu-title">STEP RUSH 3D</h1>
       <p class="menu-subtitle">
-        Riesige Open World (1400×1400) mit Neon-Highways, Sky-Plattformen, Gefahren und unendlichem Tempo-Aufstieg. Wähle deine Steuerung:
+        Riesige Open World (1400×1400) mit Neon-Highways, Sky-Plattformen, Gefahren und kontrolliertem Tempo-Aufstieg. Wähle deine Steuerung:
       </p>
       <div class="device-grid">
         <button class="device-btn" id="btnPC">
           <span class="device-icon">🖱️⌨️</span>
           <span class="device-name">Maus &amp; Keyboard</span>
-          <span class="device-desc">WASD / Pfeile = Bewegen<br>Maus = Kamera · Shift = Sprint</span>
+          <span class="device-desc">WASD / Pfeile = Bewegen<br>Maus = Kamera · 2x Space = Air-Push</span>
         </button>
         <button class="device-btn" id="btnTouch">
           <span class="device-icon">📱📟</span>
           <span class="device-name">Handy &amp; Tablet</span>
-          <span class="device-desc">Joystick links · Wischen rechts<br>Sprint- &amp; Jump-Buttons</span>
+          <span class="device-desc">Joystick links · Wischen rechts<br>2x Jump = Sprung + Speed-Push</span>
         </button>
       </div>
     </div>
@@ -321,14 +328,14 @@
     <div class="card"><span class="label">Leben</span><span class="value" id="lives">❤️❤️❤️</span></div>
     <div class="card"><span class="label">Orbs</span><span class="value" id="orbs">0</span></div>
     <div class="card" id="speedCard"><span class="label">Speed</span><span class="value" id="speed">0.0</span></div>
-    <div class="card"><span class="label">Cap</span><span class="value" id="capSpeed">11.0</span></div>
+    <div class="card"><span class="label">Cap</span><span class="value" id="capSpeed">9.5</span></div>
     <div class="card"><span class="label">Koordinaten</span><span class="value" id="coords" style="font-size:15px;">0, 0</span></div>
     <button id="menuSwitchBtn">⚙️ Steuerung</button>
   </div>
 
   <div id="tierBadge">Normal</div>
   <div id="speedBar"><div id="speedFill"></div></div>
-  <div id="pcHint" class="hidden">Klick ins Bild für Maus-Kamera · WASD = Bewegen · Shift = Sprint · Leertaste = Sprung · ESC = Maus frei</div>
+  <div id="pcHint" class="hidden">Klick ins Bild für Maus-Kamera · WASD = Bewegen · Shift = Sprint · 2x Leertaste = Sprung + Air-Push · ESC = Maus frei</div>
 
   <!-- Touch UI -->
   <div id="touchControls" class="hidden">
@@ -337,8 +344,8 @@
       <div id="joystickKnob"></div>
     </div>
     <div class="action-buttons">
-      <button class="touch-btn" id="sprintBtn">⚡ SPRINT</button>
-      <button class="touch-btn" id="jumpBtn">⬆️ JUMP</button>
+      <button class="touch-btn" id="sprintBtn">⚡<br>SPRINT</button>
+      <button class="touch-btn" id="jumpBtn">⬆️<br>JUMP<br>+PUSH</button>
     </div>
   </div>
 
@@ -370,7 +377,7 @@
 
       if (type === 'orb') {
         osc.type = 'sine';
-        const freq = 420 + Math.min(pitchFactor, 45) * 16;
+        const freq = 420 + Math.min(pitchFactor, 45) * 14;
         osc.frequency.setValueAtTime(freq, now);
         osc.frequency.exponentialRampToValueAtTime(freq * 1.45, now + 0.11);
         gain.gain.setValueAtTime(0.11, now);
@@ -387,12 +394,20 @@
         osc.stop(now + 0.25);
       } else if (type === 'jump') {
         osc.type = 'triangle';
-        osc.frequency.setValueAtTime(185, now);
-        osc.frequency.exponentialRampToValueAtTime(410, now + 0.14);
-        gain.gain.setValueAtTime(0.11, now);
-        gain.gain.exponentialRampToValueAtTime(0.001, now + 0.15);
+        osc.frequency.setValueAtTime(195, now);
+        osc.frequency.exponentialRampToValueAtTime(440, now + 0.15);
+        gain.gain.setValueAtTime(0.12, now);
+        gain.gain.exponentialRampToValueAtTime(0.001, now + 0.16);
         osc.start(now);
-        osc.stop(now + 0.15);
+        osc.stop(now + 0.16);
+      } else if (type === 'airpush') {
+        osc.type = 'sine';
+        osc.frequency.setValueAtTime(290, now);
+        osc.frequency.exponentialRampToValueAtTime(680, now + 0.18);
+        gain.gain.setValueAtTime(0.14, now);
+        gain.gain.exponentialRampToValueAtTime(0.001, now + 0.19);
+        osc.start(now);
+        osc.stop(now + 0.19);
       } else if (type === 'hit') {
         osc.type = 'sawtooth';
         osc.frequency.setValueAtTime(150, now);
@@ -440,7 +455,7 @@
     const playerLight = new THREE.PointLight(0x22d3ee, 0, 22);
     scene.add(playerLight);
 
-    // ---------- Noch größere & detailliertere Open World (1400 x 1400) ----------
+    // ---------- Riesige Open World (1400 x 1400) ----------
     const WORLD_HALF = 700;
 
     function createDetailedGroundTexture() {
@@ -449,11 +464,9 @@
       canvas.height = 512;
       const ctx = canvas.getContext('2d');
 
-      // Dunkler Asphalt / Cyber-Stein
       ctx.fillStyle = '#0a1020';
       ctx.fillRect(0, 0, 512, 512);
 
-      // Feine Sub-Rasterung
       ctx.strokeStyle = 'rgba(56, 189, 248, 0.09)';
       ctx.lineWidth = 1;
       for (let i = 0; i <= 512; i += 32) {
@@ -461,7 +474,6 @@
         ctx.beginPath(); ctx.moveTo(0, i); ctx.lineTo(512, i); ctx.stroke();
       }
 
-      // Mittlere Sektor-Linien
       ctx.strokeStyle = 'rgba(56, 189, 248, 0.22)';
       ctx.lineWidth = 2;
       for (let i = 0; i <= 512; i += 128) {
@@ -469,7 +481,6 @@
         ctx.beginPath(); ctx.moveTo(0, i); ctx.lineTo(512, i); ctx.stroke();
       }
 
-      // Haupt-Kachelrahmen
       ctx.strokeStyle = 'rgba(34, 211, 238, 0.42)';
       ctx.lineWidth = 4;
       ctx.strokeRect(0, 0, 512, 512);
@@ -494,7 +505,7 @@
     ground.receiveShadow = true;
     scene.add(ground);
 
-    // Sternenhimmel / Partikel-Horizont hoch über der Map
+    // Sternenhimmel
     const starCount = 1400;
     const starPositions = new Float32Array(starCount * 3);
     for (let i = 0; i < starCount; i++) {
@@ -510,7 +521,7 @@
     );
     scene.add(stars);
 
-    // Neon-Highways (Kreuz-Achsen & Ringstraße durch die Open World)
+    // Neon-Highways
     const highwayMat = new THREE.MeshStandardMaterial({
       color: 0x0f172a,
       emissive: 0x0284c7,
@@ -568,7 +579,6 @@
       mesh.receiveShadow = true;
       group.add(mesh);
 
-      // Leuchtende Kante oben auf der Plattform
       const topTrim = new THREE.Mesh(
         new THREE.BoxGeometry(w + 0.12, 0.14, d + 0.12),
         new THREE.MeshBasicMaterial({ color: trimColor })
@@ -605,7 +615,7 @@
     addPlatform(105, 0, -82, 22, 16, 22, 0x312e81, 0x4338ca, 0xc084fc);
     addPlatform(135, 16, -110, 16, 8, 16, 0x4c1d95, 0x6d28d9, 0xf472b6);
 
-    // Große Neon-Türme & Sky-Brücken in der weiten Welt
+    // Große Neon-Türme
     const landmarkTowers = [
       [-90, -95, 24, 65, 24, 0x0284c7],
       [140, 120, 28, 80, 28, 0x0ea5e9],
@@ -621,7 +631,7 @@
       addPlatform(tx, 0, tz, tw, th, td, 0x0b132b, accent, accent);
     }
 
-    // Viele Sprung-Plattformen über die gesamte 1400x1400 Map verteilt
+    // Sprung-Plattformen über die gesamte Map
     for (let i = 0; i < 140; i++) {
       const rx = (Math.random() - 0.5) * 1240;
       const rz = (Math.random() - 0.5) * 1240;
@@ -633,7 +643,7 @@
       addPlatform(rx, 0, rz, rw, rh, rd, 0x162038, 0x1d4ed8, 0x38bdf8);
     }
 
-    // Gebirgskette am äußeren Rand der Open World
+    // Gebirgskette am äußeren Rand
     for (let i = 0; i < 72; i++) {
       const angle = (i / 72) * Math.PI * 2;
       const dist = 540 + Math.random() * 120;
@@ -646,7 +656,7 @@
       scene.add(mountain);
     }
 
-    // Gefahren (Rote Laser-/Shock-Pylonen) für mehr Herausforderung!
+    // Gefahren (Rote Laser-/Shock-Pylonen)
     const hazardMat = new THREE.MeshStandardMaterial({
       color: 0xef4444,
       emissive: 0xdc2626,
@@ -696,7 +706,7 @@
       boostGates.push({ mesh: gate, cooldown: 0 });
     }
 
-    // Energie-Orbs in der Open World
+    // Energie-Orbs
     const orbGeo = new THREE.OctahedronGeometry(0.7, 1);
     const orbMat = new THREE.MeshStandardMaterial({
       color: 0xfacc15,
@@ -722,7 +732,7 @@
       spawnOrbAt(ox, 1.35, oz);
     }
 
-    // ---------- Charakter mit Gelenken (Gehen, Laufen, Sprinten) ----------
+    // ---------- Charakter mit Gelenken ----------
     const player = new THREE.Group();
     const characterRig = new THREE.Group();
     player.add(characterRig);
@@ -896,6 +906,7 @@
     const keys = {};
     let touchMoveVec = { x: 0, y: 0 };
     let touchSprint = false;
+    let jumpHeld = false;
 
     const ui = {
       startMenu: document.getElementById('startMenu'),
@@ -955,13 +966,18 @@
     });
 
     window.addEventListener('keydown', (e) => {
-      keys[e.code] = true;
-      if (e.code === 'Space' && gameStarted) {
+      if (e.code === 'Space' && !keys['Space'] && gameStarted) {
         e.preventDefault();
+        jumpHeld = true;
         tryJump();
       }
+      keys[e.code] = true;
     });
-    window.addEventListener('keyup', (e) => { keys[e.code] = false; });
+
+    window.addEventListener('keyup', (e) => {
+      keys[e.code] = false;
+      if (e.code === 'Space') jumpHeld = false;
+    });
 
     // Touch Joystick & Buttons
     const joystickZone = document.getElementById('joystickZone');
@@ -1056,16 +1072,26 @@
       sprintBtn.classList.remove('active');
     });
 
-    document.getElementById('jumpBtn').addEventListener('touchstart', (e) => {
+    const jumpBtn = document.getElementById('jumpBtn');
+    jumpBtn.addEventListener('touchstart', (e) => {
       e.preventDefault();
+      initAudio();
+      jumpHeld = true;
+      jumpBtn.classList.add('active');
       tryJump();
     }, { passive: false });
+    jumpBtn.addEventListener('touchend', () => {
+      jumpHeld = false;
+      jumpBtn.classList.remove('active');
+    });
 
-    // ---------- Spieler-Zustand (Herausfordernderes Tempo & Leben) ----------
-    let speedCap = 11.0; // Steigt gezielt durch Orbs & Booster, bleibt aber am Anfang kontrolliert
+    // ---------- Spieler-Zustand (Kontrolliertes Tempo & Sprung-Push) ----------
+    let speedCap = 9.5;       // Startet entspannt und wächst gezielt durch Orbs/Booster
     let currentSpeed = 0.0;
+    let jumpBoostSpeed = 0.0; // Temporärer Speed-Push durch Springen / Air-Dash!
     let velocityY = 0;
     let onGround = true;
+    let jumpsRemaining = 2;   // Boden-Sprung + 1 starker Air-Push-Sprung in der Luft
     let playerRotationY = Math.PI;
     let collectedOrbs = 0;
     let lives = 3;
@@ -1076,19 +1102,50 @@
     let shakeIntensity = 0;
 
     function tryJump() {
-      if (!onGround) return;
-      velocityY = 12.2;
-      onGround = false;
-      playSound('jump');
+      if (jumpsRemaining <= 0) return;
 
-      for (let i = 0; i < 8; i++) {
-        spawnParticle(
-          new THREE.Vector3(player.position.x + (Math.random() - 0.5) * 0.6, player.position.y + 0.1, player.position.z + (Math.random() - 0.5) * 0.6),
-          0x38bdf8,
-          new THREE.Vector3((Math.random() - 0.5) * 4, Math.random() * 2.5, (Math.random() - 0.5) * 4),
-          0.35,
-          0.9
-        );
+      if (onGround) {
+        // Erster Sprung vom Boden: Kräftiger Absprung + leichter Speed-Push nach vorne
+        velocityY = 14.5;
+        onGround = false;
+        jumpsRemaining = 1;
+        jumpBoostSpeed = Math.max(jumpBoostSpeed, 5.5 + speedCap * 0.16);
+        playSound('jump');
+
+        // Ring-Druckwelle beim Absprung
+        for (let i = 0; i < 14; i++) {
+          const ang = (i / 14) * Math.PI * 2;
+          spawnParticle(
+            new THREE.Vector3(player.position.x, player.position.y + 0.15, player.position.z),
+            0x38bdf8,
+            new THREE.Vector3(Math.cos(ang) * 5.5, 1.4, Math.sin(ang) * 5.5),
+            0.38,
+            1.05
+          );
+        }
+      } else {
+        // Zweiter Sprung in der Luft (Air-Push!): Gibt spürbaren Vorwärts-Boost & zweiten Auftrieb
+        velocityY = 13.0;
+        jumpsRemaining = 0;
+        jumpBoostSpeed = Math.max(jumpBoostSpeed, 9.5 + speedCap * 0.24);
+        playSound('airpush');
+
+        // Starker Air-Dash-Impuls in Blickrichtung
+        const pushX = Math.sin(playerRotationY) * 2.2;
+        const pushZ = Math.cos(playerRotationY) * 2.2;
+        player.position.x = THREE.MathUtils.clamp(player.position.x + pushX, -WORLD_HALF + 4, WORLD_HALF - 4);
+        player.position.z = THREE.MathUtils.clamp(player.position.z + pushZ, -WORLD_HALF + 4, WORLD_HALF - 4);
+
+        for (let i = 0; i < 20; i++) {
+          const ang = (i / 20) * Math.PI * 2;
+          spawnParticle(
+            new THREE.Vector3(player.position.x, player.position.y + 0.2, player.position.z),
+            0x22d3ee,
+            new THREE.Vector3(Math.cos(ang) * 7.5, -1.5 + Math.random() * 2, Math.sin(ang) * 7.5),
+            0.44,
+            1.3
+          );
+        }
       }
     }
 
@@ -1099,10 +1156,10 @@
       shakeIntensity = 0.55;
       playSound('hit');
 
-      // Speed spürbar drosseln & leicht zurückstoßen
-      speedCap = Math.max(11.0, speedCap * 0.72);
-      currentSpeed = Math.max(4.0, currentSpeed * 0.55);
-      velocityY = 6.5;
+      speedCap = Math.max(9.5, speedCap * 0.75);
+      currentSpeed = Math.max(3.5, currentSpeed * 0.55);
+      jumpBoostSpeed = 0;
+      velocityY = 7.0;
       onGround = false;
 
       const pushDir = new THREE.Vector3(
@@ -1123,11 +1180,11 @@
         );
       }
 
-      // Bei 0 Leben zurück zur sicheren Plaza mit Reset
       if (lives <= 0) {
         lives = 3;
-        speedCap = 11.0;
+        speedCap = 9.5;
         currentSpeed = 0;
+        jumpBoostSpeed = 0;
         collectedOrbs = 0;
         player.position.set(0, 0, 0);
         velocityY = 0;
@@ -1135,7 +1192,7 @@
     }
 
     function getSpeedTier(spd) {
-      if (spd >= 125) {
+      if (spd >= 85) {
         return {
           name: '⚡🔥 KOSMISCHER OVERDRIVE',
           color: 0xf472b6,
@@ -1146,7 +1203,7 @@
           barGradient: 'linear-gradient(90deg, #f59e0b, #ec4899, #8b5cf6, #22d3ee)'
         };
       }
-      if (spd >= 80) {
+      if (spd >= 55) {
         return {
           name: '⚡ BLITZ-MODUS',
           color: 0xc084fc,
@@ -1157,7 +1214,7 @@
           barGradient: 'linear-gradient(90deg, #3b82f6, #a855f7, #e879f9)'
         };
       }
-      if (spd >= 45) {
+      if (spd >= 32) {
         return {
           name: '🔥 FEUER-MODUS',
           color: 0xf97316,
@@ -1168,7 +1225,7 @@
           barGradient: 'linear-gradient(90deg, #facc15, #f97316, #ef4444)'
         };
       }
-      if (spd >= 22) {
+      if (spd >= 18) {
         return {
           name: '💨 TURBO-AURA',
           color: 0x38bdf8,
@@ -1214,22 +1271,24 @@
       characterRig.rotation.z = THREE.MathUtils.lerp(characterRig.rotation.z, targetBank, 10 * dt);
 
       if (!onGround) {
-        leftLeg.root.rotation.x = THREE.MathUtils.lerp(leftLeg.root.rotation.x, -0.68, 12 * dt);
-        leftLeg.mid.rotation.x = THREE.MathUtils.lerp(leftLeg.mid.rotation.x, 1.15, 12 * dt);
-        rightLeg.root.rotation.x = THREE.MathUtils.lerp(rightLeg.root.rotation.x, 0.35, 12 * dt);
-        rightLeg.mid.rotation.x = THREE.MathUtils.lerp(rightLeg.mid.rotation.x, 0.45, 12 * dt);
+        // Dynamische Sprung- & Air-Push-Pose
+        const isRising = velocityY > 0;
+        leftLeg.root.rotation.x = THREE.MathUtils.lerp(leftLeg.root.rotation.x, isRising ? -0.78 : -0.35, 14 * dt);
+        leftLeg.mid.rotation.x = THREE.MathUtils.lerp(leftLeg.mid.rotation.x, isRising ? 1.25 : 0.65, 14 * dt);
+        rightLeg.root.rotation.x = THREE.MathUtils.lerp(rightLeg.root.rotation.x, isRising ? 0.42 : 0.25, 14 * dt);
+        rightLeg.mid.rotation.x = THREE.MathUtils.lerp(rightLeg.mid.rotation.x, isRising ? 0.55 : 0.35, 14 * dt);
 
-        leftArm.root.rotation.x = THREE.MathUtils.lerp(leftArm.root.rotation.x, -0.95, 12 * dt);
-        rightArm.root.rotation.x = THREE.MathUtils.lerp(rightArm.root.rotation.x, 0.65, 12 * dt);
-        chestPivot.rotation.x = THREE.MathUtils.lerp(chestPivot.rotation.x, 0.2, 12 * dt);
+        leftArm.root.rotation.x = THREE.MathUtils.lerp(leftArm.root.rotation.x, isRising ? -1.1 : -0.45, 14 * dt);
+        rightArm.root.rotation.x = THREE.MathUtils.lerp(rightArm.root.rotation.x, isRising ? 0.75 : 0.35, 14 * dt);
+        chestPivot.rotation.x = THREE.MathUtils.lerp(chestPivot.rotation.x, jumpBoostSpeed > 2 ? 0.34 : 0.16, 14 * dt);
         return;
       }
 
-      const strideFreq = 6.5 + Math.min(speed, 110) * 0.25;
+      const strideFreq = 6.2 + Math.min(speed, 95) * 0.26;
       walkCycle += strideFreq * dt;
 
-      const runFactor = THREE.MathUtils.clamp((speed - 5) / 26, 0, 1);
-      const hipSwingAmp = 0.5 + runFactor * 0.68;
+      const runFactor = THREE.MathUtils.clamp((speed - 4.5) / 22, 0, 1);
+      const hipSwingAmp = 0.48 + runFactor * 0.68;
       const leftPhase = Math.sin(walkCycle);
       const rightPhase = Math.sin(walkCycle + Math.PI);
 
@@ -1247,7 +1306,7 @@
       leftArm.mid.rotation.x = elbowBend;
       rightArm.mid.rotation.x = elbowBend;
 
-      const forwardLean = 0.06 + runFactor * 0.36 + Math.min(0.22, speed * 0.0018);
+      const forwardLean = 0.05 + runFactor * 0.35 + Math.min(0.22, speed * 0.002);
       chestPivot.rotation.x = THREE.MathUtils.lerp(chestPivot.rotation.x, forwardLean, 10 * dt);
       headPivot.rotation.x = -chestPivot.rotation.x * 0.85;
 
@@ -1255,9 +1314,9 @@
       characterRig.position.y = Math.abs(Math.sin(walkCycle)) * (0.06 + runFactor * 0.08);
     }
 
-    // ---------- Verstärkte Speed-Effekte ----------
-    function updateSpeedEffects(dt) {
-      const tier = getSpeedTier(currentSpeed);
+    // ---------- Speed-Effekte ----------
+    function updateSpeedEffects(dt, effectiveSpeed) {
+      const tier = getSpeedTier(effectiveSpeed);
 
       suitMat.color.lerp(new THREE.Color(tier.color), 5 * dt);
       suitMat.emissive.lerp(new THREE.Color(tier.emissive), 5 * dt);
@@ -1266,26 +1325,25 @@
       playerLight.position.set(player.position.x, player.position.y + 1.6, player.position.z);
       playerLight.color.lerp(new THREE.Color(tier.color), 5 * dt);
 
-      if (currentSpeed >= 22) {
-        auraRing.material.opacity = Math.min(0.85, (currentSpeed - 22) * 0.022);
+      if (effectiveSpeed >= 18 || jumpBoostSpeed > 1.5) {
+        auraRing.material.opacity = Math.min(0.85, Math.max((effectiveSpeed - 18) * 0.025, jumpBoostSpeed * 0.08));
         auraRing.material.color.setHex(tier.color);
         auraRing.scale.setScalar(1 + Math.sin(performance.now() * 0.018) * 0.18);
-        playerLight.intensity = Math.min(8, (currentSpeed - 20) * 0.1);
+        playerLight.intensity = Math.min(8, Math.max((effectiveSpeed - 16) * 0.12, jumpBoostSpeed * 0.35));
       } else {
         auraRing.material.opacity = 0;
         playerLight.intensity = 0;
       }
 
-      const targetFov = Math.min(108, 68 + Math.max(0, currentSpeed - 12) * 0.25);
+      const targetFov = Math.min(106, 68 + Math.max(0, effectiveSpeed - 10) * 0.32);
       camera.fov = THREE.MathUtils.lerp(camera.fov, targetFov, 5 * dt);
       camera.updateProjectionMatrix();
 
       effectTimer -= dt;
-      if (effectTimer <= 0 && currentSpeed >= 22) {
+      if (effectTimer <= 0 && (effectiveSpeed >= 18 || jumpBoostSpeed > 2.5)) {
         const backDir = new THREE.Vector3(-Math.sin(playerRotationY), 0, -Math.cos(playerRotationY));
 
-        if (currentSpeed >= 125) {
-          // Kosmischer Overdrive: doppelte Blitze + Plasma-Partikel
+        if (effectiveSpeed >= 85) {
           const colors = [0xf472b6, 0x22d3ee, 0xfacc15, 0xa855f7];
           for (let k = 0; k < 2; k++) {
             const col = colors[Math.floor(Math.random() * colors.length)];
@@ -1303,9 +1361,8 @@
           }
           spawnLightningAroundPlayer(true);
           if (Math.random() < 0.65) spawnLightningAroundPlayer(true);
-          effectTimer = 0.02;
-        } else if (currentSpeed >= 80) {
-          // Blitz-Modus: Blitze + elektrische Funken
+          effectTimer = 0.022;
+        } else if (effectiveSpeed >= 55) {
           spawnLightningAroundPlayer(false);
           if (Math.random() < 0.45) spawnLightningAroundPlayer(false);
           spawnParticle(
@@ -1319,9 +1376,8 @@
             0.4,
             1.25
           );
-          effectTimer = 0.03;
-        } else if (currentSpeed >= 45) {
-          // Feuer-Modus: Flammen & Glut
+          effectTimer = 0.032;
+        } else if (effectiveSpeed >= 32) {
           const fireColors = [0xf97316, 0xef4444, 0xfacc15];
           const col = fireColors[Math.floor(Math.random() * fireColors.length)];
           spawnParticle(
@@ -1335,9 +1391,8 @@
             0.45,
             1.35
           );
-          effectTimer = 0.03;
+          effectTimer = 0.032;
         } else {
-          // Turbo-Aura (ab 22)
           spawnParticle(
             new THREE.Vector3(
               player.position.x + (Math.random() - 0.5) * 0.5,
@@ -1349,7 +1404,7 @@
             0.35,
             0.95
           );
-          effectTimer = 0.05;
+          effectTimer = 0.048;
         }
       }
     }
@@ -1390,20 +1445,25 @@
         .addScaledVector(forwardVec, inputForward)
         .addScaledVector(rightVec, inputRight);
 
-      if (moveDir.lengthSq() > 0.001) moveDir.normalize();
-
-      // Kontrollierter, anspruchsvoller Speed-Aufstieg (kein sofortiges „viel zu schnell“)
-      if (inputMag > 0.05 && isSprinting) {
-        speedCap += 0.45 * dt;
+      if (moveDir.lengthSq() > 0.001) {
+        moveDir.normalize();
+      } else if (jumpBoostSpeed > 0.2) {
+        // Wenn man im Stand springt, schiebt der Jump-Push einen trotzdem nach vorne!
+        moveDir.set(Math.sin(playerRotationY), 0, Math.cos(playerRotationY));
       }
 
-      const targetSpeed = inputMag > 0.05
-        ? speedCap * (isSprinting ? 1.0 : 0.48) * inputMag
+      // Langsamer, fairer Geschwindigkeitsaufbau: Sprinten erhöht speedCap NICHT mehr automatisch!
+      const baseTargetSpeed = inputMag > 0.05
+        ? speedCap * (isSprinting ? 1.0 : 0.52) * inputMag
         : 0;
 
-      // Bei sehr hohem Speed wird das Abbremsen/Umlenken anspruchsvoller
-      const agility = Math.max(2.2, 6.2 - currentSpeed * 0.025);
-      currentSpeed = THREE.MathUtils.lerp(currentSpeed, targetSpeed, Math.min(1, agility * dt));
+      // Temporärer Jump-Push klingt sanft ab
+      jumpBoostSpeed = Math.max(0, jumpBoostSpeed - 9.5 * dt);
+
+      const agility = onGround ? Math.max(3.0, 6.8 - currentSpeed * 0.03) : 4.2;
+      currentSpeed = THREE.MathUtils.lerp(currentSpeed, baseTargetSpeed, Math.min(1, agility * dt));
+
+      const effectiveSpeed = currentSpeed + jumpBoostSpeed;
 
       let turnRate = 0;
       if (inputMag > 0.05) {
@@ -1413,18 +1473,18 @@
         while (angleDiff < -Math.PI) angleDiff += Math.PI * 2;
 
         turnRate = angleDiff;
-        const turnSpeed = Math.max(5.5, 12.5 - currentSpeed * 0.04);
+        const turnSpeed = Math.max(6.5, 13.0 - effectiveSpeed * 0.04);
         playerRotationY += angleDiff * Math.min(1, turnSpeed * dt);
       }
       player.rotation.y = playerRotationY;
 
       const nextX = THREE.MathUtils.clamp(
-        player.position.x + moveDir.x * currentSpeed * dt,
+        player.position.x + moveDir.x * effectiveSpeed * dt,
         -WORLD_HALF + 4,
         WORLD_HALF - 4
       );
       const nextZ = THREE.MathUtils.clamp(
-        player.position.z + moveDir.z * currentSpeed * dt,
+        player.position.z + moveDir.z * effectiveSpeed * dt,
         -WORLD_HALF + 4,
         WORLD_HALF - 4
       );
@@ -1462,19 +1522,22 @@
         }
       }
 
-      velocityY -= 28 * dt;
+      // Bessere Sprungphysik: Länger halten = höherer Sprung, loslassen = schneller landen
+      const gravity = (!onGround && velocityY > 0 && !jumpHeld) ? 38 : 26;
+      velocityY -= gravity * dt;
       player.position.y += velocityY * dt;
 
       if (player.position.y <= floorHeight) {
         player.position.y = floorHeight;
         velocityY = 0;
         onGround = true;
+        jumpsRemaining = 2;
       } else {
         onGround = false;
       }
 
-      updateCharacterAnimation(dt, currentSpeed, turnRate);
-      updateSpeedEffects(dt);
+      updateCharacterAnimation(dt, effectiveSpeed, turnRate);
+      updateSpeedEffects(dt, effectiveSpeed);
 
       // Gefahren prüfen
       for (const h of hazards) {
@@ -1487,7 +1550,7 @@
         }
       }
 
-      // Orbs einsammeln
+      // Orbs einsammeln (langsamerer, kontrollierter Tempo-Zuwachs!)
       const time = performance.now() * 0.003;
       for (let i = 0; i < orbs.length; i++) {
         const orb = orbs[i];
@@ -1496,8 +1559,7 @@
 
         if (player.position.distanceTo(orb.mesh.position) < 1.85) {
           collectedOrbs += 1;
-          speedCap += 1.15;
-          currentSpeed = Math.max(currentSpeed, speedCap * 0.72);
+          speedCap += 0.35; // Deutlich sanfterer Zuwachs, damit man nicht zu schnell wird!
           playSound('orb', collectedOrbs);
 
           for (let p = 0; p < 10; p++) {
@@ -1523,9 +1585,9 @@
         if (gate.cooldown > 0) gate.cooldown -= dt;
         const dist = player.position.distanceTo(gate.mesh.position);
         if (dist < 4.6 && gate.cooldown <= 0) {
-          gate.cooldown = 3.0;
-          speedCap += 8.5;
-          currentSpeed = speedCap;
+          gate.cooldown = 3.5;
+          speedCap += 3.5;
+          jumpBoostSpeed = Math.max(jumpBoostSpeed, 8.0);
           playSound('boost');
 
           for (let p = 0; p < 24; p++) {
@@ -1573,7 +1635,7 @@
         shakeIntensity = Math.max(0, shakeIntensity - 2.0 * dt);
       }
 
-      const camDist = 7.4 + Math.min(5.0, currentSpeed * 0.03);
+      const camDist = 7.4 + Math.min(5.0, effectiveSpeed * 0.032);
       const camTarget = new THREE.Vector3(
         player.position.x + shakeX,
         player.position.y + 1.85 + shakeY,
@@ -1591,14 +1653,14 @@
       camera.lookAt(camTarget);
 
       // HUD aktualisieren
-      const tier = getSpeedTier(currentSpeed);
+      const tier = getSpeedTier(effectiveSpeed);
       ui.lives.textContent = '❤️'.repeat(Math.max(0, lives)) + '🖤'.repeat(Math.max(0, 3 - lives));
       ui.orbs.textContent = collectedOrbs;
-      ui.speed.textContent = currentSpeed.toFixed(1);
+      ui.speed.textContent = effectiveSpeed.toFixed(1);
       ui.capSpeed.textContent = speedCap.toFixed(1);
       ui.coords.textContent = `${Math.round(player.position.x)}, ${Math.round(player.position.z)}`;
 
-      const fillPct = Math.min(100, (currentSpeed / (currentSpeed + 45)) * 135);
+      const fillPct = Math.min(100, (effectiveSpeed / (effectiveSpeed + 40)) * 135);
       ui.speedFill.style.width = fillPct + '%';
       ui.speedFill.style.background = tier.barGradient;
 
