@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no" />
-  <title>Step Rush 3D - Massive Multi-Biome Open World</title>
+  <title>Step Rush 3D - Ultra Multi-Biome Open World</title>
   <style>
     * { box-sizing: border-box; }
     html, body {
@@ -24,28 +24,28 @@
       inset: 0;
       display: grid;
       place-items: center;
-      background: radial-gradient(circle at center, rgba(15, 23, 42, 0.84), rgba(2, 6, 17, 0.96));
+      background: radial-gradient(circle at center, rgba(15, 23, 42, 0.85), rgba(2, 6, 17, 0.96));
       backdrop-filter: blur(12px);
-      z-index: 50;
+      z-index: 60;
       padding: 20px;
     }
     #startMenu.hidden { display: none; }
 
     .menu-card {
-      width: min(94vw, 600px);
-      background: rgba(15, 23, 42, 0.92);
+      width: min(94vw, 620px);
+      background: rgba(15, 23, 42, 0.94);
       border: 1px solid rgba(56, 189, 248, 0.45);
       border-radius: 28px;
       padding: 32px 28px;
       text-align: center;
-      box-shadow: 0 30px 90px rgba(0, 0, 0, 0.8), 0 0 50px rgba(34, 211, 238, 0.14);
+      box-shadow: 0 30px 90px rgba(0, 0, 0, 0.85), 0 0 50px rgba(34, 211, 238, 0.16);
     }
 
     .menu-title {
       font-size: clamp(28px, 5vw, 44px);
       font-weight: 900;
       margin: 0 0 10px;
-      background: linear-gradient(90deg, #4ade80, #22d3ee, #fbbf24, #f472b6);
+      background: linear-gradient(90deg, #4ade80, #22d3ee, #fbbf24, #f97316, #f472b6);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
       letter-spacing: 0.03em;
@@ -109,11 +109,11 @@
     }
 
     .card {
-      background: rgba(15, 23, 42, .78);
+      background: rgba(15, 23, 42, .8);
       border: 1px solid rgba(96, 165, 250, .35);
       border-radius: 14px;
       padding: 8px 14px;
-      min-width: 88px;
+      min-width: 86px;
       backdrop-filter: blur(8px);
       transition: border-color 0.25s ease, transform 0.2s ease;
     }
@@ -133,18 +133,42 @@
       line-height: 1.1;
     }
 
-    #menuSwitchBtn {
+    .hud-actions {
       pointer-events: auto;
       margin-left: auto;
-      background: rgba(15, 23, 42, 0.85);
-      border: 1px solid rgba(148, 163, 184, 0.4);
-      color: #e2e8f0;
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .hud-btn {
+      background: rgba(15, 23, 42, 0.88);
+      border: 1px solid rgba(148, 163, 184, 0.45);
+      color: #f8fafc;
       border-radius: 12px;
       padding: 10px 14px;
       font-size: 13px;
-      font-weight: 700;
+      font-weight: 800;
       cursor: pointer;
       backdrop-filter: blur(8px);
+      transition: all 0.18s ease;
+    }
+
+    .hud-btn:hover {
+      transform: translateY(-1px);
+      border-color: #22d3ee;
+    }
+
+    #openShopBtn {
+      border-color: rgba(250, 204, 21, 0.65);
+      color: #fde047;
+      background: rgba(120, 53, 15, 0.45);
+    }
+
+    #openAdminBtn {
+      border-color: rgba(244, 114, 182, 0.65);
+      color: #f9a8d4;
+      background: rgba(131, 24, 67, 0.45);
     }
 
     #statusRow {
@@ -160,7 +184,7 @@
       z-index: 15;
     }
 
-    #biomeBadge, #sprintBadge {
+    .badge {
       padding: 6px 14px;
       border-radius: 999px;
       font-size: 12px;
@@ -196,13 +220,33 @@
       color: #cbd5e1;
     }
 
+    #auraBadge {
+      background: rgba(56, 189, 248, 0.2);
+      border: 1px solid rgba(56, 189, 248, 0.5);
+      color: #bae6fd;
+    }
+
+    #auraBadge.fire {
+      background: rgba(239, 68, 68, 0.32);
+      border-color: #fb923c;
+      color: #fed7aa;
+      box-shadow: 0 0 18px rgba(249, 115, 22, 0.5);
+    }
+
+    #auraBadge.lightning {
+      background: rgba(168, 85, 247, 0.36);
+      border-color: #e879f9;
+      color: #f5d0fe;
+      box-shadow: 0 0 22px rgba(192, 132, 252, 0.65);
+    }
+
     #speedBar {
       position: fixed;
       left: 14px;
       right: 14px;
       top: 116px;
       height: 9px;
-      max-width: 360px;
+      max-width: 380px;
       border-radius: 999px;
       background: rgba(15, 23, 42, .85);
       border: 1px solid rgba(96, 165, 250, .35);
@@ -215,7 +259,7 @@
       height: 100%;
       width: 0%;
       border-radius: 999px;
-      background: linear-gradient(90deg, #4ade80, #22d3ee, #f97316);
+      background: linear-gradient(90deg, #4ade80, #22d3ee, #f97316, #e879f9);
       transition: width .08s linear;
     }
 
@@ -224,7 +268,7 @@
       bottom: 16px;
       left: 50%;
       transform: translateX(-50%);
-      background: rgba(15, 23, 42, 0.84);
+      background: rgba(15, 23, 42, 0.85);
       border: 1px solid rgba(96, 165, 250, 0.32);
       padding: 9px 20px;
       border-radius: 999px;
@@ -237,6 +281,155 @@
       backdrop-filter: blur(8px);
     }
     #pcHint.hidden { display: none; }
+
+    /* ---------- Modals: Shop & Admin Panel ---------- */
+    .modal-backdrop {
+      position: fixed;
+      inset: 0;
+      background: rgba(2, 6, 17, 0.78);
+      backdrop-filter: blur(8px);
+      display: grid;
+      place-items: center;
+      z-index: 55;
+      padding: 18px;
+    }
+    .modal-backdrop.hidden { display: none; }
+
+    .modal-box {
+      width: min(95vw, 560px);
+      max-height: 88vh;
+      overflow-y: auto;
+      background: rgba(15, 23, 42, 0.96);
+      border: 1px solid rgba(56, 189, 248, 0.45);
+      border-radius: 24px;
+      padding: 24px;
+      box-shadow: 0 24px 80px rgba(0, 0, 0, 0.85);
+    }
+
+    .modal-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 16px;
+    }
+
+    .modal-title {
+      margin: 0;
+      font-size: 22px;
+      font-weight: 900;
+    }
+
+    .close-btn {
+      background: rgba(30, 41, 59, 0.9);
+      border: 1px solid rgba(148, 163, 184, 0.4);
+      color: white;
+      border-radius: 10px;
+      padding: 6px 12px;
+      font-weight: 800;
+      cursor: pointer;
+    }
+
+    .shop-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
+
+    @media (max-width: 520px) {
+      .shop-grid { grid-template-columns: 1fr; }
+    }
+
+    .upgrade-card {
+      background: rgba(30, 41, 59, 0.78);
+      border: 1px solid rgba(96, 165, 250, 0.3);
+      border-radius: 16px;
+      padding: 14px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .upgrade-name {
+      font-weight: 800;
+      font-size: 15px;
+      color: #f8fafc;
+    }
+
+    .upgrade-desc {
+      font-size: 12px;
+      color: #94a3b8;
+      line-height: 1.4;
+    }
+
+    .upgrade-lvl {
+      font-size: 11px;
+      color: #67e8f9;
+      font-weight: 700;
+    }
+
+    .buy-btn {
+      margin-top: auto;
+      background: linear-gradient(90deg, #0284c7, #22d3ee);
+      border: none;
+      border-radius: 10px;
+      padding: 9px 12px;
+      color: #04101f;
+      font-weight: 900;
+      font-size: 13px;
+      cursor: pointer;
+    }
+
+    .buy-btn:disabled {
+      opacity: 0.42;
+      cursor: not-allowed;
+    }
+
+    .admin-row {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 14px;
+    }
+
+    .admin-input {
+      flex: 1;
+      background: rgba(30, 41, 59, 0.95);
+      border: 1px solid rgba(244, 114, 182, 0.5);
+      border-radius: 12px;
+      padding: 10px 14px;
+      color: white;
+      font-size: 14px;
+      font-weight: 700;
+      outline: none;
+    }
+
+    .admin-action-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      margin-top: 12px;
+    }
+
+    .admin-btn {
+      background: rgba(88, 28, 135, 0.65);
+      border: 1px solid rgba(232, 121, 249, 0.55);
+      color: #fae8ff;
+      border-radius: 12px;
+      padding: 11px 12px;
+      font-weight: 800;
+      font-size: 13px;
+      cursor: pointer;
+    }
+
+    .admin-btn:hover {
+      background: rgba(126, 34, 206, 0.85);
+    }
+
+    .admin-status {
+      font-size: 13px;
+      color: #f9a8d4;
+      min-height: 20px;
+      margin-top: 6px;
+    }
 
     /* ---------- Touch Steuerung ---------- */
     #touchControls {
@@ -351,18 +544,18 @@
     <div class="menu-card">
       <h1 class="menu-title">STEP RUSH 3D</h1>
       <p class="menu-subtitle">
-        Riesige Open World (2400×2400) mit Gras-, Sand- und Schnee-Biom, ohne Hindernisse, mit Speed-Boost-Punkten, 5s Sprint (10s Cooldown) und mehr Schritten = mehr Tempo!
+        Riesige Open World (3600×3600) mit Gras-, Sand-, Schnee-, Küsten- &amp; Vulkan-Biom, Shop-Upgrades, Speed-Effekten (Feuer bei 100, Blitz bei 500) und Admin-Panel!
       </p>
       <div class="device-grid">
         <button class="device-btn" id="btnPC">
           <span class="device-icon">🖱️⌨️</span>
           <span class="device-name">Maus &amp; Keyboard</span>
-          <span class="device-desc">WASD / Pfeile = Laufen<br>Shift gedrückt = 5s Sprint (10s CD)<br>Maus = Kamera · 2x Space = Air-Push</span>
+          <span class="device-desc">WASD = Laufen · Shift = 5s Sprint (10s CD)<br>Maus = Kamera · 2x Space = Air-Push</span>
         </button>
         <button class="device-btn" id="btnTouch">
           <span class="device-icon">📱📟</span>
           <span class="device-name">Handy &amp; Tablet</span>
-          <span class="device-desc">Joystick links · Wischen rechts<br>SPRINT gedrückt = 5s Boost (10s CD)<br>2x Jump = Sprung + Speed-Push</span>
+          <span class="device-desc">Joystick links · Wischen rechts<br>SPRINT = 5s Boost (10s CD) · 2x Jump = Push</span>
         </button>
       </div>
     </div>
@@ -373,18 +566,90 @@
     <div class="card"><span class="label">Schritte</span><span class="value" id="steps">0</span></div>
     <div class="card"><span class="label">Orbs</span><span class="value" id="orbs">0</span></div>
     <div class="card" id="speedCard"><span class="label">Speed</span><span class="value" id="speed">0.0</span></div>
-    <div class="card"><span class="label">Max-Speed</span><span class="value" id="capSpeed">12.0</span></div>
+    <div class="card"><span class="label">Max-Speed</span><span class="value" id="capSpeed">14.0</span></div>
     <div class="card"><span class="label">Koordinaten</span><span class="value" id="coords" style="font-size:15px;">0, 0</span></div>
-    <button id="menuSwitchBtn">⚙️ Steuerung</button>
+    <div class="hud-actions">
+      <button class="hud-btn" id="openShopBtn">🛒 Shop</button>
+      <button class="hud-btn" id="openAdminBtn">🛡️ Admin</button>
+      <button class="hud-btn" id="menuSwitchBtn">⚙️ Steuerung</button>
+    </div>
   </div>
 
   <div id="statusRow">
-    <div id="biomeBadge">🌿 Gras-Biom</div>
-    <div id="sprintBadge">⚡ Sprint bereit (5.0s)</div>
+    <div class="badge" id="biomeBadge">🌿 Gras-Biom</div>
+    <div class="badge" id="sprintBadge">⚡ Sprint bereit (5.0s)</div>
+    <div class="badge" id="auraBadge">✨ Effekt: Basis</div>
   </div>
 
   <div id="speedBar"><div id="speedFill"></div></div>
   <div id="pcHint" class="hidden">Klick ins Bild für Maus-Kamera · WASD = Bewegen · Shift gedrückt = 5s Sprint (10s Cooldown) · 2x Leertaste = Air-Push · ESC = Maus frei</div>
+
+  <!-- Shop Modal -->
+  <div class="modal-backdrop hidden" id="shopModal">
+    <div class="modal-box">
+      <div class="modal-header">
+        <h2 class="modal-title">🛒 Speed &amp; Schritt Shop</h2>
+        <button class="close-btn" id="closeShopBtn">✕</button>
+      </div>
+      <div style="margin-bottom:14px; font-size:14px; color:#fde047; font-weight:800;">
+        Verfügbare Schritte: <span id="shopStepsDisplay">0</span>
+      </div>
+      <div class="shop-grid">
+        <div class="upgrade-card">
+          <div class="upgrade-name">🚀 Max-Geschwindigkeit</div>
+          <div class="upgrade-desc">Erhöht dein maximales Speed-Limit deutlich (+12 Max-Speed pro Stufe).</div>
+          <div class="upgrade-lvl">Stufe: <span id="lvlMaxSpeed">0</span></div>
+          <button class="buy-btn" id="buyMaxSpeedBtn">Kaufen (15 Schritte)</button>
+        </div>
+
+        <div class="upgrade-card">
+          <div class="upgrade-name">⚡ Beschleunigung</div>
+          <div class="upgrade-desc">Lässt dich noch schneller auf dein Spitzentempo beschleunigen.</div>
+          <div class="upgrade-lvl">Stufe: <span id="lvlAccel">0</span></div>
+          <button class="buy-btn" id="buyAccelBtn">Kaufen (15 Schritte)</button>
+        </div>
+
+        <div class="upgrade-card">
+          <div class="upgrade-name">👟 Schritt-Power</div>
+          <div class="upgrade-desc">Jeder Schritt gibt dir mehr Tempo-Bonus und mehr Schritt-Punkte.</div>
+          <div class="upgrade-lvl">Stufe: <span id="lvlStepPower">0</span></div>
+          <button class="buy-btn" id="buyStepPowerBtn">Kaufen (20 Schritte)</button>
+        </div>
+
+        <div class="upgrade-card">
+          <div class="upgrade-name">🔥 Sprint-Superkraft</div>
+          <div class="upgrade-desc">Gibt deinem 5s-Sprint noch mehr Extra-Tempo und stärkere Effekte.</div>
+          <div class="upgrade-lvl">Stufe: <span id="lvlSprintPower">0</span></div>
+          <button class="buy-btn" id="buySprintPowerBtn">Kaufen (25 Schritte)</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Admin Panel Modal -->
+  <div class="modal-backdrop hidden" id="adminModal">
+    <div class="modal-box">
+      <div class="modal-header">
+        <h2 class="modal-title">🛡️ Admin Panel</h2>
+        <button class="close-btn" id="closeAdminBtn">✕</button>
+      </div>
+      <div style="font-size:13px; color:#cbd5e1; margin-bottom:10px; line-height:1.45;">
+        Gib den Admin-Code ein, um Admin-Rechte freizuschalten und unendlich Upgrades / Schritte zu aktivieren:
+      </div>
+      <div class="admin-row">
+        <input class="admin-input" id="adminCodeInput" type="text" placeholder="Admin-Code eingeben..." />
+        <button class="buy-btn" id="submitAdminCodeBtn">Aktivieren</button>
+      </div>
+      <div class="admin-status" id="adminStatusMsg">Noch nicht freigeschaltet.</div>
+
+      <div class="admin-action-grid" id="adminControls" style="opacity:0.45; pointer-events:none;">
+        <button class="admin-btn" id="adminInfUpgradesBtn">♾️ Unendlich Upgrades (+50 Stufen alle)</button>
+        <button class="admin-btn" id="adminGiveStepsBtn">👟 +10.000 Schritte geben</button>
+        <button class="admin-btn" id="adminBoost100Btn">🔥 Speed auf 100+ (Feuer-Effekt)</button>
+        <button class="admin-btn" id="adminBoost500Btn">⚡ Speed auf 500+ (Blitz-Effekt)</button>
+      </div>
+    </div>
+  </div>
 
   <!-- Touch UI -->
   <div id="touchControls" class="hidden">
@@ -408,6 +673,9 @@
 
   <script type="module">
     import * as THREE from 'three';
+
+    // Dein geheimer Admin-Code:
+    const SECRET_ADMIN_CODE = 'SAMI-MAX-999';
 
     // ---------- Audio Synthesizer ----------
     let audioCtx = null;
@@ -465,6 +733,14 @@
         gain.gain.exponentialRampToValueAtTime(0.001, now + 0.19);
         osc.start(now);
         osc.stop(now + 0.19);
+      } else if (type === 'buy') {
+        osc.type = 'sine';
+        osc.frequency.setValueAtTime(520, now);
+        osc.frequency.exponentialRampToValueAtTime(980, now + 0.16);
+        gain.gain.setValueAtTime(0.12, now);
+        gain.gain.exponentialRampToValueAtTime(0.001, now + 0.17);
+        osc.start(now);
+        osc.stop(now + 0.17);
       }
     }
 
@@ -472,9 +748,9 @@
     const scene = new THREE.Scene();
     const skyColor = new THREE.Color(0x60a5fa);
     scene.background = skyColor.clone();
-    scene.fog = new THREE.FogExp2(0x7dd3fc, 0.0011);
+    scene.fog = new THREE.FogExp2(0x7dd3fc, 0.00085);
 
-    const camera = new THREE.PerspectiveCamera(70, innerWidth / innerHeight, 0.1, 1800);
+    const camera = new THREE.PerspectiveCamera(70, innerWidth / innerHeight, 0.1, 2400);
 
     const renderer = new THREE.WebGLRenderer({ antialias: true });
     renderer.setSize(innerWidth, innerHeight);
@@ -489,99 +765,128 @@
     const hemiLight = new THREE.HemisphereLight(0xbae6fd, 0x3f6212, 1.05);
     scene.add(hemiLight);
 
-    const sun = new THREE.DirectionalLight(0xfffbeb, 1.85);
-    sun.position.set(220, 320, 180);
+    const sun = new THREE.DirectionalLight(0xfffbeb, 1.9);
+    sun.position.set(260, 360, 200);
     sun.castShadow = true;
     sun.shadow.mapSize.set(2048, 2048);
     sun.shadow.camera.near = 30;
-    sun.shadow.camera.far = 850;
-    const sd = 170;
+    sun.shadow.camera.far = 950;
+    const sd = 180;
     sun.shadow.camera.left = -sd;
     sun.shadow.camera.right = sd;
     sun.shadow.camera.top = sd;
     sun.shadow.camera.bottom = -sd;
     scene.add(sun);
 
-    const playerLight = new THREE.PointLight(0x38bdf8, 0, 26);
+    const playerLight = new THREE.PointLight(0x38bdf8, 0, 32);
     scene.add(playerLight);
 
-    // ---------- Riesige Multi-Biom Open World (2400 x 2400) ----------
-    const WORLD_HALF = 1200;
+    // ---------- Noch größere Multi-Biom Open World (3600 x 3600) ----------
+    // Biome: Gras (Mitte/Nordwest), Sand (Osten), Schnee (Norden), Küste (Süden/Wasser), Vulkan (Südosten)
+    const WORLD_HALF = 1800;
+    const WATER_LEVEL = -3.2;
 
-    // Deterministische Biome & Geländehöhe:
-    // Zentrum & Nord-West / Süd-West: Gras-Biom (Grün, sanfte Hügel, Wälder)
-    // Ost / Süd-Ost: Sand-Biom (Goldener Wüstensand, Dünen, Kakteen/Felsen)
-    // Nord / Hochlagen: Schnee-Biom (Weißer Schnee, eisige Gipfel, Nadelbäume)
     function getBiomeWeights(x, z) {
-      // Große geschwungene Biom-Zonen
-      const waveA = Math.sin(x * 0.0022 + Math.cos(z * 0.0021) * 1.4);
-      const waveB = Math.cos(z * 0.0024 - Math.sin(x * 0.0019) * 1.3);
+      const waveA = Math.sin(x * 0.0016 + Math.cos(z * 0.0015) * 1.4);
+      const waveB = Math.cos(z * 0.0017 - Math.sin(x * 0.0014) * 1.3);
 
-      // Sand im Osten / Südosten (x > 220 und z > -250)
-      const sandFactorRaw = THREE.MathUtils.smoothstep(x * 0.72 + z * 0.35 + waveA * 180, 120, 560);
-      // Schnee im Norden / Nordwesten (z < -220)
-      const snowFactorRaw = THREE.MathUtils.smoothstep(-z * 0.85 - x * 0.25 + waveB * 170, 140, 580);
+      // Vulkan im Südosten (x > 350, z > 350)
+      const distVolcano = Math.hypot(x - 1050, z - 1050);
+      const volcano = 1 - THREE.MathUtils.smoothstep(distVolcano, 220, 760);
 
-      let snow = snowFactorRaw;
-      let sand = sandFactorRaw * (1 - snow * 0.75);
-      let grass = Math.max(0, 1 - snow - sand);
+      // Schnee im Norden (z < -300)
+      const snowRaw = THREE.MathUtils.smoothstep(-z * 0.85 - x * 0.15 + waveB * 220, 220, 780);
 
-      const sum = grass + sand + snow || 1;
-      grass /= sum;
-      sand /= sum;
-      snow /= sum;
+      // Sand im Osten (x > 300)
+      const sandRaw = THREE.MathUtils.smoothstep(x * 0.85 - z * 0.15 + waveA * 220, 220, 780);
 
-      return { grass, sand, snow };
+      // Küste im Süden (z > 320)
+      const coastRaw = THREE.MathUtils.smoothstep(z * 0.85 + x * 0.12 + waveA * 180, 260, 760);
+
+      let v = volcano;
+      let sn = snowRaw * (1 - v * 0.85);
+      let sa = sandRaw * (1 - v * 0.85) * (1 - sn * 0.65);
+      let co = coastRaw * (1 - v * 0.85) * (1 - sa * 0.65);
+      let gr = Math.max(0, 1 - v - sn - sa - co);
+
+      const sum = gr + sa + sn + co + v || 1;
+      return {
+        grass: gr / sum,
+        sand: sa / sum,
+        snow: sn / sum,
+        coast: co / sum,
+        volcano: v / sum
+      };
     }
 
-    function getBiomeName(x, z) {
+    function getBiomeInfo(x, z) {
       const w = getBiomeWeights(x, z);
-      if (w.snow > w.grass && w.snow > w.sand) return { label: '❄️ Schnee-Biom', color: '#bae6fd', bg: 'rgba(14, 165, 233, 0.24)', border: 'rgba(125, 211, 252, 0.6)' };
-      if (w.sand > w.grass && w.sand > w.snow) return { label: '🏜️ Sand-Biom', color: '#fde68a', bg: 'rgba(245, 158, 11, 0.24)', border: 'rgba(251, 191, 36, 0.65)' };
-      return { label: '🌿 Gras-Biom', color: '#86efac', bg: 'rgba(34, 197, 94, 0.22)', border: 'rgba(74, 222, 128, 0.55)' };
+      const entries = [
+        { key: 'grass', val: w.grass, label: '🌿 Gras-Biom', color: '#86efac', bg: 'rgba(34, 197, 94, 0.22)', border: 'rgba(74, 222, 128, 0.55)' },
+        { key: 'sand', val: w.sand, label: '🏜️ Sand-Biom', color: '#fde68a', bg: 'rgba(245, 158, 11, 0.24)', border: 'rgba(251, 191, 36, 0.65)' },
+        { key: 'snow', val: w.snow, label: '❄️ Schnee-Biom', color: '#bae6fd', bg: 'rgba(14, 165, 233, 0.24)', border: 'rgba(125, 211, 252, 0.6)' },
+        { key: 'coast', val: w.coast, label: '🏖️ Küsten-Biom', color: '#67e8f9', bg: 'rgba(6, 182, 212, 0.24)', border: 'rgba(34, 211, 238, 0.65)' },
+        { key: 'volcano', val: w.volcano, label: '🌋 Vulkan-Biom', color: '#fdba74', bg: 'rgba(239, 68, 68, 0.28)', border: 'rgba(251, 146, 60, 0.7)' }
+      ];
+      entries.sort((a, b) => b.val - a.val);
+      return entries[0];
     }
 
     function getTerrainHeight(x, z) {
-      // Spawn-Bereich bei (0, 0) flach halten
       const distFromOrigin = Math.hypot(x, z);
-      const flatBlend = THREE.MathUtils.smoothstep(distFromOrigin, 18, 85);
+      const flatBlend = THREE.MathUtils.smoothstep(distFromOrigin, 22, 95);
 
       const w = getBiomeWeights(x, z);
 
-      const baseRolling =
-        Math.sin(x * 0.008) * Math.cos(z * 0.008) * 3.2 +
-        Math.sin(x * 0.021 + z * 0.017) * 1.1;
+      const grassH =
+        Math.sin(x * 0.0065) * Math.cos(z * 0.0065) * 4.2 +
+        Math.sin(x * 0.017 + z * 0.014) * 1.4;
 
-      const duneHeight =
-        (Math.sin(x * 0.014 + Math.cos(z * 0.009) * 2.2) * 0.5 + 0.5) * 6.5 +
-        Math.cos(z * 0.025 - x * 0.012) * 1.4;
+      const sandH =
+        (Math.sin(x * 0.011 + Math.cos(z * 0.007) * 2.2) * 0.5 + 0.5) * 8.0 +
+        Math.cos(z * 0.022 - x * 0.01) * 1.6;
 
-      const alpineHeight =
-        Math.max(0, Math.sin(x * 0.011) * Math.cos(z * 0.011) + 0.35) * 22 +
-        Math.sin(x * 0.03 + z * 0.026) * 2.2;
+      const snowH =
+        Math.max(0, Math.sin(x * 0.0085) * Math.cos(z * 0.0085) + 0.3) * 26 +
+        Math.sin(x * 0.025 + z * 0.022) * 2.5;
+
+      // Küste senkt sich sanft unter WATER_LEVEL ab, damit echtes Wasser sichtbar wird
+      const coastH =
+        Math.sin(x * 0.008) * Math.cos(z * 0.007) * 4.5 - 3.8;
+
+      // Vulkan bildet einen Kraterberg mit heißem Tal
+      const distVolcano = Math.hypot(x - 1050, z - 1050);
+      const craterRidge = Math.exp(-Math.pow((distVolcano - 210) / 140, 2)) * 34;
+      const volcanoH = craterRidge + Math.sin(x * 0.02 + z * 0.02) * 2.2 - 1.5;
 
       const combined =
-        baseRolling * w.grass +
-        duneHeight * w.sand +
-        alpineHeight * w.snow;
+        grassH * w.grass +
+        sandH * w.sand +
+        snowH * w.snow +
+        coastH * w.coast +
+        volcanoH * w.volcano;
 
       return combined * flatBlend;
     }
 
-    // Vertex-gefärbtes Terrain-Mesh für fließende Übergänge zwischen Gras, Sand und Schnee
-    const terrainSegments = 240;
+    // Detailliertes Vertex-gefärbtes Terrain mit realistischen Übergängen
+    const terrainSegments = 280;
     const terrainGeo = new THREE.PlaneGeometry(WORLD_HALF * 2, WORLD_HALF * 2, terrainSegments, terrainSegments);
     terrainGeo.rotateX(-Math.PI / 2);
 
     const posAttr = terrainGeo.attributes.position;
     const colors = new Float32Array(posAttr.count * 3);
 
-    const colGrassLow = new THREE.Color(0x22c55e);
+    const colGrassLow = new THREE.Color(0x16a34a);
     const colGrassHigh = new THREE.Color(0x4ade80);
     const colSandLow = new THREE.Color(0xeab308);
-    const colSandHigh = new THREE.Color(0xfde047);
-    const colSnowLow = new THREE.Color(0xe0f2fe);
+    const colSandHigh = new THREE.Color(0xfef08a);
+    const colSnowLow = new THREE.Color(0xdbeafe);
     const colSnowHigh = new THREE.Color(0xffffff);
+    const colCoastWet = new THREE.Color(0xd97706);
+    const colCoastDry = new THREE.Color(0xfde68a);
+    const colVolcanoAsh = new THREE.Color(0x1f2937);
+    const colVolcanoLava = new THREE.Color(0xea580c);
     const tempCol = new THREE.Color();
 
     for (let i = 0; i < posAttr.count; i++) {
@@ -591,16 +896,18 @@
       posAttr.setY(i, vy);
 
       const w = getBiomeWeights(vx, vz);
-      const hNorm = THREE.MathUtils.clamp((vy + 3) / 22, 0, 1);
+      const hNorm = THREE.MathUtils.clamp((vy + 5) / 26, 0, 1);
 
       const gCol = colGrassLow.clone().lerp(colGrassHigh, hNorm);
       const sCol = colSandLow.clone().lerp(colSandHigh, hNorm);
       const nCol = colSnowLow.clone().lerp(colSnowHigh, hNorm);
+      const cCol = vy < WATER_LEVEL + 0.8 ? colCoastWet : colCoastDry;
+      const vCol = vy < 2.0 ? colVolcanoLava : colVolcanoAsh;
 
       tempCol.setRGB(
-        gCol.r * w.grass + sCol.r * w.sand + nCol.r * w.snow,
-        gCol.g * w.grass + sCol.g * w.sand + nCol.g * w.snow,
-        gCol.b * w.grass + sCol.b * w.sand + nCol.b * w.snow
+        gCol.r * w.grass + sCol.r * w.sand + nCol.r * w.snow + cCol.r * w.coast + vCol.r * w.volcano,
+        gCol.g * w.grass + sCol.g * w.sand + nCol.g * w.snow + cCol.g * w.coast + vCol.g * w.volcano,
+        gCol.b * w.grass + sCol.b * w.sand + nCol.b * w.snow + cCol.b * w.coast + vCol.b * w.volcano
       );
 
       colors[i * 3] = tempCol.r;
@@ -613,21 +920,37 @@
 
     const terrainMat = new THREE.MeshStandardMaterial({
       vertexColors: true,
-      roughness: 0.86,
-      metalness: 0.05,
-      flatShading: false
+      roughness: 0.85,
+      metalness: 0.06
     });
 
     const terrainMesh = new THREE.Mesh(terrainGeo, terrainMat);
     terrainMesh.receiveShadow = true;
     scene.add(terrainMesh);
 
-    // Sanfte Randbegrenzung der Welt (ohne schädliche Hindernisse im Spielbereich)
+    // Realistische Ozean-/Küsten-Wasserfläche
+    const waterMesh = new THREE.Mesh(
+      new THREE.PlaneGeometry(WORLD_HALF * 2, WORLD_HALF * 2),
+      new THREE.MeshStandardMaterial({
+        color: 0x0284c7,
+        emissive: 0x0369a1,
+        emissiveIntensity: 0.22,
+        roughness: 0.18,
+        metalness: 0.65,
+        transparent: true,
+        opacity: 0.78
+      })
+    );
+    waterMesh.rotation.x = -Math.PI / 2;
+    waterMesh.position.y = WATER_LEVEL;
+    scene.add(waterMesh);
+
+    // Sanfte Randbegrenzung
     const borderMat = new THREE.MeshStandardMaterial({
       color: 0x1e293b,
       roughness: 0.8,
       transparent: true,
-      opacity: 0.35
+      opacity: 0.32
     });
     for (const wc of [
       { x: 0, z: -WORLD_HALF, w: WORLD_HALF * 2, d: 8 },
@@ -641,24 +964,40 @@
       scene.add(wall);
     }
 
-    // ---------- Biom-Deko (Bäume, Kakteen, Schnee-Tannen) – ohne Schaden/Blockade-Stress ----------
+    // ---------- Biom-Landschaftselemente (keine nutzlosen Diamanten!) ----------
     const trunkMat = new THREE.MeshStandardMaterial({ color: 0x5c3a21, roughness: 0.9 });
     const leafMat = new THREE.MeshStandardMaterial({ color: 0x15803d, roughness: 0.8 });
     const snowLeafMat = new THREE.MeshStandardMaterial({ color: 0x0f766e, roughness: 0.8 });
     const snowCapMat = new THREE.MeshStandardMaterial({ color: 0xf8fafc, roughness: 0.6 });
     const cactusMat = new THREE.MeshStandardMaterial({ color: 0x16a34a, roughness: 0.75 });
     const rockMat = new THREE.MeshStandardMaterial({ color: 0xd97706, roughness: 0.9 });
+    const palmLeafMat = new THREE.MeshStandardMaterial({ color: 0x22c55e, roughness: 0.7 });
+    const lavaGlowMat = new THREE.MeshStandardMaterial({
+      color: 0xf97316,
+      emissive: 0xea580c,
+      emissiveIntensity: 1.4,
+      roughness: 0.3
+    });
 
-    for (let i = 0; i < 240; i++) {
-      const rx = (Math.random() - 0.5) * (WORLD_HALF * 1.85);
-      const rz = (Math.random() - 0.5) * (WORLD_HALF * 1.85);
-      if (Math.hypot(rx, rz) < 24) continue;
+    for (let i = 0; i < 360; i++) {
+      const rx = (Math.random() - 0.5) * (WORLD_HALF * 1.88);
+      const rz = (Math.random() - 0.5) * (WORLD_HALF * 1.88);
+      if (Math.hypot(rx, rz) < 26) continue;
 
       const ry = getTerrainHeight(rx, rz);
       const w = getBiomeWeights(rx, rz);
 
-      if (w.snow > w.grass && w.snow > w.sand) {
-        // Schnee-Tanne
+      if (w.volcano > w.grass && w.volcano > w.sand && w.volcano > w.snow && w.volcano > w.coast) {
+        // Vulkan-Gestein & glühende Magma-Brocken
+        const magRock = new THREE.Mesh(
+          new THREE.DodecahedronGeometry(1.5 + Math.random() * 2.5, 0),
+          Math.random() < 0.45 ? lavaGlowMat : new THREE.MeshStandardMaterial({ color: 0x1e293b, roughness: 0.9 })
+        );
+        magRock.position.set(rx, Math.max(ry, WATER_LEVEL) + 0.8, rz);
+        magRock.rotation.set(Math.random(), Math.random(), Math.random());
+        magRock.castShadow = true;
+        scene.add(magRock);
+      } else if (w.snow > w.grass && w.snow > w.sand && w.snow > w.coast) {
         const tree = new THREE.Group();
         const trunk = new THREE.Mesh(new THREE.CylinderGeometry(0.35, 0.5, 2.5, 7), trunkMat);
         trunk.position.y = 1.25;
@@ -675,10 +1014,9 @@
         cone2.castShadow = true;
         tree.add(cone2);
 
-        tree.position.set(rx, ry - 0.15, rz);
+        tree.position.set(rx, Math.max(ry, WATER_LEVEL) - 0.15, rz);
         scene.add(tree);
-      } else if (w.sand > w.grass && w.sand > w.snow) {
-        // Kaktus oder Sandstein-Fels
+      } else if (w.sand > w.grass && w.sand > w.coast) {
         if (Math.random() < 0.65) {
           const cactus = new THREE.Group();
           const h = 2.4 + Math.random() * 2.2;
@@ -692,17 +1030,32 @@
           arm.rotation.z = -0.35;
           cactus.add(arm);
 
-          cactus.position.set(rx, ry - 0.1, rz);
+          cactus.position.set(rx, Math.max(ry, WATER_LEVEL) - 0.1, rz);
           scene.add(cactus);
         } else {
           const rock = new THREE.Mesh(new THREE.DodecahedronGeometry(1.6 + Math.random() * 2.2, 0), rockMat);
-          rock.position.set(rx, ry + 0.7, rz);
+          rock.position.set(rx, Math.max(ry, WATER_LEVEL) + 0.7, rz);
           rock.rotation.set(Math.random(), Math.random(), Math.random());
           rock.castShadow = true;
           scene.add(rock);
         }
+      } else if (w.coast > w.grass) {
+        // Küsten-Palme
+        const palm = new THREE.Group();
+        const trunk = new THREE.Mesh(new THREE.CylinderGeometry(0.24, 0.42, 4.2, 7), trunkMat);
+        trunk.position.y = 2.1;
+        trunk.rotation.z = 0.08;
+        trunk.castShadow = true;
+        palm.add(trunk);
+
+        const fronds = new THREE.Mesh(new THREE.ConeGeometry(2.6, 1.4, 6), palmLeafMat);
+        fronds.position.set(0.18, 4.4, 0);
+        fronds.castShadow = true;
+        palm.add(fronds);
+
+        palm.position.set(rx, Math.max(ry, WATER_LEVEL + 0.1), rz);
+        scene.add(palm);
       } else {
-        // Laubbaum im Gras-Biom
         const tree = new THREE.Group();
         const trunk = new THREE.Mesh(new THREE.CylinderGeometry(0.32, 0.48, 2.4, 7), trunkMat);
         trunk.position.y = 1.2;
@@ -714,30 +1067,32 @@
         crown.castShadow = true;
         tree.add(crown);
 
-        tree.position.set(rx, ry - 0.15, rz);
+        tree.position.set(rx, Math.max(ry, WATER_LEVEL) - 0.15, rz);
         scene.add(tree);
       }
     }
 
-    // ---------- Nur ein paar gezielte Speed-Boost-Punkte auf der Map ----------
+    // ---------- Gezielte Speed-Boost-Punkte auf der Map ----------
     const boostPads = [];
-    const padBaseGeo = new THREE.CylinderGeometry(4.2, 4.8, 0.35, 28);
-    const padRingGeo = new THREE.TorusGeometry(4.0, 0.24, 12, 36);
-    const padBeaconGeo = new THREE.OctahedronGeometry(1.1, 0);
+    const padBaseGeo = new THREE.CylinderGeometry(4.4, 5.0, 0.35, 28);
+    const padRingGeo = new THREE.TorusGeometry(4.1, 0.24, 12, 36);
+    const padBeaconGeo = new THREE.CylinderGeometry(0.45, 0.45, 3.4, 14);
 
     const speedBoostLocations = [
-      { x: 0, z: -75, name: 'Start-Nord-Boost' },
-      { x: 95, z: 35, name: 'Gras-Ost-Boost' },
-      { x: -110, z: 60, name: 'Gras-West-Boost' },
-      { x: 520, z: 180, name: 'Wüsten-Boost' },
-      { x: 640, z: 540, name: 'Tiefsand-Boost' },
-      { x: -140, z: -560, name: 'Schneeberg-Boost' },
-      { x: 240, z: -640, name: 'Gletscher-Boost' },
-      { x: -580, z: -180, name: 'West-Hochland-Boost' }
+      { x: 0, z: -80 },
+      { x: 110, z: 40 },
+      { x: -120, z: 65 },
+      { x: 780, z: 120 },
+      { x: 920, z: 780 },
+      { x: -160, z: -820 },
+      { x: 280, z: -960 },
+      { x: -840, z: -220 },
+      { x: 120, z: 860 },
+      { x: 1050, z: 1050 }
     ];
 
     for (const bp of speedBoostLocations) {
-      const by = getTerrainHeight(bp.x, bp.z);
+      const by = Math.max(getTerrainHeight(bp.x, bp.z), WATER_LEVEL);
       const group = new THREE.Group();
       group.position.set(bp.x, by + 0.18, bp.z);
 
@@ -762,32 +1117,32 @@
       ringMesh.position.y = 0.22;
       group.add(ringMesh);
 
-      const crystalMesh = new THREE.Mesh(
+      const beamMesh = new THREE.Mesh(
         padBeaconGeo,
-        new THREE.MeshStandardMaterial({
+        new THREE.MeshBasicMaterial({
           color: 0x38bdf8,
-          emissive: 0x0284c7,
-          emissiveIntensity: 1.4
+          transparent: true,
+          opacity: 0.45
         })
       );
-      crystalMesh.position.y = 2.6;
-      group.add(crystalMesh);
+      beamMesh.position.y = 1.9;
+      group.add(beamMesh);
 
       scene.add(group);
       boostPads.push({
         group,
         ringMesh,
-        crystalMesh,
+        beamMesh,
         x: bp.x,
         z: bp.z,
-        radius: 4.8,
+        radius: 5.0,
         cooldown: 0
       });
     }
 
-    // ---------- Schritt-Orbs (jeder Orb gibt Schritte & erhöht dauerhaft das Tempo) ----------
+    // ---------- Schritt-Orbs (keine Diamanten!) ----------
     const orbs = [];
-    const orbGeo = new THREE.OctahedronGeometry(0.75, 1);
+    const orbGeo = new THREE.SphereGeometry(0.68, 16, 16);
     const orbMat = new THREE.MeshStandardMaterial({
       color: 0xfacc15,
       emissive: 0xf59e0b,
@@ -797,21 +1152,19 @@
     });
 
     function spawnOrbAt(x, z, yOffset = 1.45) {
-      const groundY = getTerrainHeight(x, z);
+      const groundY = Math.max(getTerrainHeight(x, z), WATER_LEVEL);
       const mesh = new THREE.Mesh(orbGeo, orbMat);
       mesh.position.set(x, groundY + yOffset, z);
       scene.add(mesh);
       orbs.push({ mesh, x, z, yOffset, phase: Math.random() * Math.PI * 2 });
     }
 
-    // Einladende Orb-Linie direkt vor dem Startpunkt
-    for (let i = 1; i <= 12; i++) {
+    for (let i = 1; i <= 14; i++) {
       spawnOrbAt(0, -i * 6.5, 1.45);
     }
-    // Viele Orbs verteilt über alle Biome
-    for (let i = 0; i < 480; i++) {
-      const ox = (Math.random() - 0.5) * (WORLD_HALF * 1.85);
-      const oz = (Math.random() - 0.5) * (WORLD_HALF * 1.85);
+    for (let i = 0; i < 650; i++) {
+      const ox = (Math.random() - 0.5) * (WORLD_HALF * 1.88);
+      const oz = (Math.random() - 0.5) * (WORLD_HALF * 1.88);
       spawnOrbAt(ox, oz, 1.45);
     }
 
@@ -863,7 +1216,6 @@
       metalness: 0.5
     });
 
-    // Becken / Hüfte
     const pelvis = new THREE.Mesh(new THREE.BoxGeometry(0.62, 0.24, 0.4), jointDarkMat);
     pelvis.position.y = 0.94;
     pelvis.castShadow = true;
@@ -873,18 +1225,15 @@
     belt.position.y = 1.03;
     characterRig.add(belt);
 
-    // Oberkörper-Pivot
     const chestPivot = new THREE.Group();
     chestPivot.position.set(0, 1.06, 0);
     characterRig.add(chestPivot);
 
-    // Brustpanzer
     const torso = new THREE.Mesh(new THREE.BoxGeometry(0.74, 0.74, 0.46), armorPrimaryMat);
     torso.position.y = 0.37;
     torso.castShadow = true;
     chestPivot.add(torso);
 
-    // Bruststreifen & Energie-Kern
     const chestStripeL = new THREE.Mesh(new THREE.BoxGeometry(0.11, 0.58, 0.49), armorAccentMat);
     chestStripeL.position.set(-0.2, 0.38, 0);
     chestPivot.add(chestStripeL);
@@ -900,7 +1249,6 @@
     core.position.set(0, 0.44, 0.24);
     chestPivot.add(core);
 
-    // Schulterplatten
     const shoulderL = new THREE.Mesh(new THREE.BoxGeometry(0.28, 0.22, 0.48), armorAccentMat);
     shoulderL.position.set(-0.49, 0.68, 0);
     shoulderL.rotation.z = 0.22;
@@ -913,7 +1261,6 @@
     shoulderR.castShadow = true;
     chestPivot.add(shoulderR);
 
-    // Jetpack / Rücken-Stabilisatoren (animiert beim Sprinten & Springen)
     const jetpackBase = new THREE.Mesh(new THREE.BoxGeometry(0.46, 0.44, 0.22), jointDarkMat);
     jetpackBase.position.set(0, 0.44, -0.32);
     jetpackBase.castShadow = true;
@@ -927,7 +1274,6 @@
     thrusterR.position.set(0.15, 0.24, -0.34);
     chestPivot.add(thrusterR);
 
-    // Kopf-Pivot + Helm + Visier + Antenne/Kamm
     const headPivot = new THREE.Group();
     headPivot.position.set(0, 0.82, 0);
     chestPivot.add(headPivot);
@@ -950,7 +1296,6 @@
     visor.position.set(0, 0.29, 0.25);
     headPivot.add(visor);
 
-    // Gelenkte Arme & Beine mit Händen und Stiefeln
     function createDetailedLimb(x, y, z, upperLen, lowerLen, thickness, isLeg) {
       const rootPivot = new THREE.Group();
       rootPivot.position.set(x, y, z);
@@ -1010,18 +1355,18 @@
     chestPivot.add(leftArm.root, rightArm.root);
 
     const auraRing = new THREE.Mesh(
-      new THREE.RingGeometry(0.75, 1.18, 36),
+      new THREE.RingGeometry(0.8, 1.35, 36),
       new THREE.MeshBasicMaterial({ color: 0x38bdf8, side: THREE.DoubleSide, transparent: true, opacity: 0 })
     );
     auraRing.rotation.x = -Math.PI / 2;
-    auraRing.position.y = 0.06;
+    auraRing.position.y = 0.08;
     player.add(auraRing);
 
     scene.add(player);
 
-    // ---------- Partikel & Speed-Linien ----------
+    // ---------- Partikel & Speed-Effekte (Feuer ab 100, Blitz ab 500) ----------
     const particles = [];
-    const particleGeo = new THREE.BoxGeometry(0.22, 0.22, 0.22);
+    const particleGeo = new THREE.BoxGeometry(0.24, 0.24, 0.24);
 
     function spawnParticle(pos, colorHex, velocity, life = 0.45, scale = 1) {
       const mat = new THREE.MeshBasicMaterial({
@@ -1036,9 +1381,38 @@
       particles.push({ mesh, vel: velocity, life, maxLife: life });
     }
 
-    // ---------- Steuerung, Schritte, Tempo & Sprint (5s Boost / 10s Cooldown) ----------
+    const lightningBolts = [];
+    function spawnLightningStrike() {
+      const points = [];
+      const angle = Math.random() * Math.PI * 2;
+      const radius = 0.5 + Math.random() * 1.4;
+      let cx = player.position.x + Math.cos(angle) * radius;
+      let cy = player.position.y + 0.1;
+      let cz = player.position.z + Math.sin(angle) * radius;
+
+      points.push(new THREE.Vector3(cx, cy, cz));
+      for (let i = 1; i <= 7; i++) {
+        cx += (Math.random() - 0.5) * 1.35;
+        cy += 0.52;
+        cz += (Math.random() - 0.5) * 1.35;
+        points.push(new THREE.Vector3(cx, cy, cz));
+      }
+
+      const geo = new THREE.BufferGeometry().setFromPoints(points);
+      const mat = new THREE.LineBasicMaterial({
+        color: 0xe879f9,
+        transparent: true,
+        opacity: 1
+      });
+      const line = new THREE.Line(geo, mat);
+      scene.add(line);
+      lightningBolts.push({ line, life: 0.14 });
+    }
+
+    // ---------- Steuerung, Shop, Admin, Schritte & Sprint ----------
     let controlMode = null;
     let gameStarted = false;
+    let uiModalOpen = false;
 
     let cameraYaw = 0;
     let cameraPitch = 0.34;
@@ -1048,14 +1422,26 @@
     let touchSprintHeld = false;
     let jumpHeld = false;
 
-    // Sprint-Zustand: 5 Sekunden aktiv beim Gedrückthalten, danach 10 Sekunden Cooldown
+    // Shop-Upgrades
+    const upgrades = {
+      maxSpeed: 0,
+      accel: 0,
+      stepPower: 0,
+      sprintPower: 0
+    };
+
+    // Admin-Status
+    let adminUnlocked = false;
+    let infiniteUpgradesActive = false;
+
+    // Sprint-Zustand: 5s aktiv, danach 10s Cooldown
     const SPRINT_DURATION = 5.0;
     const SPRINT_COOLDOWN = 10.0;
-    let sprintActiveTimer = 0;    // > 0 bedeutet: Sprint läuft gerade (max 5.0s)
-    let sprintCooldownTimer = 0;  // > 0 bedeutet: Cooldown läuft gerade (max 10.0s)
-    let sprintExhaustedThisHold = false; // Verhindert Dauer-Triggern ohne Loslassen
+    let sprintActiveTimer = 0;
+    let sprintCooldownTimer = 0;
+    let sprintExhaustedThisHold = false;
 
-    // Schritte & Geschwindigkeit
+    // Schritte & Tempo
     let steps = 0;
     let orbsCollected = 0;
     let distanceAccumulator = 0;
@@ -1077,14 +1463,169 @@
       speed: document.getElementById('speed'),
       capSpeed: document.getElementById('capSpeed'),
       coords: document.getElementById('coords'),
-      speedCard: document.getElementById('speedCard'),
       speedFill: document.getElementById('speedFill'),
       biomeBadge: document.getElementById('biomeBadge'),
       sprintBadge: document.getElementById('sprintBadge'),
+      auraBadge: document.getElementById('auraBadge'),
       sprintBtn: document.getElementById('sprintBtn'),
-      sprintBtnSub: document.getElementById('sprintBtnSub')
+      sprintBtnSub: document.getElementById('sprintBtnSub'),
+      shopModal: document.getElementById('shopModal'),
+      adminModal: document.getElementById('adminModal'),
+      shopStepsDisplay: document.getElementById('shopStepsDisplay'),
+      lvlMaxSpeed: document.getElementById('lvlMaxSpeed'),
+      lvlAccel: document.getElementById('lvlAccel'),
+      lvlStepPower: document.getElementById('lvlStepPower'),
+      lvlSprintPower: document.getElementById('lvlSprintPower'),
+      buyMaxSpeedBtn: document.getElementById('buyMaxSpeedBtn'),
+      buyAccelBtn: document.getElementById('buyAccelBtn'),
+      buyStepPowerBtn: document.getElementById('buyStepPowerBtn'),
+      buySprintPowerBtn: document.getElementById('buySprintPowerBtn'),
+      adminCodeInput: document.getElementById('adminCodeInput'),
+      adminStatusMsg: document.getElementById('adminStatusMsg'),
+      adminControls: document.getElementById('adminControls')
     };
 
+    function getUpgradeCost(baseCost, lvl) {
+      return Math.round(baseCost * Math.pow(1.35, lvl));
+    }
+
+    function refreshShopUI() {
+      ui.shopStepsDisplay.textContent = steps;
+      ui.lvlMaxSpeed.textContent = upgrades.maxSpeed;
+      ui.lvlAccel.textContent = upgrades.accel;
+      ui.lvlStepPower.textContent = upgrades.stepPower;
+      ui.lvlSprintPower.textContent = upgrades.sprintPower;
+
+      const c1 = getUpgradeCost(15, upgrades.maxSpeed);
+      const c2 = getUpgradeCost(15, upgrades.accel);
+      const c3 = getUpgradeCost(20, upgrades.stepPower);
+      const c4 = getUpgradeCost(25, upgrades.sprintPower);
+
+      ui.buyMaxSpeedBtn.textContent = infiniteUpgradesActive ? 'Kostenlos (Admin ∞)' : `Kaufen (${c1} Schritte)`;
+      ui.buyAccelBtn.textContent = infiniteUpgradesActive ? 'Kostenlos (Admin ∞)' : `Kaufen (${c2} Schritte)`;
+      ui.buyStepPowerBtn.textContent = infiniteUpgradesActive ? 'Kostenlos (Admin ∞)' : `Kaufen (${c3} Schritte)`;
+      ui.buySprintPowerBtn.textContent = infiniteUpgradesActive ? 'Kostenlos (Admin ∞)' : `Kaufen (${c4} Schritte)`;
+
+      ui.buyMaxSpeedBtn.disabled = !infiniteUpgradesActive && steps < c1;
+      ui.buyAccelBtn.disabled = !infiniteUpgradesActive && steps < c2;
+      ui.buyStepPowerBtn.disabled = !infiniteUpgradesActive && steps < c3;
+      ui.buySprintPowerBtn.disabled = !infiniteUpgradesActive && steps < c4;
+    }
+
+    function openModal(modalEl) {
+      uiModalOpen = true;
+      if (document.pointerLockElement) document.exitPointerLock?.();
+      modalEl.classList.remove('hidden');
+      refreshShopUI();
+    }
+
+    function closeModal(modalEl) {
+      modalEl.classList.add('hidden');
+      uiModalOpen = ui.shopModal.classList.contains('hidden') === false || ui.adminModal.classList.contains('hidden') === false;
+      if (!uiModalOpen && controlMode === 'pc' && gameStarted) {
+        renderer.domElement.requestPointerLock?.();
+      }
+    }
+
+    document.getElementById('openShopBtn').addEventListener('click', () => { initAudio(); openModal(ui.shopModal); });
+    document.getElementById('closeShopBtn').addEventListener('click', () => closeModal(ui.shopModal));
+    document.getElementById('openAdminBtn').addEventListener('click', () => { initAudio(); openModal(ui.adminModal); });
+    document.getElementById('closeAdminBtn').addEventListener('click', () => closeModal(ui.adminModal));
+
+    // Shop-Käufe
+    ui.buyMaxSpeedBtn.addEventListener('click', () => {
+      const cost = getUpgradeCost(15, upgrades.maxSpeed);
+      if (infiniteUpgradesActive || steps >= cost) {
+        if (!infiniteUpgradesActive) steps -= cost;
+        upgrades.maxSpeed += 1;
+        playSound('buy');
+        refreshShopUI();
+      }
+    });
+
+    ui.buyAccelBtn.addEventListener('click', () => {
+      const cost = getUpgradeCost(15, upgrades.accel);
+      if (infiniteUpgradesActive || steps >= cost) {
+        if (!infiniteUpgradesActive) steps -= cost;
+        upgrades.accel += 1;
+        playSound('buy');
+        refreshShopUI();
+      }
+    });
+
+    ui.buyStepPowerBtn.addEventListener('click', () => {
+      const cost = getUpgradeCost(20, upgrades.stepPower);
+      if (infiniteUpgradesActive || steps >= cost) {
+        if (!infiniteUpgradesActive) steps -= cost;
+        upgrades.stepPower += 1;
+        playSound('buy');
+        refreshShopUI();
+      }
+    });
+
+    ui.buySprintPowerBtn.addEventListener('click', () => {
+      const cost = getUpgradeCost(25, upgrades.sprintPower);
+      if (infiniteUpgradesActive || steps >= cost) {
+        if (!infiniteUpgradesActive) steps -= cost;
+        upgrades.sprintPower += 1;
+        playSound('buy');
+        refreshShopUI();
+      }
+    });
+
+    // Admin-Code Prüfung & Aktionen
+    document.getElementById('submitAdminCodeBtn').addEventListener('click', () => {
+      const entered = ui.adminCodeInput.value.trim().toUpperCase();
+      if (entered === SECRET_ADMIN_CODE) {
+        adminUnlocked = true;
+        infiniteUpgradesActive = true;
+        ui.adminStatusMsg.textContent = '✅ Admin-Rechte aktiv! Unendlich Upgrades & Admin-Tools freigeschaltet.';
+        ui.adminControls.style.opacity = '1';
+        ui.adminControls.style.pointerEvents = 'auto';
+        playSound('boost');
+        refreshShopUI();
+      } else {
+        ui.adminStatusMsg.textContent = '❌ Falscher Code.';
+      }
+    });
+
+    document.getElementById('adminInfUpgradesBtn').addEventListener('click', () => {
+      if (!adminUnlocked) return;
+      infiniteUpgradesActive = true;
+      upgrades.maxSpeed += 50;
+      upgrades.accel += 50;
+      upgrades.stepPower += 50;
+      upgrades.sprintPower += 50;
+      playSound('boost');
+      ui.adminStatusMsg.textContent = '♾️ Alle Upgrades um +50 Stufen erhöht & unendlich Upgrades aktiviert!';
+      refreshShopUI();
+    });
+
+    document.getElementById('adminGiveStepsBtn').addEventListener('click', () => {
+      if (!adminUnlocked) return;
+      steps += 10000;
+      playSound('buy');
+      ui.adminStatusMsg.textContent = '👟 +10.000 Schritte hinzugefügt!';
+      refreshShopUI();
+    });
+
+    document.getElementById('adminBoost100Btn').addEventListener('click', () => {
+      if (!adminUnlocked) return;
+      upgrades.maxSpeed = Math.max(upgrades.maxSpeed, 15);
+      currentSpeed = Math.max(currentSpeed, 125);
+      playSound('boost');
+      ui.adminStatusMsg.textContent = '🔥 Tempo auf 125 gesetzt -> Feuer-Effekt aktiv!';
+    });
+
+    document.getElementById('adminBoost500Btn').addEventListener('click', () => {
+      if (!adminUnlocked) return;
+      upgrades.maxSpeed = Math.max(upgrades.maxSpeed, 55);
+      currentSpeed = Math.max(currentSpeed, 520);
+      playSound('boost');
+      ui.adminStatusMsg.textContent = '⚡ Tempo auf 520 gesetzt -> Blitz-Effekt aktiv!';
+    });
+
+    // ---------- Steuerung Startmenü ----------
     function selectControlMode(mode) {
       initAudio();
       controlMode = mode;
@@ -1111,7 +1652,7 @@
 
     let isMouseDragging = false;
     renderer.domElement.addEventListener('mousedown', () => {
-      if (controlMode !== 'pc' || !gameStarted) return;
+      if (controlMode !== 'pc' || !gameStarted || uiModalOpen) return;
       if (document.pointerLockElement !== renderer.domElement) {
         renderer.domElement.requestPointerLock?.();
       }
@@ -1121,7 +1662,7 @@
     window.addEventListener('mouseup', () => { isMouseDragging = false; });
 
     window.addEventListener('mousemove', (e) => {
-      if (controlMode !== 'pc' || !gameStarted) return;
+      if (controlMode !== 'pc' || !gameStarted || uiModalOpen) return;
       if (document.pointerLockElement === renderer.domElement || isMouseDragging) {
         cameraYaw -= e.movementX * 0.003;
         cameraPitch = THREE.MathUtils.clamp(cameraPitch + e.movementY * 0.0024, 0.08, 1.15);
@@ -1129,6 +1670,7 @@
     });
 
     window.addEventListener('keydown', (e) => {
+      if (uiModalOpen) return;
       if (e.code === 'Space' && !keys['Space'] && gameStarted) {
         e.preventDefault();
         jumpHeld = true;
@@ -1196,7 +1738,6 @@
       touchMoveVec.y = dy / maxR;
     }
 
-    // Touch Camera Look
     const touchLookZone = document.getElementById('touchLookZone');
     let lookTouchId = null;
     let lastLookX = 0;
@@ -1231,7 +1772,6 @@
     touchLookZone.addEventListener('touchend', endLook);
     touchLookZone.addEventListener('touchcancel', endLook);
 
-    // Touch Sprint-Knopf (gedrückt halten -> 5s Boost, dann 10s Cooldown)
     const sprintBtn = document.getElementById('sprintBtn');
     sprintBtn.addEventListener('touchstart', (e) => {
       e.preventDefault();
@@ -1249,7 +1789,6 @@
     sprintBtn.addEventListener('touchend', releaseTouchSprint, { passive: false });
     sprintBtn.addEventListener('touchcancel', releaseTouchSprint, { passive: false });
 
-    // Touch Jump-Knopf
     const jumpBtn = document.getElementById('jumpBtn');
     jumpBtn.addEventListener('touchstart', (e) => {
       e.preventDefault();
@@ -1274,7 +1813,7 @@
       lastJumpTapTime = now;
 
       if (isGrounded) {
-        velY = 12.2;
+        velY = 12.6;
         isGrounded = false;
         airPushUsed = false;
         squashAmount = -0.25;
@@ -1285,27 +1824,27 @@
           spawnParticle(
             new THREE.Vector3(player.position.x, player.position.y + 0.15, player.position.z),
             0x38bdf8,
-            new THREE.Vector3(Math.cos(a) * 3.2, 1.5 + Math.random() * 1.5, Math.sin(a) * 3.2),
+            new THREE.Vector3(Math.cos(a) * 3.5, 1.5 + Math.random() * 1.5, Math.sin(a) * 3.5),
             0.35,
             0.9
           );
         }
       } else if (isDoubleTap && !airPushUsed) {
         airPushUsed = true;
-        velY = Math.max(velY, 10.2);
-        currentSpeed = Math.min(currentSpeed + 5.5, getMaxSpeed() + 6.0);
+        velY = Math.max(velY, 10.5);
+        currentSpeed = Math.min(currentSpeed + 8.0, getMaxSpeed() + 12.0);
         squashAmount = 0.2;
         playSound('airpush');
 
         const forward = new THREE.Vector3(-Math.sin(cameraYaw), 0, -Math.cos(cameraYaw));
-        player.position.addScaledVector(forward, 1.25);
+        player.position.addScaledVector(forward, 1.4);
 
         for (let i = 0; i < 16; i++) {
           const a = (i / 16) * Math.PI * 2;
           spawnParticle(
             new THREE.Vector3(player.position.x, player.position.y + 0.9, player.position.z),
             0x22d3ee,
-            new THREE.Vector3(Math.cos(a) * 5.2, (Math.random() - 0.3) * 3.2, Math.sin(a) * 5.2),
+            new THREE.Vector3(Math.cos(a) * 5.5, (Math.random() - 0.3) * 3.2, Math.sin(a) * 5.5),
             0.42,
             1.15
           );
@@ -1313,21 +1852,21 @@
       }
     }
 
-    // ---------- Tempo-Berechnung durch Schritte ----------
+    // ---------- Tempo- & Upgrade-Berechnung ----------
     function getStepBonusSpeed() {
-      // Jeder Schritt erhöht das Tempo spürbar (mit sanftem Diminishing Return ab sehr hohen Zahlen)
-      return Math.min(steps * 0.045, 28.0);
+      const multiplier = 0.06 + upgrades.stepPower * 0.045;
+      return Math.min(steps * multiplier, 900);
     }
 
     function getMaxSpeed() {
-      const baseCap = 12.0 + getStepBonusSpeed();
-      const sprintBonus = sprintActiveTimer > 0 ? 11.5 : 0;
-      const padBonus = padBoostTimer > 0 ? 14.0 : 0;
+      const baseCap = 14.0 + upgrades.maxSpeed * 12.0 + getStepBonusSpeed();
+      const sprintBonus = sprintActiveTimer > 0 ? (14.0 + upgrades.sprintPower * 10.0) : 0;
+      const padBonus = padBoostTimer > 0 ? 22.0 : 0;
       return baseCap + sprintBonus + padBonus;
     }
 
-    // ---------- Startposition auf Terrain ----------
-    player.position.set(0, getTerrainHeight(0, 0), 0);
+    // ---------- Startposition ----------
+    player.position.set(0, Math.max(getTerrainHeight(0, 0), WATER_LEVEL), 0);
 
     // ---------- Haupt-Loop ----------
     let lastTime = performance.now();
@@ -1338,7 +1877,7 @@
       const dt = Math.min((now - lastTime) / 1000, 0.05);
       lastTime = now;
 
-      // Sprint-Logik: Beim Gedrückthalten 5 Sek. Sprint, danach 10 Sek. Cooldown
+      // Sprint-Logik: 5 Sek. Boost, danach 10 Sek. Cooldown
       const wantsSprint = Boolean(keys['ShiftLeft'] || keys['ShiftRight'] || touchSprintHeld);
 
       if (sprintCooldownTimer > 0) {
@@ -1347,22 +1886,21 @@
 
       if (sprintActiveTimer > 0) {
         sprintActiveTimer = Math.max(0, sprintActiveTimer - dt);
-        // Sobald die 5 Sekunden Sprint vorbei sind, startet der 10-Sekunden-Cooldown
         if (sprintActiveTimer === 0) {
           sprintCooldownTimer = SPRINT_COOLDOWN;
           sprintExhaustedThisHold = true;
         }
-      } else if (wantsSprint && !sprintExhaustedThisHold && sprintCooldownTimer <= 0 && gameStarted) {
+      } else if (wantsSprint && !sprintExhaustedThisHold && sprintCooldownTimer <= 0 && gameStarted && !uiModalOpen) {
         sprintActiveTimer = SPRINT_DURATION;
         squashAmount = 0.22;
         playSound('sprint');
-        for (let i = 0; i < 14; i++) {
+        for (let i = 0; i < 16; i++) {
           spawnParticle(
             new THREE.Vector3(player.position.x, player.position.y + 1.0, player.position.z),
             0xfacc15,
-            new THREE.Vector3((Math.random() - 0.5) * 7, 1 + Math.random() * 3, (Math.random() - 0.5) * 7),
+            new THREE.Vector3((Math.random() - 0.5) * 8, 1.5 + Math.random() * 3.5, (Math.random() - 0.5) * 8),
             0.45,
-            1.1
+            1.15
           );
         }
       }
@@ -1371,11 +1909,11 @@
         padBoostTimer = Math.max(0, padBoostTimer - dt);
       }
 
-      // Bewegungsvektor ermitteln
+      // Bewegung
       let moveForward = 0;
       let moveRight = 0;
 
-      if (gameStarted) {
+      if (gameStarted && !uiModalOpen) {
         if (controlMode === 'pc') {
           if (keys['KeyW'] || keys['ArrowUp']) moveForward += 1;
           if (keys['KeyS'] || keys['ArrowDown']) moveForward -= 1;
@@ -1392,7 +1930,7 @@
 
       const maxSpd = getMaxSpeed();
       const targetSpd = isMoving ? maxSpd * inputMag : 0;
-      const accelRate = isMoving ? (sprintActiveTimer > 0 || padBoostTimer > 0 ? 16.0 : 9.5) : 11.0;
+      const accelRate = isMoving ? (10.0 + upgrades.accel * 2.4 + (sprintActiveTimer > 0 ? 8.0 : 0)) : 11.0;
       currentSpeed = THREE.MathUtils.lerp(currentSpeed, targetSpd, 1 - Math.exp(-accelRate * dt));
 
       const prevX = player.position.x;
@@ -1410,11 +1948,9 @@
         player.position.x += wishDir.x * currentSpeed * dt;
         player.position.z += wishDir.z * currentSpeed * dt;
 
-        // Weltgrenzen einhalten
-        player.position.x = THREE.MathUtils.clamp(player.position.x, -WORLD_HALF + 5, WORLD_HALF - 5);
-        player.position.z = THREE.MathUtils.clamp(player.position.z, -WORLD_HALF + 5, WORLD_HALF - 5);
+        player.position.x = THREE.MathUtils.clamp(player.position.x, -WORLD_HALF + 6, WORLD_HALF - 6);
+        player.position.z = THREE.MathUtils.clamp(player.position.z, -WORLD_HALF + 6, WORLD_HALF - 6);
 
-        // Charakter sanft in Laufrichtung drehen
         const targetYaw = Math.atan2(wishDir.x, wishDir.z);
         let diff = targetYaw - player.rotation.y;
         while (diff > Math.PI) diff -= Math.PI * 2;
@@ -1422,22 +1958,21 @@
         player.rotation.y += diff * Math.min(1, dt * 15);
       }
 
-      // Schritte anhand zurückgelegter Strecke zählen -> macht den Spieler schneller!
+      // Schritte anhand Strecke zählen -> erhöht Tempo!
       const stepDist = Math.hypot(player.position.x - prevX, player.position.z - prevZ);
       if (isGrounded && stepDist > 0.001) {
         distanceAccumulator += stepDist;
         const stepLength = 2.4;
         if (distanceAccumulator >= stepLength) {
-          const earned = Math.floor(distanceAccumulator / stepLength);
-          distanceAccumulator -= earned * stepLength;
+          const earned = Math.floor(distanceAccumulator / stepLength) * (1 + Math.floor(upgrades.stepPower * 0.5));
+          distanceAccumulator = 0;
           steps += earned;
-          // Kleiner direkter Tempo-Impuls pro Schritt
-          currentSpeed = Math.min(currentSpeed + earned * 0.14, getMaxSpeed());
+          currentSpeed = Math.min(currentSpeed + earned * (0.2 + upgrades.stepPower * 0.08), getMaxSpeed());
         }
       }
 
-      // Vertikale Physik & Terrain-Höhe
-      const groundHeight = getTerrainHeight(player.position.x, player.position.z);
+      // Vertikale Physik & Terrain/Wasser-Höhe
+      const groundHeight = Math.max(getTerrainHeight(player.position.x, player.position.z), WATER_LEVEL);
       velY -= 29.0 * dt;
       player.position.y += velY * dt;
 
@@ -1451,14 +1986,14 @@
         airPushUsed = false;
       }
 
-      // ---------- Charakter-Animationen (Laufen, Sprinten, Springen, Idle) ----------
+      // ---------- Charakter-Animationen ----------
       squashAmount = THREE.MathUtils.lerp(squashAmount, 0, 1 - Math.exp(-12 * dt));
       const scaleY = 1 + squashAmount;
       const scaleXZ = 1 - squashAmount * 0.55;
       characterRig.scale.set(scaleXZ, scaleY, scaleXZ);
 
       if (isGrounded && currentSpeed > 0.35) {
-        const strideFreq = 6.5 + currentSpeed * 0.72;
+        const strideFreq = 6.5 + Math.min(currentSpeed * 0.55, 26);
         animCycle += dt * strideFreq;
 
         const swing = Math.sin(animCycle);
@@ -1468,7 +2003,7 @@
         const elbowBendL = -0.55 - Math.max(0, Math.sin(animCycle)) * 0.65;
         const elbowBendR = -0.55 - Math.max(0, Math.sin(animCycle + Math.PI)) * 0.65;
 
-        const sprintLean = sprintActiveTimer > 0 ? 0.36 : 0.14 + Math.min(currentSpeed * 0.01, 0.18);
+        const sprintLean = sprintActiveTimer > 0 ? 0.38 : 0.14 + Math.min(currentSpeed * 0.004, 0.2);
         chestPivot.rotation.x = sprintLean + Math.abs(Math.sin(animCycle)) * 0.06;
         chestPivot.rotation.y = Math.sin(animCycle) * 0.18;
         chestPivot.position.y = 1.06 + Math.abs(Math.cos(animCycle)) * 0.08;
@@ -1487,29 +2022,7 @@
 
         rightArm.root.rotation.x = swing * 1.05;
         rightArm.mid.rotation.x = elbowBendR;
-
-        // Fuß-Staubpartikel beim Laufen/Sprinten
-        if (Math.random() < (sprintActiveTimer > 0 ? 0.65 : 0.25)) {
-          const biomeW = getBiomeWeights(player.position.x, player.position.z);
-          let dustCol = 0x86efac;
-          if (biomeW.sand > biomeW.grass && biomeW.sand > biomeW.snow) dustCol = 0xfde047;
-          else if (biomeW.snow > biomeW.grass && biomeW.snow > biomeW.sand) dustCol = 0xffffff;
-          if (sprintActiveTimer > 0) dustCol = 0xfacc15;
-
-          spawnParticle(
-            new THREE.Vector3(
-              player.position.x + (Math.random() - 0.5) * 0.6,
-              player.position.y + 0.12,
-              player.position.z + (Math.random() - 0.5) * 0.6
-            ),
-            dustCol,
-            new THREE.Vector3((Math.random() - 0.5) * 2.2, 1.0 + Math.random() * 1.5, (Math.random() - 0.5) * 2.2),
-            0.32,
-            0.75
-          );
-        }
       } else if (!isGrounded) {
-        // Sprung- & Flugpose
         chestPivot.rotation.x = velY > 0 ? -0.14 : 0.22;
         chestPivot.rotation.y = 0;
         chestPivot.position.y = 1.08;
@@ -1527,7 +2040,6 @@
         rightArm.root.rotation.x = -0.85;
         rightArm.mid.rotation.x = -0.4;
       } else {
-        // Ruhige Idle-Animation (Atmen & leichtes Umsehen)
         const idleT = now * 0.0025;
         chestPivot.rotation.x = THREE.MathUtils.lerp(chestPivot.rotation.x, Math.sin(idleT) * 0.03, 0.12);
         chestPivot.rotation.y = THREE.MathUtils.lerp(chestPivot.rotation.y, Math.sin(idleT * 0.7) * 0.06, 0.12);
@@ -1547,27 +2059,93 @@
         rightArm.mid.rotation.x = THREE.MathUtils.lerp(rightArm.mid.rotation.x, -0.22, 0.15);
       }
 
-      // Energie-Kern & Aura
+      // ---------- Geschwindigkeits-Effekte: Feuer ab 100, Blitz ab 500 ----------
+      const hasFireEffect = currentSpeed >= 100;
+      const hasLightningEffect = currentSpeed >= 500;
+
+      if (hasLightningEffect) {
+        if (Math.random() < 0.65) spawnLightningStrike();
+        if (Math.random() < 0.75) {
+          spawnParticle(
+            new THREE.Vector3(
+              player.position.x + (Math.random() - 0.5) * 1.4,
+              player.position.y + 0.4 + Math.random() * 1.8,
+              player.position.z + (Math.random() - 0.5) * 1.4
+            ),
+            0xe879f9,
+            new THREE.Vector3((Math.random() - 0.5) * 9, 2 + Math.random() * 5, (Math.random() - 0.5) * 9),
+            0.35,
+            1.2
+          );
+        }
+      }
+
+      if (hasFireEffect) {
+        if (Math.random() < 0.85) {
+          const fireCol = Math.random() < 0.55 ? 0xf97316 : 0xfacc15;
+          spawnParticle(
+            new THREE.Vector3(
+              player.position.x + (Math.random() - 0.5) * 1.1,
+              player.position.y + 0.3 + Math.random() * 1.2,
+              player.position.z + (Math.random() - 0.5) * 1.1
+            ),
+            fireCol,
+            new THREE.Vector3((Math.random() - 0.5) * 4.5, 2.5 + Math.random() * 4.5, (Math.random() - 0.5) * 4.5),
+            0.42,
+            1.35
+          );
+        }
+      } else if (isMoving && Math.random() < 0.25) {
+        spawnParticle(
+          new THREE.Vector3(
+            player.position.x + (Math.random() - 0.5) * 0.6,
+            player.position.y + 0.12,
+            player.position.z + (Math.random() - 0.5) * 0.6
+          ),
+          sprintActiveTimer > 0 ? 0xfacc15 : 0x86efac,
+          new THREE.Vector3((Math.random() - 0.5) * 2.2, 1.0 + Math.random() * 1.5, (Math.random() - 0.5) * 2.2),
+          0.32,
+          0.75
+        );
+      }
+
+      // Blitzlinien aktualisieren
+      for (let i = lightningBolts.length - 1; i >= 0; i--) {
+        const lb = lightningBolts[i];
+        lb.life -= dt;
+        if (lb.life <= 0) {
+          scene.remove(lb.line);
+          lb.line.geometry.dispose();
+          lb.line.material.dispose();
+          lightningBolts.splice(i, 1);
+        } else {
+          lb.line.material.opacity = lb.life / 0.14;
+        }
+      }
+
       core.rotation.y += dt * 4.5;
       core.rotation.x += dt * 2.5;
 
-      const isBoostedNow = sprintActiveTimer > 0 || padBoostTimer > 0;
-      auraRing.rotation.z += dt * (isBoostedNow ? 6.0 : 2.0);
-      if (isBoostedNow) {
-        auraRing.material.opacity = 0.78;
-        auraRing.material.color.setHex(sprintActiveTimer > 0 ? 0xfacc15 : 0x38bdf8);
-        playerLight.intensity = 2.8;
-        playerLight.color.setHex(sprintActiveTimer > 0 ? 0xfacc15 : 0x38bdf8);
+      auraRing.rotation.z += dt * (hasLightningEffect ? 10 : hasFireEffect ? 6.5 : 2.5);
+      if (hasLightningEffect) {
+        auraRing.material.opacity = 0.85;
+        auraRing.material.color.setHex(0xe879f9);
+        playerLight.intensity = 3.6;
+        playerLight.color.setHex(0xe879f9);
+      } else if (hasFireEffect) {
+        auraRing.material.opacity = 0.8;
+        auraRing.material.color.setHex(0xf97316);
+        playerLight.intensity = 3.0;
+        playerLight.color.setHex(0xf97316);
       } else {
         auraRing.material.opacity = Math.min(0.45, currentSpeed / 40);
         auraRing.material.color.setHex(0x38bdf8);
-        playerLight.intensity = Math.min(2.0, currentSpeed / 12);
+        playerLight.intensity = Math.min(2.0, currentSpeed / 15);
         playerLight.color.setHex(0x38bdf8);
       }
       playerLight.position.set(player.position.x, player.position.y + 2.2, player.position.z);
 
-      // Schatten-Kamera der Sonne mit dem Spieler mitführen
-      sun.position.set(player.position.x + 150, player.position.y + 240, player.position.z + 120);
+      sun.position.set(player.position.x + 170, player.position.y + 260, player.position.z + 130);
       sun.target.position.copy(player.position);
       sun.target.updateMatrixWorld();
 
@@ -1575,16 +2153,15 @@
       for (const bp of boostPads) {
         if (bp.cooldown > 0) bp.cooldown = Math.max(0, bp.cooldown - dt);
         bp.ringMesh.rotation.z += dt * 2.4;
-        bp.crystalMesh.rotation.y += dt * 3.2;
-        bp.crystalMesh.position.y = 2.5 + Math.sin(now * 0.004 + bp.x) * 0.35;
+        bp.beamMesh.position.y = 1.9 + Math.sin(now * 0.004 + bp.x) * 0.25;
 
         const dist = Math.hypot(player.position.x - bp.x, player.position.z - bp.z);
-        if (dist < bp.radius && Math.abs(player.position.y - bp.group.position.y) < 3.5 && bp.cooldown <= 0) {
+        if (dist < bp.radius && Math.abs(player.position.y - bp.group.position.y) < 4.0 && bp.cooldown <= 0) {
           bp.cooldown = 1.6;
-          padBoostTimer = 3.2;
-          steps += 5;
-          currentSpeed = Math.min(currentSpeed + 12.0, getMaxSpeed() + 8.0);
-          if (isGrounded) velY = 7.5;
+          padBoostTimer = 3.5;
+          steps += 6 * (1 + Math.floor(upgrades.stepPower * 0.5));
+          currentSpeed = Math.min(currentSpeed + 22.0, getMaxSpeed() + 18.0);
+          if (isGrounded) velY = 8.0;
           playSound('boost');
 
           for (let i = 0; i < 20; i++) {
@@ -1600,22 +2177,23 @@
         }
       }
 
-      // ---------- Orbs einsammeln (erhöht Schritte & Tempo) ----------
+      // ---------- Orbs einsammeln ----------
       for (let i = orbs.length - 1; i >= 0; i--) {
         const orb = orbs[i];
         orb.mesh.rotation.y += dt * 3.0;
-        orb.mesh.position.y = getTerrainHeight(orb.x, orb.z) + orb.yOffset + Math.sin(now * 0.004 + orb.phase) * 0.25;
+        orb.mesh.position.y = Math.max(getTerrainHeight(orb.x, orb.z), WATER_LEVEL) + orb.yOffset + Math.sin(now * 0.004 + orb.phase) * 0.25;
 
         const dx = player.position.x - orb.x;
         const dy = (player.position.y + 1.1) - orb.mesh.position.y;
         const dz = player.position.z - orb.z;
-        if (dx * dx + dy * dy + dz * dz < 2.25) {
+        if (dx * dx + dy * dy + dz * dz < 2.5) {
           scene.remove(orb.mesh);
           orbs.splice(i, 1);
 
           orbsCollected += 1;
-          steps += 3;
-          currentSpeed = Math.min(currentSpeed + 1.4, getMaxSpeed() + 2.0);
+          const gainedSteps = 4 * (1 + Math.floor(upgrades.stepPower * 0.5));
+          steps += gainedSteps;
+          currentSpeed = Math.min(currentSpeed + 2.2 + upgrades.stepPower * 0.6, getMaxSpeed() + 5.0);
           playSound('orb', steps);
 
           for (let p = 0; p < 8; p++) {
@@ -1628,9 +2206,8 @@
             );
           }
 
-          // Nachspawnen auf der großen Map, damit nie die Orbs ausgehen
-          const nx = (Math.random() - 0.5) * (WORLD_HALF * 1.85);
-          const nz = (Math.random() - 0.5) * (WORLD_HALF * 1.85);
+          const nx = (Math.random() - 0.5) * (WORLD_HALF * 1.88);
+          const nz = (Math.random() - 0.5) * (WORLD_HALF * 1.88);
           spawnOrbAt(nx, nz, 1.45);
         }
       }
@@ -1646,12 +2223,12 @@
         }
         pt.vel.y -= 11.0 * dt;
         pt.mesh.position.addScaledVector(pt.vel, dt);
-        pt.mesh.scale.setScalar(Math.max(0.01, (pt.life / pt.maxLife) * 1.1));
+        pt.mesh.scale.setScalar(Math.max(0.01, (pt.life / pt.maxLife) * 1.15));
         pt.mesh.material.opacity = pt.life / pt.maxLife;
       }
 
       // ---------- Kamera & dynamisches FOV ----------
-      const distBack = 7.4 + Math.min(currentSpeed * 0.14, 5.5);
+      const distBack = 7.6 + Math.min(currentSpeed * 0.08, 7.0);
       const horizDist = Math.cos(cameraPitch) * distBack;
       const vertDist = Math.sin(cameraPitch) * distBack;
 
@@ -1662,14 +2239,14 @@
       );
 
       camera.position.lerp(targetCamPos, 1 - Math.exp(-14 * dt));
-      const camGround = getTerrainHeight(camera.position.x, camera.position.z);
+      const camGround = Math.max(getTerrainHeight(camera.position.x, camera.position.z), WATER_LEVEL);
       if (camera.position.y < camGround + 0.9) {
         camera.position.y = camGround + 0.9;
       }
 
       camera.lookAt(player.position.x, player.position.y + 1.55, player.position.z);
 
-      const targetFov = 70 + Math.min(currentSpeed * 0.85, 26);
+      const targetFov = 70 + Math.min(currentSpeed * 0.35, 28);
       camera.fov = THREE.MathUtils.lerp(camera.fov, targetFov, 1 - Math.exp(-8 * dt));
       camera.updateProjectionMatrix();
 
@@ -1686,31 +2263,40 @@
         const pct = Math.min(100, (currentSpeed / Math.max(getMaxSpeed(), 1)) * 100);
         ui.speedFill.style.width = `${pct}%`;
 
-        // Biom-Anzeige
-        const bInfo = getBiomeName(player.position.x, player.position.z);
+        const bInfo = getBiomeInfo(player.position.x, player.position.z);
         ui.biomeBadge.textContent = bInfo.label;
         ui.biomeBadge.style.color = bInfo.color;
         ui.biomeBadge.style.background = bInfo.bg;
         ui.biomeBadge.style.borderColor = bInfo.border;
 
-        // Sprint-Status (5s aktiv / 10s Cooldown)
         if (sprintActiveTimer > 0) {
           ui.sprintBadge.textContent = `⚡ SPRINT AKTIV: ${sprintActiveTimer.toFixed(1)}s`;
-          ui.sprintBadge.className = 'active';
+          ui.sprintBadge.className = 'badge active';
           ui.sprintBtn.classList.add('sprinting');
           ui.sprintBtn.classList.remove('cooldown');
           ui.sprintBtnSub.textContent = `${sprintActiveTimer.toFixed(1)}s`;
         } else if (sprintCooldownTimer > 0) {
           ui.sprintBadge.textContent = `⏳ Sprint Cooldown: ${sprintCooldownTimer.toFixed(1)}s`;
-          ui.sprintBadge.className = 'cooldown';
+          ui.sprintBadge.className = 'badge cooldown';
           ui.sprintBtn.classList.remove('sprinting');
           ui.sprintBtn.classList.add('cooldown');
           ui.sprintBtnSub.textContent = `${sprintCooldownTimer.toFixed(1)}s`;
         } else {
           ui.sprintBadge.textContent = `⚡ Sprint bereit (5.0s Boost / 10s CD)`;
-          ui.sprintBadge.className = '';
+          ui.sprintBadge.className = 'badge';
           ui.sprintBtn.classList.remove('sprinting', 'cooldown');
           ui.sprintBtnSub.textContent = '5.0s';
+        }
+
+        if (hasLightningEffect) {
+          ui.auraBadge.textContent = '⚡🔥 Effekt: Blitz & Feuer (500+)';
+          ui.auraBadge.className = 'badge lightning';
+        } else if (hasFireEffect) {
+          ui.auraBadge.textContent = '🔥 Effekt: Feuer (100+)';
+          ui.auraBadge.className = 'badge fire';
+        } else {
+          ui.auraBadge.textContent = '✨ Effekt: Basis (Feuer ab 100 · Blitz ab 500)';
+          ui.auraBadge.className = 'badge';
         }
       }
 
