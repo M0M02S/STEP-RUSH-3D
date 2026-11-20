@@ -3,169 +3,104 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no" />
-  <title>Step Rush 3D</title>
+  <title>Step Rush 3D – Open World</title>
   <style>
-    * { box-sizing: border-box; }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
     html, body {
-      margin: 0;
       height: 100%;
       overflow: hidden;
-      background: #0b1020;
+      background: #87ceeb;
       font-family: system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
       color: white;
       user-select: none;
+      -webkit-user-select: none;
     }
     canvas { display: block; touch-action: none; }
 
     #hud {
       position: fixed;
-      top: 14px;
-      left: 14px;
-      right: 14px;
+      top: 12px;
+      left: 12px;
+      right: 12px;
       display: flex;
-      gap: 14px;
+      gap: 10px;
       flex-wrap: wrap;
-      align-items: flex-start;
       pointer-events: none;
-      text-shadow: 0 2px 8px rgba(0,0,0,.7);
+      text-shadow: 0 2px 6px rgba(0,0,0,.6);
     }
-
     .card {
-      background: rgba(15, 23, 42, .72);
+      background: rgba(15, 23, 42, .65);
       border: 1px solid rgba(96, 165, 250, .35);
-      border-radius: 14px;
-      padding: 10px 14px;
-      min-width: 92px;
+      border-radius: 12px;
+      padding: 8px 14px;
       backdrop-filter: blur(8px);
+      min-width: 86px;
     }
-
     .label {
       display: block;
-      font-size: 11px;
-      letter-spacing: .12em;
+      font-size: 10px;
+      letter-spacing: .14em;
       text-transform: uppercase;
       color: #93c5fd;
       margin-bottom: 2px;
     }
-
     .value {
-      font-size: 22px;
+      font-size: 20px;
       font-weight: 800;
-      line-height: 1.1;
+      line-height: 1;
     }
-
-    #speedBar {
-      position: fixed;
-      left: 14px;
-      right: 14px;
-      bottom: 16px;
-      height: 14px;
-      border-radius: 999px;
-      background: rgba(15, 23, 42, .8);
-      border: 1px solid rgba(96, 165, 250, .35);
-      overflow: hidden;
-      pointer-events: none;
-    }
-
-    #speedFill {
-      height: 100%;
-      width: 0%;
-      border-radius: 999px;
-      background: linear-gradient(90deg, #22d3ee, #3b82f6, #a855f7);
-      transition: width .08s linear;
-    }
-
-    #gameover {
-      position: fixed;
-      inset: 0;
-      display: grid;
-      place-items: center;
-      background: rgba(2, 6, 23, .72);
-      backdrop-filter: blur(6px);
-      z-index: 20;
-    }
-
-    #gameover.hidden { display: none; }
-
-    .panel {
-      width: min(92vw, 420px);
-      text-align: center;
-      background: rgba(15, 23, 42, .95);
-      border: 1px solid rgba(96, 165, 250, .45);
-      border-radius: 24px;
-      padding: 28px;
-      box-shadow: 0 30px 80px rgba(0,0,0,.55);
-    }
-
-    .panel h1 {
-      margin: 0 0 8px;
-      font-size: 34px;
-      letter-spacing: .03em;
-    }
-
-    .panel p {
-      margin: 6px 0;
-      color: #cbd5e1;
-    }
-
-    .final {
-      font-size: 42px;
-      font-weight: 900;
-      color: #facc15;
-      margin: 18px 0;
-    }
-
-    button {
-      margin-top: 16px;
-      border: 0;
-      border-radius: 999px;
-      padding: 14px 24px;
-      font-size: 17px;
-      font-weight: 800;
-      cursor: pointer;
-      color: #082f49;
-      background: linear-gradient(90deg, #22d3ee, #60a5fa);
-      box-shadow: 0 10px 30px rgba(34, 211, 238, .3);
-    }
-
-    button:active { transform: translateY(1px); }
 
     #hint {
       position: fixed;
+      bottom: 14px;
       left: 50%;
-      bottom: 42px;
       transform: translateX(-50%);
-      color: #94a3b8;
-      font-size: 13px;
+      background: rgba(15, 23, 42, .6);
+      border: 1px solid rgba(96, 165, 250, .3);
+      border-radius: 12px;
+      padding: 8px 16px;
+      font-size: 12px;
+      color: #cbd5e1;
       text-align: center;
       pointer-events: none;
-      text-shadow: 0 2px 8px #000;
-      width: 90%;
+      backdrop-filter: blur(8px);
+      max-width: 92vw;
+    }
+    @media (min-width: 700px) {
+      #hint { font-size: 13px; }
+    }
+
+    #sprintBar {
+      position: fixed;
+      bottom: 60px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: min(60vw, 280px);
+      height: 8px;
+      border-radius: 999px;
+      background: rgba(15, 23, 42, .75);
+      border: 1px solid rgba(96, 165, 250, .4);
+      overflow: hidden;
+      pointer-events: none;
+    }
+    #sprintFill {
+      height: 100%;
+      width: 100%;
+      background: linear-gradient(90deg, #22d3ee, #a855f7);
+      transition: width .08s linear;
     }
   </style>
 </head>
 <body>
   <div id="hud">
-    <div class="card"><span class="label">Score</span><span class="value" id="score">0</span></div>
+    <div class="card"><span class="label">Speed</span><span class="value" id="speed">0.0</span></div>
     <div class="card"><span class="label">Schritte</span><span class="value" id="steps">0</span></div>
-    <div class="card"><span class="label">Combo</span><span class="value" id="combo">x1</span></div>
-    <div class="card"><span class="label">Level</span><span class="value" id="level">1</span></div>
-    <div class="card"><span class="label">Leben</span><span class="value" id="lives">❤️❤️❤️</span></div>
-    <div class="card"><span class="label">Speed</span><span class="value" id="speed">8.0</span></div>
+    <div class="card"><span class="label">Orbs</span><span class="value" id="orbs">0</span></div>
+    <div class="card"><span class="label">Position</span><span class="value" id="pos">0,0</span></div>
   </div>
 
-  <div id="speedBar"><div id="speedFill"></div></div>
-  <div id="hint">A/D oder ←/→ = Spur · Leertaste/W/↑ = springen · Mobil: wischen</div>
-
-  <div id="gameover" class="hidden">
-    <div class="panel">
-      <h1>Game Over</h1>
-      <p>Dein Run ist vorbei.</p>
-      <div class="final" id="finalScore">0</div>
-      <p>Punkte</p>
-      <button id="restartBtn">Nochmal schneller!</button>
-    </div>
-  </div>
+  <div id="sprintBar"><div id="sprintFill"></div></div>
+  <div id="hint">WASD = bewegen · Shift = sprinten · Maus = Kamera · Space = springen · Mobil: linke Hälfte Joystick, rechte Kamera</div>
 
   <script type="importmap">
     {
@@ -178,14 +113,16 @@
   <script type="module">
     import * as THREE from 'three';
 
-    // ---------- Grundsetup ----------
+    // ==========================================================
+    //  SETUP
+    // ==========================================================
     const scene = new THREE.Scene();
-    scene.background = new THREE.Color(0x0b1020);
-    scene.fog = new THREE.Fog(0x0b1020, 28, 95);
+    const SKY_COLOR = 0x9ec9ea;
+    const FOG_COLOR = 0xa8d0e8;
+    scene.background = new THREE.Color(SKY_COLOR);
+    scene.fog = new THREE.Fog(FOG_COLOR, 120, 520);
 
-    const camera = new THREE.PerspectiveCamera(70, innerWidth / innerHeight, 0.1, 250);
-    camera.position.set(0, 5.4, 10);
-    camera.lookAt(0, 1.2, -16);
+    const camera = new THREE.PerspectiveCamera(60, innerWidth / innerHeight, 0.1, 3000);
 
     const renderer = new THREE.WebGLRenderer({ antialias: true });
     renderer.setSize(innerWidth, innerHeight);
@@ -194,373 +131,371 @@
     renderer.shadowMap.type = THREE.PCFSoftShadowMap;
     document.body.appendChild(renderer.domElement);
 
-    // ---------- Licht ----------
-    scene.add(new THREE.AmbientLight(0xffffff, 0.65));
+    // ---------- Lights ----------
+    scene.add(new THREE.AmbientLight(0xffffff, 0.45));
 
-    const sun = new THREE.DirectionalLight(0xffffff, 1.4);
-    sun.position.set(6, 14, 8);
+    const sun = new THREE.DirectionalLight(0xfff2d0, 1.35);
+    sun.position.set(80, 150, 80);
     sun.castShadow = true;
-    sun.shadow.mapSize.set(1024, 1024);
+    sun.shadow.mapSize.set(2048, 2048);
+    sun.shadow.camera.near = 1;
+    sun.shadow.camera.far = 400;
+    sun.shadow.camera.left = -50;
+    sun.shadow.camera.right = 50;
+    sun.shadow.camera.top = 50;
+    sun.shadow.camera.bottom = -50;
+    sun.shadow.bias = -0.0006;
+    sun.shadow.normalBias = 0.02;
     scene.add(sun);
+    scene.add(sun.target);
 
-    const rim = new THREE.DirectionalLight(0x3b82f6, 0.9);
-    rim.position.set(-8, 6, -10);
-    scene.add(rim);
+    const hemi = new THREE.HemisphereLight(SKY_COLOR, 0x4a6b3a, 0.55);
+    scene.add(hemi);
 
-    // ---------- Straße ----------
-    const road = new THREE.Mesh(
-      new THREE.PlaneGeometry(9, 260),
-      new THREE.MeshStandardMaterial({ color: 0x141d36, roughness: 0.9, metalness: 0.1 })
-    );
-    road.rotation.x = -Math.PI / 2;
-    road.position.set(0, 0, -55);
-    road.receiveShadow = true;
-    scene.add(road);
-
-    // Fahrspurlinien
-    for (const x of [-1, 1]) {
-      const line = new THREE.Mesh(
-        new THREE.BoxGeometry(0.06, 0.02, 260),
-        new THREE.MeshStandardMaterial({ color: 0x3b82f6, emissive: 0x1d4ed8, emissiveIntensity: 0.7 })
-      );
-      line.position.set(x, 0.02, -55);
-      scene.add(line);
-    }
-
-    // Neon-Seitenbegrenzungen
-    for (const x of [-4.75, 4.75]) {
-      const rail = new THREE.Mesh(
-        new THREE.BoxGeometry(0.18, 0.55, 260),
-        new THREE.MeshStandardMaterial({ color: 0x1e40af, emissive: 0x2563eb, emissiveIntensity: 0.6 })
-      );
-      rail.position.set(x, 0.28, -55);
-      rail.castShadow = true;
-      rail.receiveShadow = true;
-      scene.add(rail);
-    }
-
-    // ---------- Spieler ----------
-    const player = new THREE.Group();
-
-    const bodyMat = new THREE.MeshStandardMaterial({
-      color: 0x22d3ee,
-      emissive: 0x0891b2,
-      emissiveIntensity: 0.65,
-      roughness: 0.35,
-      metalness: 0.25
+    // ---------- Sky dome ----------
+    const skyGeo = new THREE.SphereGeometry(1600, 32, 16);
+    const skyMat = new THREE.ShaderMaterial({
+      side: THREE.BackSide,
+      uniforms: {
+        topColor:    { value: new THREE.Color(0x4a90d9) },
+        bottomColor: { value: new THREE.Color(0xd7ecff) },
+        offset:      { value: 200 },
+        exponent:    { value: 0.7 }
+      },
+      vertexShader: `
+        varying vec3 vWorld;
+        void main() {
+          vWorld = (modelMatrix * vec4(position, 1.0)).xyz;
+          gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
+        }
+      `,
+      fragmentShader: `
+        uniform vec3 topColor;
+        uniform vec3 bottomColor;
+        uniform float offset;
+        uniform float exponent;
+        varying vec3 vWorld;
+        void main() {
+          float h = normalize(vWorld + offset).y;
+          gl_FragColor = vec4(mix(bottomColor, topColor, pow(max(h, 0.0), exponent)), 1.0);
+        }
+      `
     });
+    const skyDome = new THREE.Mesh(skyGeo, skyMat);
+    scene.add(skyDome);
 
-    const body = new THREE.Mesh(new THREE.BoxGeometry(0.8, 1.2, 0.62), bodyMat);
-    body.position.y = 0.6;
-    body.castShadow = true;
-    player.add(body);
+    // ==========================================================
+    //  TERRAIN  (large open world with procedural noise)
+    // ==========================================================
+    const TERRAIN_SIZE = 4000;
+    const TERRAIN_SEG  = 260;
 
-    const head = new THREE.Mesh(
-      new THREE.SphereGeometry(0.35, 20, 20),
-      new THREE.MeshStandardMaterial({ color: 0xf8fafc, roughness: 0.5 })
-    );
-    head.position.y = 1.45;
-    head.castShadow = true;
-    player.add(head);
+    function hash2(x, y) {
+      const s = Math.sin(x * 127.1 + y * 311.7) * 43758.5453;
+      return s - Math.floor(s);
+    }
+    function noise2(x, y) {
+      const ix = Math.floor(x), iy = Math.floor(y);
+      const fx = x - ix, fy = y - iy;
+      const u = fx * fx * (3 - 2 * fx);
+      const v = fy * fy * (3 - 2 * fy);
+      const a = hash2(ix, iy);
+      const b = hash2(ix + 1, iy);
+      const c = hash2(ix, iy + 1);
+      const d = hash2(ix + 1, iy + 1);
+      return a * (1 - u) * (1 - v) + b * u * (1 - v) + c * (1 - u) * v + d * u * v;
+    }
+    function fbm(x, y, oct = 4) {
+      let v = 0, amp = 1, freq = 1, max = 0;
+      for (let i = 0; i < oct; i++) {
+        v += noise2(x * freq, y * freq) * amp;
+        max += amp;
+        amp *= 0.5;
+        freq *= 2;
+      }
+      return v / max;
+    }
+    function terrainHeight(x, z) {
+      let h = fbm(x * 0.0022, z * 0.0022, 5) * 70 - 26;
+      h += fbm(x * 0.010, z * 0.010, 3) * 5;
+      return h;
+    }
 
-    const visor = new THREE.Mesh(
-      new THREE.BoxGeometry(0.46, 0.13, 0.08),
-      new THREE.MeshStandardMaterial({ color: 0x0f172a, emissive: 0x22d3ee, emissiveIntensity: 0.5 })
-    );
-    visor.position.set(0, 1.47, -0.33);
-    player.add(visor);
+    // Terrain mesh
+    const terrainGeo = new THREE.PlaneGeometry(TERRAIN_SIZE, TERRAIN_SIZE, TERRAIN_SEG, TERRAIN_SEG);
+    terrainGeo.rotateX(-Math.PI / 2);
 
-    player.position.set(0, 0, 0);
+    const posAttr = terrainGeo.attributes.position;
+    const colors = new Float32Array(posAttr.count * 3);
+    const tmpColor = new THREE.Color();
+
+    for (let i = 0; i < posAttr.count; i++) {
+      const x = posAttr.getX(i);
+      const z = posAttr.getZ(i);
+      const y = terrainHeight(x, z);
+      posAttr.setY(i, y);
+
+      // Height-based vertex colours
+      if (y < -8) {
+        tmpColor.setHex(0x3f6b39);              // deep valley – dark grass
+      } else if (y < 8) {
+        const t = (y + 8) / 16;
+        tmpColor.setRGB(
+          0.32 + t * 0.04,
+          0.52 - t * 0.08,
+          0.28 - t * 0.02
+        );
+      } else if (y < 24) {
+        tmpColor.setHex(0x776b52);              // dirt / hillside
+      } else {
+        tmpColor.setHex(0x9b9b9b);              // rock
+      }
+      const v = (hash2(x * 0.6, z * 0.6) - 0.5) * 0.08;
+      colors[i * 3]     = Math.max(0, tmpColor.r + v);
+      colors[i * 3 + 1] = Math.max(0, tmpColor.g + v);
+      colors[i * 3 + 2] = Math.max(0, tmpColor.b + v);
+    }
+
+    terrainGeo.setAttribute('color', new THREE.BufferAttribute(colors, 3));
+    terrainGeo.computeVertexNormals();
+
+    const terrainMat = new THREE.MeshStandardMaterial({
+      vertexColors: true,
+      roughness: 0.95,
+      metalness: 0.0
+    });
+    const terrain = new THREE.Mesh(terrainGeo, terrainMat);
+    terrain.receiveShadow = true;
+    scene.add(terrain);
+
+    // ==========================================================
+    //  SCENERY  (instanced trees, rocks, orbs)
+    // ==========================================================
+    const dummy = new THREE.Object3D();
+
+    // --- Trees ---
+    const NUM_TREES = 520;
+    const trunkGeo = new THREE.CylinderGeometry(0.18, 0.26, 3.0, 6);
+    const leavesGeo = new THREE.ConeGeometry(1.6, 4.2, 8);
+    const trunkMat = new THREE.MeshStandardMaterial({ color: 0x4a3524, roughness: 0.95 });
+    const leavesMat = new THREE.MeshStandardMaterial({ color: 0x2c6b3f, roughness: 0.85 });
+
+    const trunks = new THREE.InstancedMesh(trunkGeo, trunkMat, NUM_TREES);
+    const leaves = new THREE.InstancedMesh(leavesGeo, leavesMat, NUM_TREES);
+    trunks.castShadow = true;
+    leaves.castShadow = true;
+    trunks.receiveShadow = true;
+    leaves.receiveShadow = true;
+
+    for (let i = 0; i < NUM_TREES; i++) {
+      const x = (Math.random() - 0.5) * (TERRAIN_SIZE - 120);
+      const z = (Math.random() - 0.5) * (TERRAIN_SIZE - 120);
+      // avoid spawning on the very center start point
+      if (Math.abs(x) < 8 && Math.abs(z) < 8) { dummy.position.set(0, -100, 0); }
+      const y = terrainHeight(x, z);
+      const s = 0.65 + Math.random() * 0.9;
+
+      dummy.position.set(x, y + 1.5 * s, z);
+      dummy.rotation.set(0, Math.random() * Math.PI * 2, 0);
+      dummy.scale.setScalar(s);
+      dummy.updateMatrix();
+      trunks.setMatrixAt(i, dummy.matrix);
+
+      dummy.position.set(x, y + 3.0 * s + 2.1 * s, z);
+      dummy.updateMatrix();
+      leaves.setMatrixAt(i, dummy.matrix);
+    }
+    scene.add(trunks);
+    scene.add(leaves);
+
+    // --- Rocks ---
+    const NUM_ROCKS = 320;
+    const rockGeo = new THREE.DodecahedronGeometry(1, 0);
+    const rockMat = new THREE.MeshStandardMaterial({
+      color: 0x777777, roughness: 0.95, flatShading: true
+    });
+    const rocks = new THREE.InstancedMesh(rockGeo, rockMat, NUM_ROCKS);
+    rocks.castShadow = true;
+    rocks.receiveShadow = true;
+
+    for (let i = 0; i < NUM_ROCKS; i++) {
+      const x = (Math.random() - 0.5) * (TERRAIN_SIZE - 120);
+      const z = (Math.random() - 0.5) * (TERRAIN_SIZE - 120);
+      const y = terrainHeight(x, z);
+      const s = 0.5 + Math.random() * 2.2;
+      dummy.position.set(x, y + s * 0.35, z);
+      dummy.rotation.set(Math.random() * 0.6, Math.random() * Math.PI * 2, Math.random() * 0.6);
+      dummy.scale.set(s, s * (0.6 + Math.random() * 0.5), s);
+      dummy.updateMatrix();
+      rocks.setMatrixAt(i, dummy.matrix);
+    }
+    scene.add(rocks);
+
+    // --- Collectible orbs ---
+    const orbGroup = new THREE.Group();
+    scene.add(orbGroup);
+
+    const orbGeo = new THREE.OctahedronGeometry(0.5, 0);
+    const orbMat = new THREE.MeshStandardMaterial({
+      color: 0xffd54f,
+      emissive: 0xffb300,
+      emissiveIntensity: 1.1,
+      roughness: 0.3,
+      metalness: 0.4
+    });
+    const orbs = [];
+
+    function spawnOrb(x, z) {
+      const y = terrainHeight(x, z) + 1.2;
+      const orb = new THREE.Mesh(orbGeo, orbMat);
+      orb.position.set(x, y, z);
+      orb.castShadow = true;
+      orb.userData.baseY = y;
+      orb.userData.phase = Math.random() * Math.PI * 2;
+      orbGroup.add(orb);
+      orbs.push(orb);
+    }
+
+    for (let i = 0; i < 280; i++) {
+      let x, z;
+      do {
+        x = (Math.random() - 0.5) * 1800;
+        z = (Math.random() - 0.5) * 1800;
+      } while (Math.abs(x) < 4 && Math.abs(z) < 4);
+      spawnOrb(x, z);
+    }
+
+    // ==========================================================
+    //  CHARACTER RIG
+    // ==========================================================
+    const skinMat  = new THREE.MeshStandardMaterial({ color: 0xf0c4a0, roughness: 0.85 });
+    const shirtMat = new THREE.MeshStandardMaterial({ color: 0x1e88e5, roughness: 0.7 });
+    const pantsMat = new THREE.MeshStandardMaterial({ color: 0x2b3a4a, roughness: 0.85 });
+    const shoeMat  = new THREE.MeshStandardMaterial({ color: 0x1a1a1a, roughness: 0.6 });
+    const hairMat  = new THREE.MeshStandardMaterial({ color: 0x2e1d12, roughness: 0.9 });
+    const eyeMat   = new THREE.MeshStandardMaterial({ color: 0x111111, roughness: 0.4 });
+
+    const player = new THREE.Group();
     scene.add(player);
 
-    // ---------- Spielzustand ----------
-    const lanes = [-2, 0, 2];
-    const maxSpeed = 38;
-    const minSpeed = 8;
+    // Root group that receives vertical bob
+    const hips = new THREE.Group();
+    hips.position.y = 0.9;
+    player.add(hips);
 
-    let laneIndex = 1;
-    let jumpY = 0;
-    let velocityY = 0;
-    let onGround = true;
+    // Pelvis
+    const pelvis = new THREE.Mesh(new THREE.BoxGeometry(0.32, 0.20, 0.22), pantsMat);
+    pelvis.position.y = -0.04;
+    pelvis.castShadow = true;
+    hips.add(pelvis);
 
-    let speed = minSpeed;
-    let steps = 0;
-    let score = 0;
-    let combo = 1;
-    let lives = 3;
-    let gameOver = false;
+    // Chest group (bobs, leans, counter-rotates)
+    const chest = new THREE.Group();
+    chest.position.y = 0.10;
+    hips.add(chest);
 
-    let stepTimer = 0;
-    let obstacleTimer = 0;
+    const torso = new THREE.Mesh(new THREE.CapsuleGeometry(0.17, 0.30, 6, 14), shirtMat);
+    torso.position.y = 0.20;
+    torso.castShadow = true;
+    chest.add(torso);
 
-    const objects = [];
+    const neck = new THREE.Mesh(new THREE.CylinderGeometry(0.05, 0.06, 0.09, 8), skinMat);
+    neck.position.y = 0.42;
+    chest.add(neck);
 
-    // ---------- UI ----------
-    const ui = {
-      score: document.getElementById('score'),
-      steps: document.getElementById('steps'),
-      combo: document.getElementById('combo'),
-      level: document.getElementById('level'),
-      lives: document.getElementById('lives'),
-      speed: document.getElementById('speed'),
-      speedFill: document.getElementById('speedFill'),
-      gameover: document.getElementById('gameover'),
-      finalScore: document.getElementById('finalScore')
-    };
+    // Head
+    const headGroup = new THREE.Group();
+    headGroup.position.y = 0.56;
+    chest.add(headGroup);
 
-    function updateUI() {
-      ui.score.textContent = Math.floor(score);
-      ui.steps.textContent = steps;
-      ui.combo.textContent = 'x' + combo;
-      ui.level.textContent = Math.floor(steps / 10) + 1;
-      ui.lives.textContent = '❤️'.repeat(Math.max(0, lives)) + '🖤'.repeat(Math.max(0, 3 - lives));
-      ui.speed.textContent = speed.toFixed(1);
-      ui.speedFill.style.width = ((speed - minSpeed) / (maxSpeed - minSpeed) * 100) + '%';
+    const skull = new THREE.Mesh(new THREE.SphereGeometry(0.145, 22, 22), skinMat);
+    skull.castShadow = true;
+    headGroup.add(skull);
+
+    const hair = new THREE.Mesh(
+      new THREE.SphereGeometry(0.152, 20, 20, 0, Math.PI * 2, 0, Math.PI * 0.62),
+      hairMat
+    );
+    hair.position.y = 0.01;
+    headGroup.add(hair);
+
+    // Eyes (facing -Z = forward)
+    for (const s of [-1, 1]) {
+      const eye = new THREE.Mesh(new THREE.SphereGeometry(0.021, 8, 8), eyeMat);
+      eye.position.set(s * 0.05, 0.015, -0.135);
+      headGroup.add(eye);
     }
 
-    // ---------- Spawning ----------
-    function spawnObstacle() {
-      const lane = Math.floor(Math.random() * 3);
-      const low = Math.random() < 0.38;
-      const height = low ? 0.8 : 2.0;
-
-      const mesh = new THREE.Mesh(
-        new THREE.BoxGeometry(low ? 1.5 : 1.1, height, 1.1),
-        new THREE.MeshStandardMaterial({
-          color: low ? 0xf59e0b : 0xef4444,
-          emissive: low ? 0x7c2d12 : 0x7f1d1d,
-          emissiveIntensity: 0.7,
-          roughness: 0.4
-        })
-      );
-
-      mesh.position.set(lanes[lane], height / 2, -78);
-      mesh.castShadow = true;
-      mesh.receiveShadow = true;
-      mesh.userData = { type: 'obstacle', lane, low, hit: false };
-
-      scene.add(mesh);
-      objects.push(mesh);
+    // ----- Helper: capsule limb -----
+    function limbGeo(radius, totalLength) {
+      const cyl = Math.max(0.001, totalLength - 2 * radius);
+      return new THREE.CapsuleGeometry(radius, cyl, 6, 10);
     }
 
-    function spawnStep() {
-      const lane = Math.floor(Math.random() * 3);
+    // ----- Arms -----
+    function createArm(side) {
+      const shoulder = new THREE.Group();
+      shoulder.position.set(side * 0.21, 0.30, 0);
+      chest.add(shoulder);
 
-      const mesh = new THREE.Mesh(
-        new THREE.TorusGeometry(0.35, 0.13, 10, 22),
-        new THREE.MeshStandardMaterial({
-          color: 0xfacc15,
-          emissive: 0xf59e0b,
-          emissiveIntensity: 1.2,
-          roughness: 0.3,
-          metalness: 0.4
-        })
-      );
+      const upperArm = new THREE.Mesh(limbGeo(0.057, 0.28), shirtMat);
+      upperArm.position.y = -0.14;
+      upperArm.castShadow = true;
+      shoulder.add(upperArm);
 
-      mesh.rotation.x = Math.PI / 2;
-      mesh.position.set(lanes[lane], 1.0, -78);
-      mesh.castShadow = true;
-      mesh.userData = { type: 'step', lane, collected: false };
+      const elbow = new THREE.Group();
+      elbow.position.y = -0.28;
+      shoulder.add(elbow);
 
-      scene.add(mesh);
-      objects.push(mesh);
+      const forearm = new THREE.Mesh(limbGeo(0.05, 0.26), skinMat);
+      forearm.position.y = -0.13;
+      forearm.castShadow = true;
+      elbow.add(forearm);
+
+      const hand = new THREE.Mesh(new THREE.SphereGeometry(0.055, 8, 8), skinMat);
+      hand.position.y = -0.28;
+      hand.castShadow = true;
+      elbow.add(hand);
+
+      return { shoulder, elbow, hand };
     }
+    const leftArm  = createArm(-1);
+    const rightArm = createArm( 1);
 
-    // ---------- Steuerung ----------
-    function moveLane(dir) {
-      if (gameOver) return;
-      laneIndex = THREE.MathUtils.clamp(laneIndex + dir, 0, 2);
+    // ----- Legs -----
+    function createLeg(side) {
+      const hip = new THREE.Group();
+      hip.position.set(side * 0.095, 0, 0);
+      hips.add(hip);
+
+      const upper = new THREE.Mesh(limbGeo(0.08, 0.42), pantsMat);
+      upper.position.y = -0.21;
+      upper.castShadow = true;
+      hip.add(upper);
+
+      const knee = new THREE.Group();
+      knee.position.y = -0.42;
+      hip.add(knee);
+
+      const lower = new THREE.Mesh(limbGeo(0.068, 0.40), pantsMat);
+      lower.position.y = -0.20;
+      lower.castShadow = true;
+      knee.add(lower);
+
+      const foot = new THREE.Mesh(new THREE.BoxGeometry(0.13, 0.08, 0.26), shoeMat);
+      foot.position.set(0, -0.42, -0.05);
+      foot.castShadow = true;
+      knee.add(foot);
+
+      return { hip, knee, foot };
     }
+    const leftLeg  = createLeg(-1);
+    const rightLeg = createLeg( 1);
 
-    function jump() {
-      if (gameOver || !onGround) return;
-      velocityY = 7.6;
-      onGround = false;
-    }
+    // ==========================================================
+    //  STATE
+    // ==========================================================
+    const playerPos = new THREE.Vector3(0, 0, 0);
+    playerPos.y = terrainHeight(0, 0);
 
-    window.addEventListener('keydown', (e) => {
-      if (e.code === 'ArrowLeft' || e.code === 'KeyA') moveLane(-1);
-      if (e.code === 'ArrowRight' || e.code === 'KeyD') moveLane(1);
-      if (e.code === 'Space' || e.code === 'ArrowUp' || e.code === 'KeyW') {
-        e.preventDefault();
-        jump();
-      }
-      if (e.code === 'KeyR' && gameOver) restart();
-    });
-
-    let touchStart = null;
-
-    renderer.domElement.addEventListener('pointerdown', (e) => {
-      touchStart = { x: e.clientX, y: e.clientY };
-    });
-
-    renderer.domElement.addEventListener('pointerup', (e) => {
-      if (!touchStart) return;
-      const dx = e.clientX - touchStart.x;
-      const dy = e.clientY - touchStart.y;
-      touchStart = null;
-
-      if (Math.abs(dx) > Math.abs(dy)) {
-        if (dx > 30) moveLane(1);
-        else if (dx < -30) moveLane(-1);
-      } else if (dy < -30) {
-        jump();
-      }
-    });
-
-    // ---------- Neustart ----------
-    function restart() {
-      for (const obj of objects) scene.remove(obj);
-      objects.length = 0;
-
-      laneIndex = 1;
-      jumpY = 0;
-      velocityY = 0;
-      onGround = true;
-
-      speed = minSpeed;
-      steps = 0;
-      score = 0;
-      combo = 1;
-      lives = 3;
-      gameOver = false;
-
-      stepTimer = 0;
-      obstacleTimer = 0.8;
-
-      player.position.set(0, 0, 0);
-      ui.gameover.classList.add('hidden');
-      updateUI();
-    }
-
-    document.getElementById('restartBtn').addEventListener('click', restart);
-
-    function endGame() {
-      gameOver = true;
-      ui.finalScore.textContent = Math.floor(score);
-      ui.gameover.classList.remove('hidden');
-    }
-
-    // ---------- Update ----------
-    function update(dt) {
-      // Spur weich wechseln
-      const targetX = lanes[laneIndex];
-      player.position.x += (targetX - player.position.x) * Math.min(1, 13 * dt);
-
-      // Sprungphysik
-      if (!onGround) {
-        velocityY -= 20 * dt;
-        jumpY += velocityY * dt;
-        if (jumpY <= 0) {
-          jumpY = 0;
-          velocityY = 0;
-          onGround = true;
-        }
-      }
-      player.position.y = jumpY;
-
-      // Welt bewegt sich auf Spieler zu
-      const dz = speed * dt;
-
-      for (let i = objects.length - 1; i >= 0; i--) {
-        const obj = objects[i];
-        obj.position.z += dz;
-
-        // Schritte einsammeln
-        if (obj.userData.type === 'step') {
-          if (
-            obj.userData.lane === laneIndex &&
-            Math.abs(obj.position.z) < 1.25 &&
-            !obj.userData.collected
-          ) {
-            obj.userData.collected = true;
-            steps += 1;
-            score += 10 * combo;
-            combo = Math.min(combo + 1, 25);
-            speed = Math.min(maxSpeed, speed + 0.15);
-
-            scene.remove(obj);
-            objects.splice(i, 1);
-            continue;
-          }
-        }
-
-        // Hindernis-Kollision
-        if (obj.userData.type === 'obstacle') {
-          if (
-            obj.userData.lane === laneIndex &&
-            Math.abs(obj.position.z) < 1.25 &&
-            !obj.userData.hit
-          ) {
-            const avoidedByJump = obj.userData.low && jumpY > 0.8;
-
-            if (!avoidedByJump) {
-              obj.userData.hit = true;
-              lives -= 1;
-              combo = 1;
-              speed = Math.max(minSpeed, speed * 0.65);
-
-              scene.remove(obj);
-              objects.splice(i, 1);
-
-              if (lives <= 0) {
-                endGame();
-                return;
-              }
-              continue;
-            }
-          }
-        }
-
-        // Weit hinter dem Spieler entfernen
-        if (obj.position.z > 13) {
-          scene.remove(obj);
-          objects.splice(i, 1);
-        }
-      }
-
-      // Passiver Score durch Geschwindigkeit
-      score += speed * dt * 0.6;
-
-      // Spawn-Timer
-      stepTimer -= dt;
-      if (stepTimer <= 0) {
-        spawnStep();
-        stepTimer = Math.max(0.32, 0.9 - speed * 0.012);
-      }
-
-      obstacleTimer -= dt;
-      if (obstacleTimer <= 0) {
-        spawnObstacle();
-        obstacleTimer = Math.max(0.5, 1.65 - speed * 0.032);
-      }
-
-      updateUI();
-    }
-
-    // ---------- Loop ----------
-    let lastTime = performance.now();
-
-    function animate(now) {
-      requestAnimationFrame(animate);
-
-      const dt = Math.min((now - lastTime) / 1000, 0.05);
-      lastTime = now;
-
-      if (!gameOver) update(dt);
-
-      renderer.render(scene, camera);
-    }
-
-    updateUI();
-    requestAnimationFrame(animate);
-
-    // ---------- Resize ----------
-    window.addEventListener('resize', () => {
-      camera.aspect = innerWidth / innerHeight;
-      camera.updateProjectionMatrix();
-      renderer.setSize(innerWidth, innerHeight);
-    });
-  </script>
-</body>
-</html>
+    let playerAngle =
