@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no" />
-  <title>Step Rush 3D - Ultra Multi-Biome Open World</title>
+  <title>Step Rush 3D - Multi-World &amp; Multi-Biome Open World</title>
   <style>
     * { box-sizing: border-box; }
     html, body {
@@ -24,28 +24,28 @@
       inset: 0;
       display: grid;
       place-items: center;
-      background: radial-gradient(circle at center, rgba(15, 23, 42, 0.85), rgba(2, 6, 17, 0.96));
+      background: radial-gradient(circle at center, rgba(15, 23, 42, 0.86), rgba(2, 6, 17, 0.96));
       backdrop-filter: blur(12px);
-      z-index: 60;
+      z-index: 80;
       padding: 20px;
     }
     #startMenu.hidden { display: none; }
 
     .menu-card {
-      width: min(94vw, 620px);
-      background: rgba(15, 23, 42, 0.94);
+      width: min(94vw, 640px);
+      background: rgba(15, 23, 42, 0.95);
       border: 1px solid rgba(56, 189, 248, 0.45);
       border-radius: 28px;
       padding: 32px 28px;
       text-align: center;
-      box-shadow: 0 30px 90px rgba(0, 0, 0, 0.85), 0 0 50px rgba(34, 211, 238, 0.16);
+      box-shadow: 0 30px 90px rgba(0, 0, 0, 0.85), 0 0 55px rgba(34, 211, 238, 0.16);
     }
 
     .menu-title {
       font-size: clamp(28px, 5vw, 44px);
       font-weight: 900;
       margin: 0 0 10px;
-      background: linear-gradient(90deg, #4ade80, #22d3ee, #fbbf24, #f97316, #f472b6);
+      background: linear-gradient(90deg, #4ade80, #22d3ee, #fbbf24, #f97316, #e879f9);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
       letter-spacing: 0.03em;
@@ -69,7 +69,7 @@
     }
 
     .device-btn {
-      background: rgba(30, 41, 59, 0.85);
+      background: rgba(30, 41, 59, 0.88);
       border: 2px solid rgba(96, 165, 250, 0.35);
       border-radius: 20px;
       padding: 22px 16px;
@@ -85,7 +85,7 @@
     .device-btn:hover, .device-btn:active {
       transform: translateY(-3px);
       border-color: #22d3ee;
-      background: rgba(30, 58, 138, 0.45);
+      background: rgba(30, 58, 138, 0.5);
       box-shadow: 0 12px 30px rgba(34, 211, 238, 0.25);
     }
 
@@ -105,15 +105,15 @@
       align-items: flex-start;
       pointer-events: none;
       text-shadow: 0 2px 8px rgba(0,0,0,.75);
-      z-index: 15;
+      z-index: 30;
     }
 
     .card {
-      background: rgba(15, 23, 42, .8);
-      border: 1px solid rgba(96, 165, 250, .35);
+      background: rgba(15, 23, 42, .82);
+      border: 1px solid rgba(96, 165, 250, .38);
       border-radius: 14px;
       padding: 8px 14px;
-      min-width: 86px;
+      min-width: 88px;
       backdrop-filter: blur(8px);
       transition: border-color 0.25s ease, transform 0.2s ease;
     }
@@ -139,11 +139,13 @@
       display: flex;
       gap: 8px;
       flex-wrap: wrap;
+      position: relative;
+      z-index: 35;
     }
 
     .hud-btn {
-      background: rgba(15, 23, 42, 0.88);
-      border: 1px solid rgba(148, 163, 184, 0.45);
+      background: rgba(15, 23, 42, 0.92);
+      border: 1px solid rgba(148, 163, 184, 0.5);
       color: #f8fafc;
       border-radius: 12px;
       padding: 10px 14px;
@@ -151,24 +153,41 @@
       font-weight: 800;
       cursor: pointer;
       backdrop-filter: blur(8px);
-      transition: all 0.18s ease;
+      transition: all 0.16s ease;
     }
 
-    .hud-btn:hover {
+    .hud-btn:hover:not(:disabled) {
       transform: translateY(-1px);
       border-color: #22d3ee;
     }
 
+    .hud-btn:disabled {
+      opacity: 0.42;
+      cursor: not-allowed;
+    }
+
     #openShopBtn {
-      border-color: rgba(250, 204, 21, 0.65);
+      border-color: rgba(250, 204, 21, 0.72);
       color: #fde047;
-      background: rgba(120, 53, 15, 0.45);
+      background: rgba(120, 53, 15, 0.55);
     }
 
     #openAdminBtn {
-      border-color: rgba(244, 114, 182, 0.65);
+      border-color: rgba(244, 114, 182, 0.72);
       color: #f9a8d4;
-      background: rgba(131, 24, 67, 0.45);
+      background: rgba(131, 24, 67, 0.55);
+    }
+
+    #newWorldBtn {
+      border-color: rgba(74, 222, 128, 0.75);
+      color: #86efac;
+      background: rgba(20, 83, 45, 0.65);
+    }
+
+    #returnOldWorldBtn {
+      border-color: rgba(56, 189, 248, 0.75);
+      color: #7dd3fc;
+      background: rgba(12, 74, 110, 0.65);
     }
 
     #statusRow {
@@ -181,7 +200,7 @@
       flex-wrap: wrap;
       align-items: center;
       pointer-events: none;
-      z-index: 15;
+      z-index: 25;
     }
 
     .badge {
@@ -193,6 +212,12 @@
       text-transform: uppercase;
       backdrop-filter: blur(8px);
       transition: all 0.25s ease;
+    }
+
+    #worldBadge {
+      background: rgba(59, 130, 246, 0.25);
+      border: 1px solid rgba(96, 165, 250, 0.65);
+      color: #bfdbfe;
     }
 
     #biomeBadge {
@@ -227,17 +252,24 @@
     }
 
     #auraBadge.fire {
-      background: rgba(239, 68, 68, 0.32);
+      background: rgba(239, 68, 68, 0.34);
       border-color: #fb923c;
       color: #fed7aa;
-      box-shadow: 0 0 18px rgba(249, 115, 22, 0.5);
+      box-shadow: 0 0 18px rgba(249, 115, 22, 0.55);
+    }
+
+    #auraBadge.frost {
+      background: rgba(6, 182, 212, 0.34);
+      border-color: #67e8f9;
+      color: #cffafe;
+      box-shadow: 0 0 18px rgba(34, 211, 238, 0.55);
     }
 
     #auraBadge.lightning {
-      background: rgba(168, 85, 247, 0.36);
+      background: rgba(168, 85, 247, 0.38);
       border-color: #e879f9;
       color: #f5d0fe;
-      box-shadow: 0 0 22px rgba(192, 132, 252, 0.65);
+      box-shadow: 0 0 24px rgba(192, 132, 252, 0.7);
     }
 
     #speedBar {
@@ -246,13 +278,13 @@
       right: 14px;
       top: 116px;
       height: 9px;
-      max-width: 380px;
+      max-width: 400px;
       border-radius: 999px;
       background: rgba(15, 23, 42, .85);
       border: 1px solid rgba(96, 165, 250, .35);
       overflow: hidden;
       pointer-events: none;
-      z-index: 15;
+      z-index: 25;
     }
 
     #speedFill {
@@ -275,32 +307,87 @@
       font-size: 13px;
       color: #e2e8f0;
       pointer-events: none;
-      z-index: 15;
+      z-index: 25;
       text-align: center;
       white-space: nowrap;
       backdrop-filter: blur(8px);
     }
     #pcHint.hidden { display: none; }
 
+    /* ---------- Cutscene / Animations-Overlay (Planetenflug & Weltwechsel) ---------- */
+    #cutsceneOverlay {
+      position: fixed;
+      inset: 0;
+      background: radial-gradient(circle at center, rgba(15, 23, 42, 0.72), rgba(2, 6, 17, 0.94));
+      backdrop-filter: blur(6px);
+      display: grid;
+      place-items: center;
+      z-index: 95;
+      padding: 24px;
+      text-align: center;
+    }
+    #cutsceneOverlay.hidden { display: none; }
+
+    .cutscene-card {
+      width: min(92vw, 560px);
+      background: rgba(15, 23, 42, 0.9);
+      border: 2px solid rgba(56, 189, 248, 0.65);
+      border-radius: 26px;
+      padding: 28px 24px;
+      box-shadow: 0 0 70px rgba(56, 189, 248, 0.35);
+    }
+
+    .cutscene-title {
+      font-size: clamp(24px, 4.5vw, 36px);
+      font-weight: 900;
+      margin: 0 0 10px;
+      background: linear-gradient(90deg, #38bdf8, #e879f9, #facc15);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .cutscene-sub {
+      font-size: 15px;
+      color: #cbd5e1;
+      margin: 0 0 18px;
+      line-height: 1.5;
+    }
+
+    .cutscene-progress {
+      width: 100%;
+      height: 12px;
+      border-radius: 999px;
+      background: rgba(30, 41, 59, 0.9);
+      overflow: hidden;
+      border: 1px solid rgba(148, 163, 184, 0.4);
+    }
+
+    .cutscene-fill {
+      height: 100%;
+      width: 0%;
+      background: linear-gradient(90deg, #22d3ee, #a855f7, #f97316);
+      transition: width 0.08s linear;
+    }
+
     /* ---------- Modals: Shop & Admin Panel ---------- */
     .modal-backdrop {
       position: fixed;
       inset: 0;
-      background: rgba(2, 6, 17, 0.78);
+      background: rgba(2, 6, 17, 0.82);
       backdrop-filter: blur(8px);
       display: grid;
       place-items: center;
-      z-index: 55;
+      z-index: 70;
       padding: 18px;
     }
     .modal-backdrop.hidden { display: none; }
 
     .modal-box {
-      width: min(95vw, 560px);
+      width: min(95vw, 640px);
       max-height: 88vh;
       overflow-y: auto;
-      background: rgba(15, 23, 42, 0.96);
-      border: 1px solid rgba(56, 189, 248, 0.45);
+      background: rgba(15, 23, 42, 0.97);
+      border: 1px solid rgba(56, 189, 248, 0.5);
       border-radius: 24px;
       padding: 24px;
       box-shadow: 0 24px 80px rgba(0, 0, 0, 0.85);
@@ -310,7 +397,7 @@
       display: flex;
       justify-content: space-between;
       align-items: center;
-      margin-bottom: 16px;
+      margin-bottom: 14px;
     }
 
     .modal-title {
@@ -320,13 +407,22 @@
     }
 
     .close-btn {
-      background: rgba(30, 41, 59, 0.9);
-      border: 1px solid rgba(148, 163, 184, 0.4);
+      background: rgba(30, 41, 59, 0.95);
+      border: 1px solid rgba(148, 163, 184, 0.45);
       color: white;
       border-radius: 10px;
-      padding: 6px 12px;
+      padding: 7px 13px;
       font-weight: 800;
       cursor: pointer;
+    }
+
+    .section-heading {
+      font-size: 13px;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: #93c5fd;
+      margin: 16px 0 10px;
+      font-weight: 800;
     }
 
     .shop-grid {
@@ -335,18 +431,18 @@
       gap: 12px;
     }
 
-    @media (max-width: 520px) {
+    @media (max-width: 540px) {
       .shop-grid { grid-template-columns: 1fr; }
     }
 
     .upgrade-card {
-      background: rgba(30, 41, 59, 0.78);
-      border: 1px solid rgba(96, 165, 250, 0.3);
+      background: rgba(30, 41, 59, 0.82);
+      border: 1px solid rgba(96, 165, 250, 0.32);
       border-radius: 16px;
       padding: 14px;
       display: flex;
       flex-direction: column;
-      gap: 8px;
+      gap: 7px;
     }
 
     .upgrade-name {
@@ -379,6 +475,10 @@
       cursor: pointer;
     }
 
+    .buy-btn.skin-equipped {
+      background: linear-gradient(90deg, #16a34a, #4ade80);
+    }
+
     .buy-btn:disabled {
       opacity: 0.42;
       cursor: not-allowed;
@@ -387,13 +487,13 @@
     .admin-row {
       display: flex;
       gap: 10px;
-      margin-bottom: 14px;
+      margin-bottom: 12px;
     }
 
     .admin-input {
       flex: 1;
       background: rgba(30, 41, 59, 0.95);
-      border: 1px solid rgba(244, 114, 182, 0.5);
+      border: 1px solid rgba(244, 114, 182, 0.55);
       border-radius: 12px;
       padding: 10px 14px;
       color: white;
@@ -409,8 +509,12 @@
       margin-top: 12px;
     }
 
+    @media (max-width: 520px) {
+      .admin-action-grid { grid-template-columns: 1fr; }
+    }
+
     .admin-btn {
-      background: rgba(88, 28, 135, 0.65);
+      background: rgba(88, 28, 135, 0.72);
       border: 1px solid rgba(232, 121, 249, 0.55);
       color: #fae8ff;
       border-radius: 12px;
@@ -421,7 +525,7 @@
     }
 
     .admin-btn:hover {
-      background: rgba(126, 34, 206, 0.85);
+      background: rgba(126, 34, 206, 0.9);
     }
 
     .admin-status {
@@ -544,7 +648,7 @@
     <div class="menu-card">
       <h1 class="menu-title">STEP RUSH 3D</h1>
       <p class="menu-subtitle">
-        Riesige Open World (3600×3600) mit Gras-, Sand-, Schnee-, Küsten- &amp; Vulkan-Biom, Shop-Upgrades, Speed-Effekten (Feuer bei 100, Blitz bei 500) und Admin-Panel!
+        Riesige Open World mit Multi-Biomen, Shop (Bezahlung mit Speed + Skins), Speed-Effekten (Feuer 100+, Frost 250+, Blitz 500+), Planetenflug ab 800 Speed und Neuer Welt (bis 1500 Speed)!
       </p>
       <div class="device-grid">
         <button class="device-btn" id="btnPC">
@@ -566,63 +670,82 @@
     <div class="card"><span class="label">Schritte</span><span class="value" id="steps">0</span></div>
     <div class="card"><span class="label">Orbs</span><span class="value" id="orbs">0</span></div>
     <div class="card" id="speedCard"><span class="label">Speed</span><span class="value" id="speed">0.0</span></div>
-    <div class="card"><span class="label">Max-Speed</span><span class="value" id="capSpeed">14.0</span></div>
+    <div class="card"><span class="label">Max-Speed</span><span class="value" id="capSpeed">120</span></div>
     <div class="card"><span class="label">Koordinaten</span><span class="value" id="coords" style="font-size:15px;">0, 0</span></div>
     <div class="hud-actions">
       <button class="hud-btn" id="openShopBtn">🛒 Shop</button>
       <button class="hud-btn" id="openAdminBtn">🛡️ Admin</button>
+      <button class="hud-btn" id="newWorldBtn" disabled>🌌 Neue Welt</button>
+      <button class="hud-btn" id="returnOldWorldBtn" style="display:none;">🌍 Alte Welt</button>
       <button class="hud-btn" id="menuSwitchBtn">⚙️ Steuerung</button>
     </div>
   </div>
 
   <div id="statusRow">
+    <div class="badge" id="worldBadge">🌍 Welt 1: Terra Prime (Max 800)</div>
     <div class="badge" id="biomeBadge">🌿 Gras-Biom</div>
     <div class="badge" id="sprintBadge">⚡ Sprint bereit (5.0s)</div>
     <div class="badge" id="auraBadge">✨ Effekt: Basis</div>
   </div>
 
   <div id="speedBar"><div id="speedFill"></div></div>
-  <div id="pcHint" class="hidden">Klick ins Bild für Maus-Kamera · WASD = Bewegen · Shift gedrückt = 5s Sprint (10s Cooldown) · 2x Leertaste = Air-Push · ESC = Maus frei</div>
+  <div id="pcHint" class="hidden">WASD = Bewegen · Shift gedrückt = 5s Sprint (10s CD) · 2x Leertaste = Air-Push · ESC / Button = Maus frei für Shop &amp; Admin</div>
 
-  <!-- Shop Modal -->
+  <!-- Animations-Szene für Planetenflug & Weltwechsel -->
+  <div id="cutsceneOverlay" class="hidden">
+    <div class="cutscene-card">
+      <h2 class="cutscene-title" id="cutsceneTitle">🚀 FLUG ZU NEUEM PLANETEN...</h2>
+      <p class="cutscene-sub" id="cutsceneSub">Du hast Speed 800 erreicht! Dein Charakter startet mit einer Raketen- und Warp-Animation zu einem neuen Planeten...</p>
+      <div class="cutscene-progress">
+        <div class="cutscene-fill" id="cutsceneFill"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Shop Modal (Bezahlung mit Geschwindigkeit + Upgrades + Skins) -->
   <div class="modal-backdrop hidden" id="shopModal">
     <div class="modal-box">
       <div class="modal-header">
-        <h2 class="modal-title">🛒 Speed &amp; Schritt Shop</h2>
+        <h2 class="modal-title">🛒 Speed-Shop &amp; Skins</h2>
         <button class="close-btn" id="closeShopBtn">✕</button>
       </div>
-      <div style="margin-bottom:14px; font-size:14px; color:#fde047; font-weight:800;">
-        Verfügbare Schritte: <span id="shopStepsDisplay">0</span>
+      <div style="margin-bottom:10px; font-size:14px; color:#38bdf8; font-weight:800;">
+        Aktuelle Geschwindigkeit (Zahlungsmittel): <span id="shopSpeedDisplay">0.0</span> Speed · Max-Speed: <span id="shopMaxSpeedDisplay">120</span>
       </div>
+
+      <div class="section-heading">⚡ Tempo &amp; Fähigkeit-Upgrades (kostet Speed)</div>
       <div class="shop-grid">
         <div class="upgrade-card">
           <div class="upgrade-name">🚀 Max-Geschwindigkeit</div>
-          <div class="upgrade-desc">Erhöht dein maximales Speed-Limit deutlich (+12 Max-Speed pro Stufe).</div>
+          <div class="upgrade-desc">Erhöht dein aktuelles Max-Speed-Limit (+85 Speed pro Stufe).</div>
           <div class="upgrade-lvl">Stufe: <span id="lvlMaxSpeed">0</span></div>
-          <button class="buy-btn" id="buyMaxSpeedBtn">Kaufen (15 Schritte)</button>
+          <button class="buy-btn" id="buyMaxSpeedBtn">Kaufen (20 Speed)</button>
         </div>
 
         <div class="upgrade-card">
           <div class="upgrade-name">⚡ Beschleunigung</div>
-          <div class="upgrade-desc">Lässt dich noch schneller auf dein Spitzentempo beschleunigen.</div>
+          <div class="upgrade-desc">Du erreichst dein Tempo deutlich schneller beim Laufen.</div>
           <div class="upgrade-lvl">Stufe: <span id="lvlAccel">0</span></div>
-          <button class="buy-btn" id="buyAccelBtn">Kaufen (15 Schritte)</button>
+          <button class="buy-btn" id="buyAccelBtn">Kaufen (15 Speed)</button>
         </div>
 
         <div class="upgrade-card">
           <div class="upgrade-name">👟 Schritt-Power</div>
-          <div class="upgrade-desc">Jeder Schritt gibt dir mehr Tempo-Bonus und mehr Schritt-Punkte.</div>
+          <div class="upgrade-desc">Jeder Schritt bringt dir mehr Speed-Schub &amp; Schritt-Punkte.</div>
           <div class="upgrade-lvl">Stufe: <span id="lvlStepPower">0</span></div>
-          <button class="buy-btn" id="buyStepPowerBtn">Kaufen (20 Schritte)</button>
+          <button class="buy-btn" id="buyStepPowerBtn">Kaufen (25 Speed)</button>
         </div>
 
         <div class="upgrade-card">
           <div class="upgrade-name">🔥 Sprint-Superkraft</div>
-          <div class="upgrade-desc">Gibt deinem 5s-Sprint noch mehr Extra-Tempo und stärkere Effekte.</div>
+          <div class="upgrade-desc">Verstärkt den Speed-Schub während deiner 5 Sekunden Sprint.</div>
           <div class="upgrade-lvl">Stufe: <span id="lvlSprintPower">0</span></div>
-          <button class="buy-btn" id="buySprintPowerBtn">Kaufen (25 Schritte)</button>
+          <button class="buy-btn" id="buySprintPowerBtn">Kaufen (30 Speed)</button>
         </div>
       </div>
+
+      <div class="section-heading">🎭 Charakter-Skins (kostet Speed)</div>
+      <div class="shop-grid" id="skinShopGrid"></div>
     </div>
   </div>
 
@@ -634,7 +757,7 @@
         <button class="close-btn" id="closeAdminBtn">✕</button>
       </div>
       <div style="font-size:13px; color:#cbd5e1; margin-bottom:10px; line-height:1.45;">
-        Gib den Admin-Code ein, um Admin-Rechte freizuschalten und unendlich Upgrades / Schritte zu aktivieren:
+        Gib den Admin-Code ein, um Admin-Rechte freizuschalten (Speed-Upgrades werden weiterhin im Shop gekauft, damit das Tempo kontrolliert bleibt):
       </div>
       <div class="admin-row">
         <input class="admin-input" id="adminCodeInput" type="text" placeholder="Admin-Code eingeben..." />
@@ -643,10 +766,10 @@
       <div class="admin-status" id="adminStatusMsg">Noch nicht freigeschaltet.</div>
 
       <div class="admin-action-grid" id="adminControls" style="opacity:0.45; pointer-events:none;">
-        <button class="admin-btn" id="adminInfUpgradesBtn">♾️ Unendlich Upgrades (+50 Stufen alle)</button>
-        <button class="admin-btn" id="adminGiveStepsBtn">👟 +10.000 Schritte geben</button>
-        <button class="admin-btn" id="adminBoost100Btn">🔥 Speed auf 100+ (Feuer-Effekt)</button>
-        <button class="admin-btn" id="adminBoost500Btn">⚡ Speed auf 500+ (Blitz-Effekt)</button>
+        <button class="admin-btn" id="adminAddSpeedBtn">⚡ +120 Speed geben</button>
+        <button class="admin-btn" id="adminUnlockSkinsBtn">🎭 Alle Skins freischalten</button>
+        <button class="admin-btn" id="adminTriggerPlanetBtn">🚀 Planetenflug-Szene starten</button>
+        <button class="admin-btn" id="adminEnableNewWorldBtn">🌌 Neue Welt (1500) freischalten</button>
       </div>
     </div>
   </div>
@@ -694,7 +817,7 @@
 
       if (type === 'orb') {
         osc.type = 'sine';
-        const freq = 440 + Math.min(pitchFactor, 60) * 12;
+        const freq = 440 + Math.min(pitchFactor, 60) * 10;
         osc.frequency.setValueAtTime(freq, now);
         osc.frequency.exponentialRampToValueAtTime(freq * 1.48, now + 0.11);
         gain.gain.setValueAtTime(0.11, now);
@@ -741,16 +864,23 @@
         gain.gain.exponentialRampToValueAtTime(0.001, now + 0.17);
         osc.start(now);
         osc.stop(now + 0.17);
+      } else if (type === 'warp') {
+        osc.type = 'sawtooth';
+        osc.frequency.setValueAtTime(140, now);
+        osc.frequency.exponentialRampToValueAtTime(1120, now + 0.9);
+        gain.gain.setValueAtTime(0.15, now);
+        gain.gain.exponentialRampToValueAtTime(0.001, now + 0.95);
+        osc.start(now);
+        osc.stop(now + 0.95);
       }
     }
 
     // ---------- Szene, Kamera & Renderer ----------
     const scene = new THREE.Scene();
-    const skyColor = new THREE.Color(0x60a5fa);
-    scene.background = skyColor.clone();
-    scene.fog = new THREE.FogExp2(0x7dd3fc, 0.00085);
+    scene.background = new THREE.Color(0x60a5fa);
+    scene.fog = new THREE.FogExp2(0x7dd3fc, 0.00072);
 
-    const camera = new THREE.PerspectiveCamera(70, innerWidth / innerHeight, 0.1, 2400);
+    const camera = new THREE.PerspectiveCamera(70, innerWidth / innerHeight, 0.1, 3200);
 
     const renderer = new THREE.WebGLRenderer({ antialias: true });
     renderer.setSize(innerWidth, innerHeight);
@@ -762,7 +892,7 @@
     document.body.appendChild(renderer.domElement);
 
     // ---------- Beleuchtung ----------
-    const hemiLight = new THREE.HemisphereLight(0xbae6fd, 0x3f6212, 1.05);
+    const hemiLight = new THREE.HemisphereLight(0xbae6fd, 0x3f6212, 1.08);
     scene.add(hemiLight);
 
     const sun = new THREE.DirectionalLight(0xfffbeb, 1.9);
@@ -778,163 +908,122 @@
     sun.shadow.camera.bottom = -sd;
     scene.add(sun);
 
-    const playerLight = new THREE.PointLight(0x38bdf8, 0, 32);
+    const playerLight = new THREE.PointLight(0x38bdf8, 0, 36);
     scene.add(playerLight);
 
-    // ---------- Noch größere Multi-Biom Open World (3600 x 3600) ----------
-    // Biome: Gras (Mitte/Nordwest), Sand (Osten), Schnee (Norden), Küste (Süden/Wasser), Vulkan (Südosten)
-    const WORLD_HALF = 1800;
+    // ---------- Welt-Zustände: Welt 1 (Terra Prime, Max 800) & Welt 2 (Aetheris Nova, Max 1500) ----------
+    // Welt 1: 3800 x 3800 mit Gras, Sand, Schnee, Küste, Vulkan
+    // Welt 2: 5200 x 5200 mit Kristall-Wald, Magma-Ebene, Frost-Gletscher, Neon-Savanne, Korallen-Archipel
+    let currentWorld = 1; // 1 = Alte Welt (Max 800), 2 = Neue Welt (Max 1500)
+    let hasVisitedNewWorld = false;
+
+    const WORLD1_HALF = 1900;
+    const WORLD2_HALF = 2600;
     const WATER_LEVEL = -3.2;
 
+    function getWorldHalf() {
+      return currentWorld === 1 ? WORLD1_HALF : WORLD2_HALF;
+    }
+
     function getBiomeWeights(x, z) {
-      const waveA = Math.sin(x * 0.0016 + Math.cos(z * 0.0015) * 1.4);
-      const waveB = Math.cos(z * 0.0017 - Math.sin(x * 0.0014) * 1.3);
+      if (currentWorld === 1) {
+        const waveA = Math.sin(x * 0.0015 + Math.cos(z * 0.0014) * 1.4);
+        const waveB = Math.cos(z * 0.0016 - Math.sin(x * 0.0013) * 1.3);
 
-      // Vulkan im Südosten (x > 350, z > 350)
-      const distVolcano = Math.hypot(x - 1050, z - 1050);
-      const volcano = 1 - THREE.MathUtils.smoothstep(distVolcano, 220, 760);
+        const distVolcano = Math.hypot(x - 1100, z - 1100);
+        const volcano = 1 - THREE.MathUtils.smoothstep(distVolcano, 240, 820);
 
-      // Schnee im Norden (z < -300)
-      const snowRaw = THREE.MathUtils.smoothstep(-z * 0.85 - x * 0.15 + waveB * 220, 220, 780);
+        const snowRaw = THREE.MathUtils.smoothstep(-z * 0.85 - x * 0.15 + waveB * 240, 240, 820);
+        const sandRaw = THREE.MathUtils.smoothstep(x * 0.85 - z * 0.15 + waveA * 240, 240, 820);
+        const coastRaw = THREE.MathUtils.smoothstep(z * 0.85 + x * 0.12 + waveA * 200, 280, 800);
 
-      // Sand im Osten (x > 300)
-      const sandRaw = THREE.MathUtils.smoothstep(x * 0.85 - z * 0.15 + waveA * 220, 220, 780);
+        let v = volcano;
+        let sn = snowRaw * (1 - v * 0.85);
+        let sa = sandRaw * (1 - v * 0.85) * (1 - sn * 0.65);
+        let co = coastRaw * (1 - v * 0.85) * (1 - sa * 0.65);
+        let gr = Math.max(0, 1 - v - sn - sa - co);
+        const sum = gr + sa + sn + co + v || 1;
+        return { b1: gr / sum, b2: sa / sum, b3: sn / sum, b4: co / sum, b5: v / sum };
+      } else {
+        // Welt 2: 5 noch größere Biome: Kristall-Dschungel, Magma-Krater, Tiefsee-Korallen, Prismen-Wüste, Aurora-Gletscher
+        const wA = Math.sin(x * 0.0011 + Math.cos(z * 0.0012) * 1.5);
+        const wB = Math.cos(z * 0.0012 - Math.sin(x * 0.0011) * 1.5);
 
-      // Küste im Süden (z > 320)
-      const coastRaw = THREE.MathUtils.smoothstep(z * 0.85 + x * 0.12 + waveA * 180, 260, 760);
+        const magmaDist = Math.hypot(x - 1350, z - 1250);
+        const b2 = 1 - THREE.MathUtils.smoothstep(magmaDist, 320, 1050);
 
-      let v = volcano;
-      let sn = snowRaw * (1 - v * 0.85);
-      let sa = sandRaw * (1 - v * 0.85) * (1 - sn * 0.65);
-      let co = coastRaw * (1 - v * 0.85) * (1 - sa * 0.65);
-      let gr = Math.max(0, 1 - v - sn - sa - co);
+        const b3 = THREE.MathUtils.smoothstep(-z * 0.82 - x * 0.25 + wB * 320, 320, 1050) * (1 - b2 * 0.8);
+        const b4 = THREE.MathUtils.smoothstep(z * 0.82 + x * 0.2 + wA * 280, 360, 1050) * (1 - b2 * 0.8);
+        const b5 = THREE.MathUtils.smoothstep(x * 0.85 - z * 0.2 + wA * 320, 340, 1050) * (1 - b2 * 0.8) * (1 - b3 * 0.6);
+        const b1 = Math.max(0, 1 - b2 - b3 - b4 - b5);
 
-      const sum = gr + sa + sn + co + v || 1;
-      return {
-        grass: gr / sum,
-        sand: sa / sum,
-        snow: sn / sum,
-        coast: co / sum,
-        volcano: v / sum
-      };
+        const sum = b1 + b2 + b3 + b4 + b5 || 1;
+        return { b1: b1 / sum, b2: b2 / sum, b3: b3 / sum, b4: b4 / sum, b5: b5 / sum };
+      }
     }
 
     function getBiomeInfo(x, z) {
       const w = getBiomeWeights(x, z);
-      const entries = [
-        { key: 'grass', val: w.grass, label: '🌿 Gras-Biom', color: '#86efac', bg: 'rgba(34, 197, 94, 0.22)', border: 'rgba(74, 222, 128, 0.55)' },
-        { key: 'sand', val: w.sand, label: '🏜️ Sand-Biom', color: '#fde68a', bg: 'rgba(245, 158, 11, 0.24)', border: 'rgba(251, 191, 36, 0.65)' },
-        { key: 'snow', val: w.snow, label: '❄️ Schnee-Biom', color: '#bae6fd', bg: 'rgba(14, 165, 233, 0.24)', border: 'rgba(125, 211, 252, 0.6)' },
-        { key: 'coast', val: w.coast, label: '🏖️ Küsten-Biom', color: '#67e8f9', bg: 'rgba(6, 182, 212, 0.24)', border: 'rgba(34, 211, 238, 0.65)' },
-        { key: 'volcano', val: w.volcano, label: '🌋 Vulkan-Biom', color: '#fdba74', bg: 'rgba(239, 68, 68, 0.28)', border: 'rgba(251, 146, 60, 0.7)' }
-      ];
-      entries.sort((a, b) => b.val - a.val);
-      return entries[0];
+      if (currentWorld === 1) {
+        const list = [
+          { val: w.b1, label: '🌿 Gras-Biom', color: '#86efac', bg: 'rgba(34, 197, 94, 0.22)', border: 'rgba(74, 222, 128, 0.55)' },
+          { val: w.b2, label: '🏜️ Sand-Biom', color: '#fde68a', bg: 'rgba(245, 158, 11, 0.24)', border: 'rgba(251, 191, 36, 0.65)' },
+          { val: w.b3, label: '❄️ Schnee-Biom', color: '#bae6fd', bg: 'rgba(14, 165, 233, 0.24)', border: 'rgba(125, 211, 252, 0.6)' },
+          { val: w.b4, label: '🏖️ Küsten-Biom', color: '#67e8f9', bg: 'rgba(6, 182, 212, 0.24)', border: 'rgba(34, 211, 238, 0.65)' },
+          { val: w.b5, label: '🌋 Vulkan-Biom', color: '#fdba74', bg: 'rgba(239, 68, 68, 0.28)', border: 'rgba(251, 146, 60, 0.7)' }
+        ];
+        list.sort((a, b) => b.val - a.val);
+        return list[0];
+      } else {
+        const list = [
+          { val: w.b1, label: '💎 Kristall-Wald', color: '#5eead4', bg: 'rgba(20, 184, 166, 0.24)', border: 'rgba(94, 234, 212, 0.65)' },
+          { val: w.b2, label: '🔥 Magma-Kern', color: '#fca5a5', bg: 'rgba(220, 38, 38, 0.3)', border: 'rgba(248, 113, 113, 0.7)' },
+          { val: w.b3, label: '🌌 Aurora-Gletscher', color: '#c4b5fd', bg: 'rgba(139, 92, 246, 0.26)', border: 'rgba(196, 181, 253, 0.65)' },
+          { val: w.b4, label: '🌊 Korallen-Archipel', color: '#7dd3fc', bg: 'rgba(2, 132, 199, 0.26)', border: 'rgba(125, 211, 252, 0.65)' },
+          { val: w.b5, label: '✨ Prismen-Wüste', color: '#fde047', bg: 'rgba(202, 138, 4, 0.26)', border: 'rgba(253, 224, 71, 0.65)' }
+        ];
+        list.sort((a, b) => b.val - a.val);
+        return list[0];
+      }
     }
 
     function getTerrainHeight(x, z) {
       const distFromOrigin = Math.hypot(x, z);
-      const flatBlend = THREE.MathUtils.smoothstep(distFromOrigin, 22, 95);
-
+      const flatBlend = THREE.MathUtils.smoothstep(distFromOrigin, 24, 110);
       const w = getBiomeWeights(x, z);
 
-      const grassH =
-        Math.sin(x * 0.0065) * Math.cos(z * 0.0065) * 4.2 +
-        Math.sin(x * 0.017 + z * 0.014) * 1.4;
+      if (currentWorld === 1) {
+        const grassH = Math.sin(x * 0.006) * Math.cos(z * 0.006) * 4.5 + Math.sin(x * 0.016 + z * 0.013) * 1.4;
+        const sandH = (Math.sin(x * 0.01 + Math.cos(z * 0.0065) * 2.2) * 0.5 + 0.5) * 8.5 + Math.cos(z * 0.02 - x * 0.01) * 1.6;
+        const snowH = Math.max(0, Math.sin(x * 0.008) * Math.cos(z * 0.008) + 0.3) * 28 + Math.sin(x * 0.024 + z * 0.02) * 2.5;
+        const coastH = Math.sin(x * 0.0075) * Math.cos(z * 0.0068) * 4.6 - 3.9;
+        const distVolcano = Math.hypot(x - 1100, z - 1100);
+        const craterRidge = Math.exp(-Math.pow((distVolcano - 220) / 150, 2)) * 36;
+        const volcanoH = craterRidge + Math.sin(x * 0.018 + z * 0.018) * 2.2 - 1.5;
 
-      const sandH =
-        (Math.sin(x * 0.011 + Math.cos(z * 0.007) * 2.2) * 0.5 + 0.5) * 8.0 +
-        Math.cos(z * 0.022 - x * 0.01) * 1.6;
+        return (grassH * w.b1 + sandH * w.b2 + snowH * w.b3 + coastH * w.b4 + volcanoH * w.b5) * flatBlend;
+      } else {
+        const h1 = Math.sin(x * 0.005) * Math.cos(z * 0.005) * 7.5 + Math.cos(x * 0.014 - z * 0.012) * 2.2;
+        const magmaDist = Math.hypot(x - 1350, z - 1250);
+        const h2 = Math.exp(-Math.pow((magmaDist - 280) / 180, 2)) * 44 - 1.8;
+        const h3 = Math.max(0, Math.sin(x * 0.0065) * Math.cos(z * 0.0065) + 0.25) * 34;
+        const h4 = Math.sin(x * 0.006) * Math.cos(z * 0.0055) * 5.2 - 4.2;
+        const h5 = (Math.cos(z * 0.008 + Math.sin(x * 0.005) * 2.0) * 0.5 + 0.5) * 11.5;
 
-      const snowH =
-        Math.max(0, Math.sin(x * 0.0085) * Math.cos(z * 0.0085) + 0.3) * 26 +
-        Math.sin(x * 0.025 + z * 0.022) * 2.5;
-
-      // Küste senkt sich sanft unter WATER_LEVEL ab, damit echtes Wasser sichtbar wird
-      const coastH =
-        Math.sin(x * 0.008) * Math.cos(z * 0.007) * 4.5 - 3.8;
-
-      // Vulkan bildet einen Kraterberg mit heißem Tal
-      const distVolcano = Math.hypot(x - 1050, z - 1050);
-      const craterRidge = Math.exp(-Math.pow((distVolcano - 210) / 140, 2)) * 34;
-      const volcanoH = craterRidge + Math.sin(x * 0.02 + z * 0.02) * 2.2 - 1.5;
-
-      const combined =
-        grassH * w.grass +
-        sandH * w.sand +
-        snowH * w.snow +
-        coastH * w.coast +
-        volcanoH * w.volcano;
-
-      return combined * flatBlend;
+        return (h1 * w.b1 + h2 * w.b2 + h3 * w.b3 + h4 * w.b4 + h5 * w.b5) * flatBlend;
+      }
     }
 
-    // Detailliertes Vertex-gefärbtes Terrain mit realistischen Übergängen
-    const terrainSegments = 280;
-    const terrainGeo = new THREE.PlaneGeometry(WORLD_HALF * 2, WORLD_HALF * 2, terrainSegments, terrainSegments);
-    terrainGeo.rotateX(-Math.PI / 2);
+    // Dynamische Welt-Container (damit beim Wechsel zwischen Welt 1 und Welt 2 alles sauber ausgetauscht wird)
+    const worldGroup = new THREE.Group();
+    scene.add(worldGroup);
 
-    const posAttr = terrainGeo.attributes.position;
-    const colors = new Float32Array(posAttr.count * 3);
-
-    const colGrassLow = new THREE.Color(0x16a34a);
-    const colGrassHigh = new THREE.Color(0x4ade80);
-    const colSandLow = new THREE.Color(0xeab308);
-    const colSandHigh = new THREE.Color(0xfef08a);
-    const colSnowLow = new THREE.Color(0xdbeafe);
-    const colSnowHigh = new THREE.Color(0xffffff);
-    const colCoastWet = new THREE.Color(0xd97706);
-    const colCoastDry = new THREE.Color(0xfde68a);
-    const colVolcanoAsh = new THREE.Color(0x1f2937);
-    const colVolcanoLava = new THREE.Color(0xea580c);
-    const tempCol = new THREE.Color();
-
-    for (let i = 0; i < posAttr.count; i++) {
-      const vx = posAttr.getX(i);
-      const vz = posAttr.getZ(i);
-      const vy = getTerrainHeight(vx, vz);
-      posAttr.setY(i, vy);
-
-      const w = getBiomeWeights(vx, vz);
-      const hNorm = THREE.MathUtils.clamp((vy + 5) / 26, 0, 1);
-
-      const gCol = colGrassLow.clone().lerp(colGrassHigh, hNorm);
-      const sCol = colSandLow.clone().lerp(colSandHigh, hNorm);
-      const nCol = colSnowLow.clone().lerp(colSnowHigh, hNorm);
-      const cCol = vy < WATER_LEVEL + 0.8 ? colCoastWet : colCoastDry;
-      const vCol = vy < 2.0 ? colVolcanoLava : colVolcanoAsh;
-
-      tempCol.setRGB(
-        gCol.r * w.grass + sCol.r * w.sand + nCol.r * w.snow + cCol.r * w.coast + vCol.r * w.volcano,
-        gCol.g * w.grass + sCol.g * w.sand + nCol.g * w.snow + cCol.g * w.coast + vCol.g * w.volcano,
-        gCol.b * w.grass + sCol.b * w.sand + nCol.b * w.snow + cCol.b * w.coast + vCol.b * w.volcano
-      );
-
-      colors[i * 3] = tempCol.r;
-      colors[i * 3 + 1] = tempCol.g;
-      colors[i * 3 + 2] = tempCol.b;
-    }
-
-    terrainGeo.setAttribute('color', new THREE.BufferAttribute(colors, 3));
-    terrainGeo.computeVertexNormals();
-
-    const terrainMat = new THREE.MeshStandardMaterial({
-      vertexColors: true,
-      roughness: 0.85,
-      metalness: 0.06
-    });
-
-    const terrainMesh = new THREE.Mesh(terrainGeo, terrainMat);
-    terrainMesh.receiveShadow = true;
-    scene.add(terrainMesh);
-
-    // Realistische Ozean-/Küsten-Wasserfläche
     const waterMesh = new THREE.Mesh(
-      new THREE.PlaneGeometry(WORLD_HALF * 2, WORLD_HALF * 2),
+      new THREE.PlaneGeometry(12000, 12000),
       new THREE.MeshStandardMaterial({
         color: 0x0284c7,
         emissive: 0x0369a1,
-        emissiveIntensity: 0.22,
+        emissiveIntensity: 0.24,
         roughness: 0.18,
         metalness: 0.65,
         transparent: true,
@@ -945,28 +1034,11 @@
     waterMesh.position.y = WATER_LEVEL;
     scene.add(waterMesh);
 
-    // Sanfte Randbegrenzung
-    const borderMat = new THREE.MeshStandardMaterial({
-      color: 0x1e293b,
-      roughness: 0.8,
-      transparent: true,
-      opacity: 0.32
-    });
-    for (const wc of [
-      { x: 0, z: -WORLD_HALF, w: WORLD_HALF * 2, d: 8 },
-      { x: 0, z: WORLD_HALF, w: WORLD_HALF * 2, d: 8 },
-      { x: -WORLD_HALF, z: 0, w: 8, d: WORLD_HALF * 2 },
-      { x: WORLD_HALF, z: 0, w: 8, d: WORLD_HALF * 2 }
-    ]) {
-      const by = getTerrainHeight(wc.x, wc.z);
-      const wall = new THREE.Mesh(new THREE.BoxGeometry(wc.w, 28, wc.d), borderMat);
-      wall.position.set(wc.x, by + 12, wc.z);
-      scene.add(wall);
-    }
+    let boostPads = [];
+    let orbs = [];
 
-    // ---------- Biom-Landschaftselemente (keine nutzlosen Diamanten!) ----------
     const trunkMat = new THREE.MeshStandardMaterial({ color: 0x5c3a21, roughness: 0.9 });
-    const leafMat = new THREE.MeshStandardMaterial({ color: 0x15803d, roughness: 0.8 });
+    const leafMat = new THREE.MeshStandardMaterial({ color: 0x16a34a, roughness: 0.8 });
     const snowLeafMat = new THREE.MeshStandardMaterial({ color: 0x0f766e, roughness: 0.8 });
     const snowCapMat = new THREE.MeshStandardMaterial({ color: 0xf8fafc, roughness: 0.6 });
     const cactusMat = new THREE.MeshStandardMaterial({ color: 0x16a34a, roughness: 0.75 });
@@ -975,173 +1047,27 @@
     const lavaGlowMat = new THREE.MeshStandardMaterial({
       color: 0xf97316,
       emissive: 0xea580c,
-      emissiveIntensity: 1.4,
+      emissiveIntensity: 1.45,
       roughness: 0.3
     });
+    const crystalMat = new THREE.MeshStandardMaterial({
+      color: 0x2dd4bf,
+      emissive: 0x0d9488,
+      emissiveIntensity: 1.1,
+      roughness: 0.15,
+      metalness: 0.5
+    });
+    const prismMat = new THREE.MeshStandardMaterial({
+      color: 0xfacc15,
+      emissive: 0xd97706,
+      emissiveIntensity: 0.85,
+      roughness: 0.2,
+      metalness: 0.6
+    });
 
-    for (let i = 0; i < 360; i++) {
-      const rx = (Math.random() - 0.5) * (WORLD_HALF * 1.88);
-      const rz = (Math.random() - 0.5) * (WORLD_HALF * 1.88);
-      if (Math.hypot(rx, rz) < 26) continue;
-
-      const ry = getTerrainHeight(rx, rz);
-      const w = getBiomeWeights(rx, rz);
-
-      if (w.volcano > w.grass && w.volcano > w.sand && w.volcano > w.snow && w.volcano > w.coast) {
-        // Vulkan-Gestein & glühende Magma-Brocken
-        const magRock = new THREE.Mesh(
-          new THREE.DodecahedronGeometry(1.5 + Math.random() * 2.5, 0),
-          Math.random() < 0.45 ? lavaGlowMat : new THREE.MeshStandardMaterial({ color: 0x1e293b, roughness: 0.9 })
-        );
-        magRock.position.set(rx, Math.max(ry, WATER_LEVEL) + 0.8, rz);
-        magRock.rotation.set(Math.random(), Math.random(), Math.random());
-        magRock.castShadow = true;
-        scene.add(magRock);
-      } else if (w.snow > w.grass && w.snow > w.sand && w.snow > w.coast) {
-        const tree = new THREE.Group();
-        const trunk = new THREE.Mesh(new THREE.CylinderGeometry(0.35, 0.5, 2.5, 7), trunkMat);
-        trunk.position.y = 1.25;
-        trunk.castShadow = true;
-        tree.add(trunk);
-
-        const cone1 = new THREE.Mesh(new THREE.ConeGeometry(2.2, 4.2, 7), snowLeafMat);
-        cone1.position.y = 3.8;
-        cone1.castShadow = true;
-        tree.add(cone1);
-
-        const cone2 = new THREE.Mesh(new THREE.ConeGeometry(1.6, 3.4, 7), snowCapMat);
-        cone2.position.y = 6.0;
-        cone2.castShadow = true;
-        tree.add(cone2);
-
-        tree.position.set(rx, Math.max(ry, WATER_LEVEL) - 0.15, rz);
-        scene.add(tree);
-      } else if (w.sand > w.grass && w.sand > w.coast) {
-        if (Math.random() < 0.65) {
-          const cactus = new THREE.Group();
-          const h = 2.4 + Math.random() * 2.2;
-          const stem = new THREE.Mesh(new THREE.CylinderGeometry(0.42, 0.48, h, 8), cactusMat);
-          stem.position.y = h / 2;
-          stem.castShadow = true;
-          cactus.add(stem);
-
-          const arm = new THREE.Mesh(new THREE.CylinderGeometry(0.28, 0.3, h * 0.45, 8), cactusMat);
-          arm.position.set(0.55, h * 0.58, 0);
-          arm.rotation.z = -0.35;
-          cactus.add(arm);
-
-          cactus.position.set(rx, Math.max(ry, WATER_LEVEL) - 0.1, rz);
-          scene.add(cactus);
-        } else {
-          const rock = new THREE.Mesh(new THREE.DodecahedronGeometry(1.6 + Math.random() * 2.2, 0), rockMat);
-          rock.position.set(rx, Math.max(ry, WATER_LEVEL) + 0.7, rz);
-          rock.rotation.set(Math.random(), Math.random(), Math.random());
-          rock.castShadow = true;
-          scene.add(rock);
-        }
-      } else if (w.coast > w.grass) {
-        // Küsten-Palme
-        const palm = new THREE.Group();
-        const trunk = new THREE.Mesh(new THREE.CylinderGeometry(0.24, 0.42, 4.2, 7), trunkMat);
-        trunk.position.y = 2.1;
-        trunk.rotation.z = 0.08;
-        trunk.castShadow = true;
-        palm.add(trunk);
-
-        const fronds = new THREE.Mesh(new THREE.ConeGeometry(2.6, 1.4, 6), palmLeafMat);
-        fronds.position.set(0.18, 4.4, 0);
-        fronds.castShadow = true;
-        palm.add(fronds);
-
-        palm.position.set(rx, Math.max(ry, WATER_LEVEL + 0.1), rz);
-        scene.add(palm);
-      } else {
-        const tree = new THREE.Group();
-        const trunk = new THREE.Mesh(new THREE.CylinderGeometry(0.32, 0.48, 2.4, 7), trunkMat);
-        trunk.position.y = 1.2;
-        trunk.castShadow = true;
-        tree.add(trunk);
-
-        const crown = new THREE.Mesh(new THREE.IcosahedronGeometry(2.3 + Math.random() * 0.9, 1), leafMat);
-        crown.position.y = 3.8;
-        crown.castShadow = true;
-        tree.add(crown);
-
-        tree.position.set(rx, Math.max(ry, WATER_LEVEL) - 0.15, rz);
-        scene.add(tree);
-      }
-    }
-
-    // ---------- Gezielte Speed-Boost-Punkte auf der Map ----------
-    const boostPads = [];
     const padBaseGeo = new THREE.CylinderGeometry(4.4, 5.0, 0.35, 28);
     const padRingGeo = new THREE.TorusGeometry(4.1, 0.24, 12, 36);
-    const padBeaconGeo = new THREE.CylinderGeometry(0.45, 0.45, 3.4, 14);
-
-    const speedBoostLocations = [
-      { x: 0, z: -80 },
-      { x: 110, z: 40 },
-      { x: -120, z: 65 },
-      { x: 780, z: 120 },
-      { x: 920, z: 780 },
-      { x: -160, z: -820 },
-      { x: 280, z: -960 },
-      { x: -840, z: -220 },
-      { x: 120, z: 860 },
-      { x: 1050, z: 1050 }
-    ];
-
-    for (const bp of speedBoostLocations) {
-      const by = Math.max(getTerrainHeight(bp.x, bp.z), WATER_LEVEL);
-      const group = new THREE.Group();
-      group.position.set(bp.x, by + 0.18, bp.z);
-
-      const baseMesh = new THREE.Mesh(
-        padBaseGeo,
-        new THREE.MeshStandardMaterial({
-          color: 0x0f172a,
-          emissive: 0xf97316,
-          emissiveIntensity: 0.75,
-          roughness: 0.25,
-          metalness: 0.6
-        })
-      );
-      baseMesh.receiveShadow = true;
-      group.add(baseMesh);
-
-      const ringMesh = new THREE.Mesh(
-        padRingGeo,
-        new THREE.MeshBasicMaterial({ color: 0xfacc15 })
-      );
-      ringMesh.rotation.x = Math.PI / 2;
-      ringMesh.position.y = 0.22;
-      group.add(ringMesh);
-
-      const beamMesh = new THREE.Mesh(
-        padBeaconGeo,
-        new THREE.MeshBasicMaterial({
-          color: 0x38bdf8,
-          transparent: true,
-          opacity: 0.45
-        })
-      );
-      beamMesh.position.y = 1.9;
-      group.add(beamMesh);
-
-      scene.add(group);
-      boostPads.push({
-        group,
-        ringMesh,
-        beamMesh,
-        x: bp.x,
-        z: bp.z,
-        radius: 5.0,
-        cooldown: 0
-      });
-    }
-
-    // ---------- Schritt-Orbs (keine Diamanten!) ----------
-    const orbs = [];
+    const padBeamGeo = new THREE.CylinderGeometry(0.45, 0.45, 3.4, 14);
     const orbGeo = new THREE.SphereGeometry(0.68, 16, 16);
     const orbMat = new THREE.MeshStandardMaterial({
       color: 0xfacc15,
@@ -1155,20 +1081,263 @@
       const groundY = Math.max(getTerrainHeight(x, z), WATER_LEVEL);
       const mesh = new THREE.Mesh(orbGeo, orbMat);
       mesh.position.set(x, groundY + yOffset, z);
-      scene.add(mesh);
+      worldGroup.add(mesh);
       orbs.push({ mesh, x, z, yOffset, phase: Math.random() * Math.PI * 2 });
     }
 
-    for (let i = 1; i <= 14; i++) {
-      spawnOrbAt(0, -i * 6.5, 1.45);
-    }
-    for (let i = 0; i < 650; i++) {
-      const ox = (Math.random() - 0.5) * (WORLD_HALF * 1.88);
-      const oz = (Math.random() - 0.5) * (WORLD_HALF * 1.88);
-      spawnOrbAt(ox, oz, 1.45);
+    function buildWorld(worldId) {
+      currentWorld = worldId;
+      while (worldGroup.children.length > 0) {
+        worldGroup.remove(worldGroup.children[0]);
+      }
+      boostPads = [];
+      orbs = [];
+
+      const half = getWorldHalf();
+
+      // Sky & Fog je nach Welt anpassen
+      if (worldId === 1) {
+        scene.background = new THREE.Color(0x60a5fa);
+        scene.fog = new THREE.FogExp2(0x7dd3fc, 0.00072);
+        waterMesh.material.color.setHex(0x0284c7);
+      } else {
+        scene.background = new THREE.Color(0x1e1b4b);
+        scene.fog = new THREE.FogExp2(0x312e81, 0.00058);
+        waterMesh.material.color.setHex(0x06b6d4);
+      }
+
+      // Terrain-Netz aufbauen
+      const segs = worldId === 1 ? 260 : 300;
+      const tGeo = new THREE.PlaneGeometry(half * 2, half * 2, segs, segs);
+      tGeo.rotateX(-Math.PI / 2);
+      const pAttr = tGeo.attributes.position;
+      const cols = new Float32Array(pAttr.count * 3);
+
+      const c1A = new THREE.Color(worldId === 1 ? 0x16a34a : 0x0d9488);
+      const c1B = new THREE.Color(worldId === 1 ? 0x4ade80 : 0x5eead4);
+      const c2A = new THREE.Color(worldId === 1 ? 0xeab308 : 0x7f1d1d);
+      const c2B = new THREE.Color(worldId === 1 ? 0xfef08a : 0xf97316);
+      const c3A = new THREE.Color(worldId === 1 ? 0xdbeafe : 0x6d28d9);
+      const c3B = new THREE.Color(worldId === 1 ? 0xffffff : 0xc4b5fd);
+      const c4A = new THREE.Color(worldId === 1 ? 0xd97706 : 0x0369a1);
+      const c4B = new THREE.Color(worldId === 1 ? 0xfde68a : 0x38bdf8);
+      const c5A = new THREE.Color(worldId === 1 ? 0x1f2937 : 0xca8a04);
+      const c5B = new THREE.Color(worldId === 1 ? 0xea580c : 0xfef08a);
+      const tmp = new THREE.Color();
+
+      for (let i = 0; i < pAttr.count; i++) {
+        const vx = pAttr.getX(i);
+        const vz = pAttr.getZ(i);
+        const vy = getTerrainHeight(vx, vz);
+        pAttr.setY(i, vy);
+
+        const w = getBiomeWeights(vx, vz);
+        const hn = THREE.MathUtils.clamp((vy + 5) / 34, 0, 1);
+
+        const k1 = c1A.clone().lerp(c1B, hn);
+        const k2 = c2A.clone().lerp(c2B, hn);
+        const k3 = c3A.clone().lerp(c3B, hn);
+        const k4 = c4A.clone().lerp(c4B, hn);
+        const k5 = c5A.clone().lerp(c5B, hn);
+
+        tmp.setRGB(
+          k1.r * w.b1 + k2.r * w.b2 + k3.r * w.b3 + k4.r * w.b4 + k5.r * w.b5,
+          k1.g * w.b1 + k2.g * w.b2 + k3.g * w.b3 + k4.g * w.b4 + k5.g * w.b5,
+          k1.b * w.b1 + k2.b * w.b2 + k3.b * w.b3 + k4.b * w.b4 + k5.b * w.b5
+        );
+        cols[i * 3] = tmp.r;
+        cols[i * 3 + 1] = tmp.g;
+        cols[i * 3 + 2] = tmp.b;
+      }
+
+      tGeo.setAttribute('color', new THREE.BufferAttribute(cols, 3));
+      tGeo.computeVertexNormals();
+
+      const tMesh = new THREE.Mesh(
+        tGeo,
+        new THREE.MeshStandardMaterial({ vertexColors: true, roughness: 0.84, metalness: 0.08 })
+      );
+      tMesh.receiveShadow = true;
+      worldGroup.add(tMesh);
+
+      // Weltgrenzen
+      const borderMat = new THREE.MeshStandardMaterial({
+        color: 0x1e293b,
+        transparent: true,
+        opacity: 0.32
+      });
+      for (const wc of [
+        { x: 0, z: -half, w: half * 2, d: 10 },
+        { x: 0, z: half, w: half * 2, d: 10 },
+        { x: -half, z: 0, w: 10, d: half * 2 },
+        { x: half, z: 0, w: 10, d: half * 2 }
+      ]) {
+        const wall = new THREE.Mesh(new THREE.BoxGeometry(wc.w, 34, wc.d), borderMat);
+        wall.position.set(wc.x, Math.max(getTerrainHeight(wc.x, wc.z), WATER_LEVEL) + 14, wc.z);
+        worldGroup.add(wall);
+      }
+
+      // Biom-Deko (ohne nutzlose Diamanten)
+      const propCount = worldId === 1 ? 360 : 460;
+      for (let i = 0; i < propCount; i++) {
+        const rx = (Math.random() - 0.5) * (half * 1.88);
+        const rz = (Math.random() - 0.5) * (half * 1.88);
+        if (Math.hypot(rx, rz) < 28) continue;
+
+        const ry = Math.max(getTerrainHeight(rx, rz), WATER_LEVEL);
+        const w = getBiomeWeights(rx, rz);
+
+        if (worldId === 1) {
+          if (w.b5 > w.b1 && w.b5 > w.b2 && w.b5 > w.b3 && w.b5 > w.b4) {
+            const mag = new THREE.Mesh(
+              new THREE.DodecahedronGeometry(1.5 + Math.random() * 2.4, 0),
+              Math.random() < 0.45 ? lavaGlowMat : new THREE.MeshStandardMaterial({ color: 0x1e293b, roughness: 0.9 })
+            );
+            mag.position.set(rx, ry + 0.8, rz);
+            mag.castShadow = true;
+            worldGroup.add(mag);
+          } else if (w.b3 > w.b1 && w.b3 > w.b2 && w.b3 > w.b4) {
+            const tree = new THREE.Group();
+            const trunk = new THREE.Mesh(new THREE.CylinderGeometry(0.35, 0.5, 2.5, 7), trunkMat);
+            trunk.position.y = 1.25;
+            tree.add(trunk);
+            const c1 = new THREE.Mesh(new THREE.ConeGeometry(2.2, 4.2, 7), snowLeafMat);
+            c1.position.y = 3.8;
+            tree.add(c1);
+            const c2 = new THREE.Mesh(new THREE.ConeGeometry(1.6, 3.4, 7), snowCapMat);
+            c2.position.y = 6.0;
+            tree.add(c2);
+            tree.position.set(rx, ry - 0.1, rz);
+            worldGroup.add(tree);
+          } else if (w.b2 > w.b1 && w.b2 > w.b4) {
+            if (Math.random() < 0.65) {
+              const cactus = new THREE.Group();
+              const h = 2.4 + Math.random() * 2.2;
+              const stem = new THREE.Mesh(new THREE.CylinderGeometry(0.42, 0.48, h, 8), cactusMat);
+              stem.position.y = h / 2;
+              cactus.add(stem);
+              const arm = new THREE.Mesh(new THREE.CylinderGeometry(0.28, 0.3, h * 0.45, 8), cactusMat);
+              arm.position.set(0.55, h * 0.58, 0);
+              arm.rotation.z = -0.35;
+              cactus.add(arm);
+              cactus.position.set(rx, ry - 0.1, rz);
+              worldGroup.add(cactus);
+            } else {
+              const rock = new THREE.Mesh(new THREE.DodecahedronGeometry(1.6 + Math.random() * 2.2, 0), rockMat);
+              rock.position.set(rx, ry + 0.7, rz);
+              worldGroup.add(rock);
+            }
+          } else if (w.b4 > w.b1) {
+            const palm = new THREE.Group();
+            const trunk = new THREE.Mesh(new THREE.CylinderGeometry(0.24, 0.42, 4.2, 7), trunkMat);
+            trunk.position.y = 2.1;
+            palm.add(trunk);
+            const fronds = new THREE.Mesh(new THREE.ConeGeometry(2.6, 1.4, 6), palmLeafMat);
+            fronds.position.set(0.18, 4.4, 0);
+            palm.add(fronds);
+            palm.position.set(rx, ry, rz);
+            worldGroup.add(palm);
+          } else {
+            const tree = new THREE.Group();
+            const trunk = new THREE.Mesh(new THREE.CylinderGeometry(0.32, 0.48, 2.4, 7), trunkMat);
+            trunk.position.y = 1.2;
+            tree.add(trunk);
+            const crown = new THREE.Mesh(new THREE.IcosahedronGeometry(2.3 + Math.random() * 0.9, 1), leafMat);
+            crown.position.y = 3.8;
+            tree.add(crown);
+            tree.position.set(rx, ry - 0.1, rz);
+            worldGroup.add(tree);
+          }
+        } else {
+          // Welt 2 Deko: Kristalle, Magma-Säulen, Prismen-Obelisken
+          if (w.b2 > w.b1 && w.b2 > w.b3 && w.b2 > w.b4 && w.b2 > w.b5) {
+            const spire = new THREE.Mesh(new THREE.ConeGeometry(1.8 + Math.random() * 1.4, 5.5 + Math.random() * 4, 6), lavaGlowMat);
+            spire.position.set(rx, ry + 2.5, rz);
+            worldGroup.add(spire);
+          } else if (w.b5 > w.b1 && w.b5 > w.b3 && w.b5 > w.b4) {
+            const ob = new THREE.Mesh(new THREE.BoxGeometry(1.2, 5.0 + Math.random() * 4.5, 1.2), prismMat);
+            ob.position.set(rx, ry + 2.4, rz);
+            worldGroup.add(ob);
+          } else {
+            const crys = new THREE.Mesh(new THREE.CylinderGeometry(0.4, 1.3, 4.5 + Math.random() * 4.0, 6), crystalMat);
+            crys.position.set(rx, ry + 2.2, rz);
+            crys.rotation.z = (Math.random() - 0.5) * 0.25;
+            worldGroup.add(crys);
+          }
+        }
+      }
+
+      // Gezielte Speed-Boost-Punkte
+      const padCoords = worldId === 1
+        ? [
+            { x: 0, z: -85 }, { x: 120, z: 45 }, { x: -130, z: 70 },
+            { x: 820, z: 140 }, { x: 960, z: 820 }, { x: -180, z: -860 },
+            { x: 300, z: -980 }, { x: -880, z: -240 }, { x: 140, z: 920 }, { x: 1100, z: 1100 }
+          ]
+        : [
+            { x: 0, z: -110 }, { x: 180, z: 70 }, { x: -190, z: 110 },
+            { x: 1150, z: 220 }, { x: 1350, z: 1250 }, { x: -240, z: -1250 },
+            { x: 420, z: -1380 }, { x: -1280, z: -320 }, { x: 220, z: 1320 }, { x: 1650, z: -450 }
+          ];
+
+      for (const bp of padCoords) {
+        const by = Math.max(getTerrainHeight(bp.x, bp.z), WATER_LEVEL);
+        const group = new THREE.Group();
+        group.position.set(bp.x, by + 0.18, bp.z);
+
+        const baseMesh = new THREE.Mesh(
+          padBaseGeo,
+          new THREE.MeshStandardMaterial({
+            color: 0x0f172a,
+            emissive: 0xf97316,
+            emissiveIntensity: 0.75,
+            roughness: 0.25,
+            metalness: 0.6
+          })
+        );
+        group.add(baseMesh);
+
+        const ringMesh = new THREE.Mesh(padRingGeo, new THREE.MeshBasicMaterial({ color: 0xfacc15 }));
+        ringMesh.rotation.x = Math.PI / 2;
+        ringMesh.position.y = 0.22;
+        group.add(ringMesh);
+
+        const beamMesh = new THREE.Mesh(
+          padBeamGeo,
+          new THREE.MeshBasicMaterial({ color: 0x38bdf8, transparent: true, opacity: 0.45 })
+        );
+        beamMesh.position.y = 1.9;
+        group.add(beamMesh);
+
+        worldGroup.add(group);
+        boostPads.push({ group, ringMesh, beamMesh, x: bp.x, z: bp.z, radius: 5.2, cooldown: 0 });
+      }
+
+      // Schritt-Orbs
+      for (let i = 1; i <= 14; i++) {
+        spawnOrbAt(0, -i * 7.0, 1.45);
+      }
+      const orbTotal = worldId === 1 ? 650 : 900;
+      for (let i = 0; i < orbTotal; i++) {
+        const ox = (Math.random() - 0.5) * (half * 1.88);
+        const oz = (Math.random() - 0.5) * (half * 1.88);
+        spawnOrbAt(ox, oz, 1.45);
+      }
     }
 
-    // ---------- Detaillierter Spielercharakter mit flüssigen Animationen ----------
+    buildWorld(1);
+
+    // ---------- Detaillierter Spielercharakter + Skins ----------
+    const SKINS = [
+      { id: 'cyber', name: 'Cyber Blau', cost: 0, primary: 0x0ea5e9, accent: 0x22d3ee, helmet: 0xf8fafc, visor: 0x38bdf8 },
+      { id: 'inferno', name: 'Inferno Rot', cost: 45, primary: 0xdc2626, accent: 0xf97316, helmet: 0xfef2f2, visor: 0xfacc15 },
+      { id: 'emerald', name: 'Smaragd-Ranger', cost: 80, primary: 0x059669, accent: 0x4ade80, helmet: 0xecfdf5, visor: 0x34d399 },
+      { id: 'galaxy', name: 'Galaxie Violett', cost: 130, primary: 0x7c3aed, accent: 0xe879f9, helmet: 0xfaf5ff, visor: 0xf472b6 }
+    ];
+
+    const unlockedSkins = new Set(['cyber']);
+    let activeSkinId = 'cyber';
+
     const player = new THREE.Group();
     const characterRig = new THREE.Group();
     player.add(characterRig);
@@ -1215,6 +1384,17 @@
       roughness: 0.4,
       metalness: 0.5
     });
+
+    function applySkin(skinId) {
+      const sk = SKINS.find(s => s.id === skinId) || SKINS[0];
+      activeSkinId = sk.id;
+      armorPrimaryMat.color.setHex(sk.primary);
+      armorPrimaryMat.emissive.setHex(sk.primary);
+      armorAccentMat.color.setHex(sk.accent);
+      armorAccentMat.emissive.setHex(sk.accent);
+      skinHelmetMat.color.setHex(sk.helmet);
+      visorGlowMat.emissive.setHex(sk.visor);
+    }
 
     const pelvis = new THREE.Mesh(new THREE.BoxGeometry(0.62, 0.24, 0.4), jointDarkMat);
     pelvis.position.y = 0.94;
@@ -1355,7 +1535,7 @@
     chestPivot.add(leftArm.root, rightArm.root);
 
     const auraRing = new THREE.Mesh(
-      new THREE.RingGeometry(0.8, 1.35, 36),
+      new THREE.RingGeometry(0.85, 1.45, 36),
       new THREE.MeshBasicMaterial({ color: 0x38bdf8, side: THREE.DoubleSide, transparent: true, opacity: 0 })
     );
     auraRing.rotation.x = -Math.PI / 2;
@@ -1364,9 +1544,9 @@
 
     scene.add(player);
 
-    // ---------- Partikel & Speed-Effekte (Feuer ab 100, Blitz ab 500) ----------
+    // ---------- Partikel & Speed-Effekte (Feuer 100+, Frost 250+, Blitz 500+) ----------
     const particles = [];
-    const particleGeo = new THREE.BoxGeometry(0.24, 0.24, 0.24);
+    const particleGeo = new THREE.BoxGeometry(0.26, 0.26, 0.26);
 
     function spawnParticle(pos, colorHex, velocity, life = 0.45, scale = 1) {
       const mat = new THREE.MeshBasicMaterial({
@@ -1385,16 +1565,16 @@
     function spawnLightningStrike() {
       const points = [];
       const angle = Math.random() * Math.PI * 2;
-      const radius = 0.5 + Math.random() * 1.4;
+      const radius = 0.5 + Math.random() * 1.6;
       let cx = player.position.x + Math.cos(angle) * radius;
       let cy = player.position.y + 0.1;
       let cz = player.position.z + Math.sin(angle) * radius;
 
       points.push(new THREE.Vector3(cx, cy, cz));
-      for (let i = 1; i <= 7; i++) {
-        cx += (Math.random() - 0.5) * 1.35;
-        cy += 0.52;
-        cz += (Math.random() - 0.5) * 1.35;
+      for (let i = 1; i <= 8; i++) {
+        cx += (Math.random() - 0.5) * 1.5;
+        cy += 0.58;
+        cz += (Math.random() - 0.5) * 1.5;
         points.push(new THREE.Vector3(cx, cy, cz));
       }
 
@@ -1406,13 +1586,18 @@
       });
       const line = new THREE.Line(geo, mat);
       scene.add(line);
-      lightningBolts.push({ line, life: 0.14 });
+      lightningBolts.push({ line, life: 0.15 });
     }
 
-    // ---------- Steuerung, Shop, Admin, Schritte & Sprint ----------
+    // ---------- Spielzustand, Upgrades, Cutscene & Steuerung ----------
     let controlMode = null;
     let gameStarted = false;
     let uiModalOpen = false;
+    let cutsceneActive = false;
+    let cutsceneTimer = 0;
+    const CUTSCENE_DURATION = 2.6;
+    let cutsceneMode = 'planet'; // 'planet' oder 'worldSwitch'
+    let planetTravelTriggered = false;
 
     let cameraYaw = 0;
     let cameraPitch = 0.34;
@@ -1422,7 +1607,6 @@
     let touchSprintHeld = false;
     let jumpHeld = false;
 
-    // Shop-Upgrades
     const upgrades = {
       maxSpeed: 0,
       accel: 0,
@@ -1430,18 +1614,14 @@
       sprintPower: 0
     };
 
-    // Admin-Status
     let adminUnlocked = false;
-    let infiniteUpgradesActive = false;
 
-    // Sprint-Zustand: 5s aktiv, danach 10s Cooldown
     const SPRINT_DURATION = 5.0;
     const SPRINT_COOLDOWN = 10.0;
     let sprintActiveTimer = 0;
     let sprintCooldownTimer = 0;
     let sprintExhaustedThisHold = false;
 
-    // Schritte & Tempo
     let steps = 0;
     let orbsCollected = 0;
     let distanceAccumulator = 0;
@@ -1464,6 +1644,7 @@
       capSpeed: document.getElementById('capSpeed'),
       coords: document.getElementById('coords'),
       speedFill: document.getElementById('speedFill'),
+      worldBadge: document.getElementById('worldBadge'),
       biomeBadge: document.getElementById('biomeBadge'),
       sprintBadge: document.getElementById('sprintBadge'),
       auraBadge: document.getElementById('auraBadge'),
@@ -1471,7 +1652,10 @@
       sprintBtnSub: document.getElementById('sprintBtnSub'),
       shopModal: document.getElementById('shopModal'),
       adminModal: document.getElementById('adminModal'),
-      shopStepsDisplay: document.getElementById('shopStepsDisplay'),
+      newWorldBtn: document.getElementById('newWorldBtn'),
+      returnOldWorldBtn: document.getElementById('returnOldWorldBtn'),
+      shopSpeedDisplay: document.getElementById('shopSpeedDisplay'),
+      shopMaxSpeedDisplay: document.getElementById('shopMaxSpeedDisplay'),
       lvlMaxSpeed: document.getElementById('lvlMaxSpeed'),
       lvlAccel: document.getElementById('lvlAccel'),
       lvlStepPower: document.getElementById('lvlStepPower'),
@@ -1480,36 +1664,113 @@
       buyAccelBtn: document.getElementById('buyAccelBtn'),
       buyStepPowerBtn: document.getElementById('buyStepPowerBtn'),
       buySprintPowerBtn: document.getElementById('buySprintPowerBtn'),
+      skinShopGrid: document.getElementById('skinShopGrid'),
       adminCodeInput: document.getElementById('adminCodeInput'),
       adminStatusMsg: document.getElementById('adminStatusMsg'),
-      adminControls: document.getElementById('adminControls')
+      adminControls: document.getElementById('adminControls'),
+      cutsceneOverlay: document.getElementById('cutsceneOverlay'),
+      cutsceneTitle: document.getElementById('cutsceneTitle'),
+      cutsceneSub: document.getElementById('cutsceneSub'),
+      cutsceneFill: document.getElementById('cutsceneFill')
     };
 
-    function getUpgradeCost(baseCost, lvl) {
-      return Math.round(baseCost * Math.pow(1.35, lvl));
+    // Max-Speed-Grenze: Welt 1 hat maximal 800 Speed, Welt 2 hat maximal 1500 Speed
+    function getWorldHardCap() {
+      return currentWorld === 1 ? 800 : 1500;
+    }
+
+    function getStepBonusSpeed() {
+      const mult = 0.08 + upgrades.stepPower * 0.05;
+      return Math.min(steps * mult, getWorldHardCap() - 120);
+    }
+
+    function getMaxSpeed() {
+      const base = 120 + upgrades.maxSpeed * 85 + getStepBonusSpeed();
+      const sprintBonus = sprintActiveTimer > 0 ? (35 + upgrades.sprintPower * 25) : 0;
+      const padBonus = padBoostTimer > 0 ? 45 : 0;
+      return Math.min(base + sprintBonus + padBonus, getWorldHardCap());
+    }
+
+    // Shop-Kosten in Geschwindigkeit (wird beim Kauf von currentSpeed abgezogen!)
+    function getUpgradeSpeedCost(baseCost, lvl) {
+      return Math.round(baseCost + lvl * 18);
+    }
+
+    function renderSkinShop() {
+      ui.skinShopGrid.innerHTML = '';
+      for (const sk of SKINS) {
+        const card = document.createElement('div');
+        card.className = 'upgrade-card';
+
+        const isOwned = unlockedSkins.has(sk.id);
+        const isEquipped = activeSkinId === sk.id;
+
+        const titleEl = document.createElement('div');
+        titleEl.className = 'upgrade-name';
+        titleEl.textContent = sk.name;
+
+        const descEl = document.createElement('div');
+        descEl.className = 'upgrade-desc';
+        descEl.textContent = isOwned ? (isEquipped ? 'Aktuell ausgerüstet.' : 'Freigeschaltet – bereit zum Ausrüsten.') : `Kostet ${sk.cost} Speed einmalig.`;
+
+        const btnEl = document.createElement('button');
+        btnEl.className = 'buy-btn' + (isEquipped ? ' skin-equipped' : '');
+
+        if (isEquipped) {
+          btnEl.textContent = '✓ Ausgerüstet';
+          btnEl.disabled = true;
+        } else if (isOwned) {
+          btnEl.textContent = 'Ausrüsten';
+          btnEl.addEventListener('click', () => {
+            applySkin(sk.id);
+            playSound('buy');
+            refreshShopUI();
+          });
+        } else {
+          btnEl.textContent = `Kaufen (${sk.cost} Speed)`;
+          btnEl.disabled = currentSpeed < sk.cost;
+          btnEl.addEventListener('click', () => {
+            if (currentSpeed >= sk.cost) {
+              currentSpeed -= sk.cost;
+              unlockedSkins.add(sk.id);
+              applySkin(sk.id);
+              playSound('buy');
+              refreshShopUI();
+            }
+          });
+        }
+
+        card.appendChild(titleEl);
+        card.appendChild(descEl);
+        card.appendChild(btnEl);
+        ui.skinShopGrid.appendChild(card);
+      }
     }
 
     function refreshShopUI() {
-      ui.shopStepsDisplay.textContent = steps;
+      ui.shopSpeedDisplay.textContent = currentSpeed.toFixed(1);
+      ui.shopMaxSpeedDisplay.textContent = getMaxSpeed().toFixed(0);
       ui.lvlMaxSpeed.textContent = upgrades.maxSpeed;
       ui.lvlAccel.textContent = upgrades.accel;
       ui.lvlStepPower.textContent = upgrades.stepPower;
       ui.lvlSprintPower.textContent = upgrades.sprintPower;
 
-      const c1 = getUpgradeCost(15, upgrades.maxSpeed);
-      const c2 = getUpgradeCost(15, upgrades.accel);
-      const c3 = getUpgradeCost(20, upgrades.stepPower);
-      const c4 = getUpgradeCost(25, upgrades.sprintPower);
+      const c1 = getUpgradeSpeedCost(20, upgrades.maxSpeed);
+      const c2 = getUpgradeSpeedCost(15, upgrades.accel);
+      const c3 = getUpgradeSpeedCost(25, upgrades.stepPower);
+      const c4 = getUpgradeSpeedCost(30, upgrades.sprintPower);
 
-      ui.buyMaxSpeedBtn.textContent = infiniteUpgradesActive ? 'Kostenlos (Admin ∞)' : `Kaufen (${c1} Schritte)`;
-      ui.buyAccelBtn.textContent = infiniteUpgradesActive ? 'Kostenlos (Admin ∞)' : `Kaufen (${c2} Schritte)`;
-      ui.buyStepPowerBtn.textContent = infiniteUpgradesActive ? 'Kostenlos (Admin ∞)' : `Kaufen (${c3} Schritte)`;
-      ui.buySprintPowerBtn.textContent = infiniteUpgradesActive ? 'Kostenlos (Admin ∞)' : `Kaufen (${c4} Schritte)`;
+      ui.buyMaxSpeedBtn.textContent = `Kaufen (-${c1} Speed)`;
+      ui.buyAccelBtn.textContent = `Kaufen (-${c2} Speed)`;
+      ui.buyStepPowerBtn.textContent = `Kaufen (-${c3} Speed)`;
+      ui.buySprintPowerBtn.textContent = `Kaufen (-${c4} Speed)`;
 
-      ui.buyMaxSpeedBtn.disabled = !infiniteUpgradesActive && steps < c1;
-      ui.buyAccelBtn.disabled = !infiniteUpgradesActive && steps < c2;
-      ui.buyStepPowerBtn.disabled = !infiniteUpgradesActive && steps < c3;
-      ui.buySprintPowerBtn.disabled = !infiniteUpgradesActive && steps < c4;
+      ui.buyMaxSpeedBtn.disabled = currentSpeed < c1;
+      ui.buyAccelBtn.disabled = currentSpeed < c2;
+      ui.buyStepPowerBtn.disabled = currentSpeed < c3;
+      ui.buySprintPowerBtn.disabled = currentSpeed < c4;
+
+      renderSkinShop();
     }
 
     function openModal(modalEl) {
@@ -1521,22 +1782,29 @@
 
     function closeModal(modalEl) {
       modalEl.classList.add('hidden');
-      uiModalOpen = ui.shopModal.classList.contains('hidden') === false || ui.adminModal.classList.contains('hidden') === false;
-      if (!uiModalOpen && controlMode === 'pc' && gameStarted) {
+      uiModalOpen = !ui.shopModal.classList.contains('hidden') || !ui.adminModal.classList.contains('hidden');
+      if (!uiModalOpen && controlMode === 'pc' && gameStarted && !cutsceneActive) {
         renderer.domElement.requestPointerLock?.();
       }
     }
 
-    document.getElementById('openShopBtn').addEventListener('click', () => { initAudio(); openModal(ui.shopModal); });
+    document.getElementById('openShopBtn').addEventListener('click', () => {
+      initAudio();
+      openModal(ui.shopModal);
+    });
     document.getElementById('closeShopBtn').addEventListener('click', () => closeModal(ui.shopModal));
-    document.getElementById('openAdminBtn').addEventListener('click', () => { initAudio(); openModal(ui.adminModal); });
+
+    document.getElementById('openAdminBtn').addEventListener('click', () => {
+      initAudio();
+      openModal(ui.adminModal);
+    });
     document.getElementById('closeAdminBtn').addEventListener('click', () => closeModal(ui.adminModal));
 
-    // Shop-Käufe
+    // Shop-Upgrades kaufen (bezahlt mit aktueller Geschwindigkeit!)
     ui.buyMaxSpeedBtn.addEventListener('click', () => {
-      const cost = getUpgradeCost(15, upgrades.maxSpeed);
-      if (infiniteUpgradesActive || steps >= cost) {
-        if (!infiniteUpgradesActive) steps -= cost;
+      const cost = getUpgradeSpeedCost(20, upgrades.maxSpeed);
+      if (currentSpeed >= cost) {
+        currentSpeed -= cost;
         upgrades.maxSpeed += 1;
         playSound('buy');
         refreshShopUI();
@@ -1544,9 +1812,9 @@
     });
 
     ui.buyAccelBtn.addEventListener('click', () => {
-      const cost = getUpgradeCost(15, upgrades.accel);
-      if (infiniteUpgradesActive || steps >= cost) {
-        if (!infiniteUpgradesActive) steps -= cost;
+      const cost = getUpgradeSpeedCost(15, upgrades.accel);
+      if (currentSpeed >= cost) {
+        currentSpeed -= cost;
         upgrades.accel += 1;
         playSound('buy');
         refreshShopUI();
@@ -1554,9 +1822,9 @@
     });
 
     ui.buyStepPowerBtn.addEventListener('click', () => {
-      const cost = getUpgradeCost(20, upgrades.stepPower);
-      if (infiniteUpgradesActive || steps >= cost) {
-        if (!infiniteUpgradesActive) steps -= cost;
+      const cost = getUpgradeSpeedCost(25, upgrades.stepPower);
+      if (currentSpeed >= cost) {
+        currentSpeed -= cost;
         upgrades.stepPower += 1;
         playSound('buy');
         refreshShopUI();
@@ -1564,13 +1832,76 @@
     });
 
     ui.buySprintPowerBtn.addEventListener('click', () => {
-      const cost = getUpgradeCost(25, upgrades.sprintPower);
-      if (infiniteUpgradesActive || steps >= cost) {
-        if (!infiniteUpgradesActive) steps -= cost;
+      const cost = getUpgradeSpeedCost(30, upgrades.sprintPower);
+      if (currentSpeed >= cost) {
+        currentSpeed -= cost;
         upgrades.sprintPower += 1;
         playSound('buy');
         refreshShopUI();
       }
+    });
+
+    // Animations-Szene starten (Planetenflug bei 800 Speed oder Weltwechsel)
+    function startCutscene(mode) {
+      cutsceneMode = mode;
+      cutsceneActive = true;
+      cutsceneTimer = 0;
+      if (document.pointerLockElement) document.exitPointerLock?.();
+      ui.shopModal.classList.add('hidden');
+      ui.adminModal.classList.add('hidden');
+      uiModalOpen = false;
+      ui.cutsceneOverlay.classList.remove('hidden');
+      ui.cutsceneFill.style.width = '0%';
+      playSound('warp');
+
+      if (mode === 'planet') {
+        ui.cutsceneTitle.textContent = '🚀 SPEED 800 – FLUG ZU ANDEREM PLANETEN!';
+        ui.cutsceneSub.textContent = 'Du durchbrichst die Atmosphäre und fliegst zu einem neuen Planeten – danach startest du wieder bei 0 Speed mit bis zu 1500 Max-Speed!';
+      } else if (mode === 'toNewWorld') {
+        ui.cutsceneTitle.textContent = '🌌 WARP IN DIE NEUE WELT (MAX 1500 SPEED)';
+        ui.cutsceneSub.textContent = 'Deine Raketen-Triebwerke zünden – gleich öffnet sich die riesige Neue Welt mit neuen Biomen und bis zu 1500 Speed!';
+      } else {
+        ui.cutsceneTitle.textContent = '🌍 RÜCKKEHR ZUR ALTEN WELT';
+        ui.cutsceneSub.textContent = 'Du fliegst zurück zur ursprünglichen Open World...';
+      }
+    }
+
+    function finishCutscene() {
+      cutsceneActive = false;
+      ui.cutsceneOverlay.classList.add('hidden');
+
+      if (cutsceneMode === 'planet' || cutsceneMode === 'toNewWorld') {
+        hasVisitedNewWorld = true;
+        buildWorld(2);
+        currentSpeed = 0;
+        steps = 0;
+        velY = 0;
+        player.position.set(0, Math.max(getTerrainHeight(0, 0), WATER_LEVEL), 0);
+        ui.returnOldWorldBtn.style.display = 'inline-block';
+      } else if (cutsceneMode === 'toOldWorld') {
+        buildWorld(1);
+        currentSpeed = 0;
+        velY = 0;
+        player.position.set(0, Math.max(getTerrainHeight(0, 0), WATER_LEVEL), 0);
+      }
+
+      if (controlMode === 'pc' && gameStarted && !uiModalOpen) {
+        renderer.domElement.requestPointerLock?.();
+      }
+    }
+
+    // Button "Neue Welt" (aktiv, sobald Max-Speed erreicht oder durch Admin freigeschaltet)
+    ui.newWorldBtn.addEventListener('click', () => {
+      initAudio();
+      if (!ui.newWorldBtn.disabled) {
+        startCutscene('toNewWorld');
+      }
+    });
+
+    // Button "Alte Welt" (immer nutzbar, sobald die Neue Welt einmal besucht wurde)
+    ui.returnOldWorldBtn.addEventListener('click', () => {
+      initAudio();
+      startCutscene('toOldWorld');
     });
 
     // Admin-Code Prüfung & Aktionen
@@ -1578,54 +1909,44 @@
       const entered = ui.adminCodeInput.value.trim().toUpperCase();
       if (entered === SECRET_ADMIN_CODE) {
         adminUnlocked = true;
-        infiniteUpgradesActive = true;
-        ui.adminStatusMsg.textContent = '✅ Admin-Rechte aktiv! Unendlich Upgrades & Admin-Tools freigeschaltet.';
+        ui.adminStatusMsg.textContent = '✅ Admin-Rechte aktiv! Du kannst jetzt Speed geben, Skins freischalten oder Szenen testen.';
         ui.adminControls.style.opacity = '1';
         ui.adminControls.style.pointerEvents = 'auto';
         playSound('boost');
-        refreshShopUI();
       } else {
         ui.adminStatusMsg.textContent = '❌ Falscher Code.';
       }
     });
 
-    document.getElementById('adminInfUpgradesBtn').addEventListener('click', () => {
+    document.getElementById('adminAddSpeedBtn').addEventListener('click', () => {
       if (!adminUnlocked) return;
-      infiniteUpgradesActive = true;
-      upgrades.maxSpeed += 50;
-      upgrades.accel += 50;
-      upgrades.stepPower += 50;
-      upgrades.sprintPower += 50;
+      upgrades.maxSpeed = Math.max(upgrades.maxSpeed, 6);
+      currentSpeed = Math.min(currentSpeed + 120, getMaxSpeed());
       playSound('boost');
-      ui.adminStatusMsg.textContent = '♾️ Alle Upgrades um +50 Stufen erhöht & unendlich Upgrades aktiviert!';
+      ui.adminStatusMsg.textContent = '⚡ +120 Speed gegeben!';
       refreshShopUI();
     });
 
-    document.getElementById('adminGiveStepsBtn').addEventListener('click', () => {
+    document.getElementById('adminUnlockSkinsBtn').addEventListener('click', () => {
       if (!adminUnlocked) return;
-      steps += 10000;
+      for (const s of SKINS) unlockedSkins.add(s.id);
       playSound('buy');
-      ui.adminStatusMsg.textContent = '👟 +10.000 Schritte hinzugefügt!';
+      ui.adminStatusMsg.textContent = '🎭 Alle Skins wurden freigeschaltet!';
       refreshShopUI();
     });
 
-    document.getElementById('adminBoost100Btn').addEventListener('click', () => {
+    document.getElementById('adminTriggerPlanetBtn').addEventListener('click', () => {
       if (!adminUnlocked) return;
-      upgrades.maxSpeed = Math.max(upgrades.maxSpeed, 15);
-      currentSpeed = Math.max(currentSpeed, 125);
-      playSound('boost');
-      ui.adminStatusMsg.textContent = '🔥 Tempo auf 125 gesetzt -> Feuer-Effekt aktiv!';
+      startCutscene('planet');
     });
 
-    document.getElementById('adminBoost500Btn').addEventListener('click', () => {
+    document.getElementById('adminEnableNewWorldBtn').addEventListener('click', () => {
       if (!adminUnlocked) return;
-      upgrades.maxSpeed = Math.max(upgrades.maxSpeed, 55);
-      currentSpeed = Math.max(currentSpeed, 520);
-      playSound('boost');
-      ui.adminStatusMsg.textContent = '⚡ Tempo auf 520 gesetzt -> Blitz-Effekt aktiv!';
+      ui.newWorldBtn.disabled = false;
+      ui.adminStatusMsg.textContent = '🌌 Button "Neue Welt" wurde aktiviert!';
     });
 
-    // ---------- Steuerung Startmenü ----------
+    // ---------- Steuerung Startmenü & Eingaben ----------
     function selectControlMode(mode) {
       initAudio();
       controlMode = mode;
@@ -1652,7 +1973,7 @@
 
     let isMouseDragging = false;
     renderer.domElement.addEventListener('mousedown', () => {
-      if (controlMode !== 'pc' || !gameStarted || uiModalOpen) return;
+      if (controlMode !== 'pc' || !gameStarted || uiModalOpen || cutsceneActive) return;
       if (document.pointerLockElement !== renderer.domElement) {
         renderer.domElement.requestPointerLock?.();
       }
@@ -1662,7 +1983,7 @@
     window.addEventListener('mouseup', () => { isMouseDragging = false; });
 
     window.addEventListener('mousemove', (e) => {
-      if (controlMode !== 'pc' || !gameStarted || uiModalOpen) return;
+      if (controlMode !== 'pc' || !gameStarted || uiModalOpen || cutsceneActive) return;
       if (document.pointerLockElement === renderer.domElement || isMouseDragging) {
         cameraYaw -= e.movementX * 0.003;
         cameraPitch = THREE.MathUtils.clamp(cameraPitch + e.movementY * 0.0024, 0.08, 1.15);
@@ -1670,7 +1991,7 @@
     });
 
     window.addEventListener('keydown', (e) => {
-      if (uiModalOpen) return;
+      if (uiModalOpen || cutsceneActive) return;
       if (e.code === 'Space' && !keys['Space'] && gameStarted) {
         e.preventDefault();
         jumpHeld = true;
@@ -1687,7 +2008,6 @@
       if (e.code === 'Space') jumpHeld = false;
     });
 
-    // Touch Joystick & Buttons
     const joystickZone = document.getElementById('joystickZone');
     const joystickKnob = document.getElementById('joystickKnob');
     let joyTouchId = null;
@@ -1832,7 +2152,7 @@
       } else if (isDoubleTap && !airPushUsed) {
         airPushUsed = true;
         velY = Math.max(velY, 10.5);
-        currentSpeed = Math.min(currentSpeed + 8.0, getMaxSpeed() + 12.0);
+        currentSpeed = Math.min(currentSpeed + 12.0, getMaxSpeed());
         squashAmount = 0.2;
         playSound('airpush');
 
@@ -1852,20 +2172,6 @@
       }
     }
 
-    // ---------- Tempo- & Upgrade-Berechnung ----------
-    function getStepBonusSpeed() {
-      const multiplier = 0.06 + upgrades.stepPower * 0.045;
-      return Math.min(steps * multiplier, 900);
-    }
-
-    function getMaxSpeed() {
-      const baseCap = 14.0 + upgrades.maxSpeed * 12.0 + getStepBonusSpeed();
-      const sprintBonus = sprintActiveTimer > 0 ? (14.0 + upgrades.sprintPower * 10.0) : 0;
-      const padBonus = padBoostTimer > 0 ? 22.0 : 0;
-      return baseCap + sprintBonus + padBonus;
-    }
-
-    // ---------- Startposition ----------
     player.position.set(0, Math.max(getTerrainHeight(0, 0), WATER_LEVEL), 0);
 
     // ---------- Haupt-Loop ----------
@@ -1877,113 +2183,156 @@
       const dt = Math.min((now - lastTime) / 1000, 0.05);
       lastTime = now;
 
-      // Sprint-Logik: 5 Sek. Boost, danach 10 Sek. Cooldown
-      const wantsSprint = Boolean(keys['ShiftLeft'] || keys['ShiftRight'] || touchSprintHeld);
+      // Falls eine Cutscene läuft (Planetenflug oder Weltwechsel)
+      if (cutsceneActive) {
+        cutsceneTimer += dt;
+        const p = Math.min(1, cutsceneTimer / CUTSCENE_DURATION);
+        ui.cutsceneFill.style.width = `${Math.round(p * 100)}%`;
 
-      if (sprintCooldownTimer > 0) {
-        sprintCooldownTimer = Math.max(0, sprintCooldownTimer - dt);
-      }
+        player.position.y += dt * (cutsceneMode === 'toOldWorld' ? -12 : 28);
+        player.rotation.y += dt * 9;
 
-      if (sprintActiveTimer > 0) {
-        sprintActiveTimer = Math.max(0, sprintActiveTimer - dt);
-        if (sprintActiveTimer === 0) {
-          sprintCooldownTimer = SPRINT_COOLDOWN;
-          sprintExhaustedThisHold = true;
-        }
-      } else if (wantsSprint && !sprintExhaustedThisHold && sprintCooldownTimer <= 0 && gameStarted && !uiModalOpen) {
-        sprintActiveTimer = SPRINT_DURATION;
-        squashAmount = 0.22;
-        playSound('sprint');
-        for (let i = 0; i < 16; i++) {
+        for (let i = 0; i < 4; i++) {
           spawnParticle(
-            new THREE.Vector3(player.position.x, player.position.y + 1.0, player.position.z),
-            0xfacc15,
-            new THREE.Vector3((Math.random() - 0.5) * 8, 1.5 + Math.random() * 3.5, (Math.random() - 0.5) * 8),
+            new THREE.Vector3(
+              player.position.x + (Math.random() - 0.5) * 4,
+              player.position.y + (Math.random() - 0.5) * 4,
+              player.position.z + (Math.random() - 0.5) * 4
+            ),
+            Math.random() < 0.5 ? 0x38bdf8 : 0xe879f9,
+            new THREE.Vector3((Math.random() - 0.5) * 14, -8 - Math.random() * 10, (Math.random() - 0.5) * 14),
             0.45,
-            1.15
+            1.5
           );
         }
-      }
 
-      if (padBoostTimer > 0) {
-        padBoostTimer = Math.max(0, padBoostTimer - dt);
-      }
-
-      // Bewegung
-      let moveForward = 0;
-      let moveRight = 0;
-
-      if (gameStarted && !uiModalOpen) {
-        if (controlMode === 'pc') {
-          if (keys['KeyW'] || keys['ArrowUp']) moveForward += 1;
-          if (keys['KeyS'] || keys['ArrowDown']) moveForward -= 1;
-          if (keys['KeyD'] || keys['ArrowRight']) moveRight += 1;
-          if (keys['KeyA'] || keys['ArrowLeft']) moveRight -= 1;
-        } else if (controlMode === 'touch') {
-          moveForward = -touchMoveVec.y;
-          moveRight = touchMoveVec.x;
+        if (cutsceneTimer >= CUTSCENE_DURATION) {
+          finishCutscene();
         }
-      }
+      } else {
+        // Sprint-Logik: 5 Sek. Boost, danach 10 Sek. Cooldown
+        const wantsSprint = Boolean(keys['ShiftLeft'] || keys['ShiftRight'] || touchSprintHeld);
 
-      const inputMag = Math.min(Math.hypot(moveForward, moveRight), 1);
-      const isMoving = inputMag > 0.05;
-
-      const maxSpd = getMaxSpeed();
-      const targetSpd = isMoving ? maxSpd * inputMag : 0;
-      const accelRate = isMoving ? (10.0 + upgrades.accel * 2.4 + (sprintActiveTimer > 0 ? 8.0 : 0)) : 11.0;
-      currentSpeed = THREE.MathUtils.lerp(currentSpeed, targetSpd, 1 - Math.exp(-accelRate * dt));
-
-      const prevX = player.position.x;
-      const prevZ = player.position.z;
-
-      if (isMoving) {
-        const forwardVec = new THREE.Vector3(-Math.sin(cameraYaw), 0, -Math.cos(cameraYaw));
-        const rightVec = new THREE.Vector3(Math.cos(cameraYaw), 0, -Math.sin(cameraYaw));
-
-        const wishDir = new THREE.Vector3()
-          .addScaledVector(forwardVec, moveForward)
-          .addScaledVector(rightVec, moveRight)
-          .normalize();
-
-        player.position.x += wishDir.x * currentSpeed * dt;
-        player.position.z += wishDir.z * currentSpeed * dt;
-
-        player.position.x = THREE.MathUtils.clamp(player.position.x, -WORLD_HALF + 6, WORLD_HALF - 6);
-        player.position.z = THREE.MathUtils.clamp(player.position.z, -WORLD_HALF + 6, WORLD_HALF - 6);
-
-        const targetYaw = Math.atan2(wishDir.x, wishDir.z);
-        let diff = targetYaw - player.rotation.y;
-        while (diff > Math.PI) diff -= Math.PI * 2;
-        while (diff < -Math.PI) diff += Math.PI * 2;
-        player.rotation.y += diff * Math.min(1, dt * 15);
-      }
-
-      // Schritte anhand Strecke zählen -> erhöht Tempo!
-      const stepDist = Math.hypot(player.position.x - prevX, player.position.z - prevZ);
-      if (isGrounded && stepDist > 0.001) {
-        distanceAccumulator += stepDist;
-        const stepLength = 2.4;
-        if (distanceAccumulator >= stepLength) {
-          const earned = Math.floor(distanceAccumulator / stepLength) * (1 + Math.floor(upgrades.stepPower * 0.5));
-          distanceAccumulator = 0;
-          steps += earned;
-          currentSpeed = Math.min(currentSpeed + earned * (0.2 + upgrades.stepPower * 0.08), getMaxSpeed());
+        if (sprintCooldownTimer > 0) {
+          sprintCooldownTimer = Math.max(0, sprintCooldownTimer - dt);
         }
-      }
 
-      // Vertikale Physik & Terrain/Wasser-Höhe
-      const groundHeight = Math.max(getTerrainHeight(player.position.x, player.position.z), WATER_LEVEL);
-      velY -= 29.0 * dt;
-      player.position.y += velY * dt;
-
-      if (player.position.y <= groundHeight) {
-        if (!isGrounded && velY < -6) {
-          squashAmount = -0.22;
+        if (sprintActiveTimer > 0) {
+          sprintActiveTimer = Math.max(0, sprintActiveTimer - dt);
+          if (sprintActiveTimer === 0) {
+            sprintCooldownTimer = SPRINT_COOLDOWN;
+            sprintExhaustedThisHold = true;
+          }
+        } else if (wantsSprint && !sprintExhaustedThisHold && sprintCooldownTimer <= 0 && gameStarted && !uiModalOpen) {
+          sprintActiveTimer = SPRINT_DURATION;
+          squashAmount = 0.22;
+          playSound('sprint');
+          for (let i = 0; i < 16; i++) {
+            spawnParticle(
+              new THREE.Vector3(player.position.x, player.position.y + 1.0, player.position.z),
+              0xfacc15,
+              new THREE.Vector3((Math.random() - 0.5) * 8, 1.5 + Math.random() * 3.5, (Math.random() - 0.5) * 8),
+              0.45,
+              1.15
+            );
+          }
         }
-        player.position.y = groundHeight;
-        velY = 0;
-        isGrounded = true;
-        airPushUsed = false;
+
+        if (padBoostTimer > 0) {
+          padBoostTimer = Math.max(0, padBoostTimer - dt);
+        }
+
+        let moveForward = 0;
+        let moveRight = 0;
+
+        if (gameStarted && !uiModalOpen) {
+          if (controlMode === 'pc') {
+            if (keys['KeyW'] || keys['ArrowUp']) moveForward += 1;
+            if (keys['KeyS'] || keys['ArrowDown']) moveForward -= 1;
+            if (keys['KeyD'] || keys['ArrowRight']) moveRight += 1;
+            if (keys['KeyA'] || keys['ArrowLeft']) moveRight -= 1;
+          } else if (controlMode === 'touch') {
+            moveForward = -touchMoveVec.y;
+            moveRight = touchMoveVec.x;
+          }
+        }
+
+        const inputMag = Math.min(Math.hypot(moveForward, moveRight), 1);
+        const isMoving = inputMag > 0.05;
+
+        const maxSpd = getMaxSpeed();
+        const targetSpd = isMoving ? maxSpd * inputMag : 0;
+        const accelRate = isMoving ? (9.0 + upgrades.accel * 2.5 + (sprintActiveTimer > 0 ? 7.0 : 0)) : 10.0;
+        currentSpeed = Math.min(
+          THREE.MathUtils.lerp(currentSpeed, targetSpd, 1 - Math.exp(-accelRate * dt)),
+          getWorldHardCap()
+        );
+
+        const prevX = player.position.x;
+        const prevZ = player.position.z;
+
+        if (isMoving) {
+          const forwardVec = new THREE.Vector3(-Math.sin(cameraYaw), 0, -Math.cos(cameraYaw));
+          const rightVec = new THREE.Vector3(Math.cos(cameraYaw), 0, -Math.sin(cameraYaw));
+
+          const wishDir = new THREE.Vector3()
+            .addScaledVector(forwardVec, moveForward)
+            .addScaledVector(rightVec, moveRight)
+            .normalize();
+
+          const visualMoveSpeed = Math.min(currentSpeed, 140);
+          player.position.x += wishDir.x * visualMoveSpeed * dt;
+          player.position.z += wishDir.z * visualMoveSpeed * dt;
+
+          const half = getWorldHalf();
+          player.position.x = THREE.MathUtils.clamp(player.position.x, -half + 6, half - 6);
+          player.position.z = THREE.MathUtils.clamp(player.position.z, -half + 6, half - 6);
+
+          const targetYaw = Math.atan2(wishDir.x, wishDir.z);
+          let diff = targetYaw - player.rotation.y;
+          while (diff > Math.PI) diff -= Math.PI * 2;
+          while (diff < -Math.PI) diff += Math.PI * 2;
+          player.rotation.y += diff * Math.min(1, dt * 15);
+        }
+
+        // Schritte anhand Strecke zählen -> erhöht Tempo!
+        const stepDist = Math.hypot(player.position.x - prevX, player.position.z - prevZ);
+        if (isGrounded && stepDist > 0.001) {
+          distanceAccumulator += stepDist;
+          const stepLength = 2.4;
+          if (distanceAccumulator >= stepLength) {
+            const earned = Math.floor(distanceAccumulator / stepLength) * (1 + Math.floor(upgrades.stepPower * 0.5));
+            distanceAccumulator = 0;
+            steps += earned;
+            currentSpeed = Math.min(currentSpeed + earned * (0.45 + upgrades.stepPower * 0.25), getMaxSpeed());
+          }
+        }
+
+        // Vertikale Physik
+        const groundHeight = Math.max(getTerrainHeight(player.position.x, player.position.z), WATER_LEVEL);
+        velY -= 29.0 * dt;
+        player.position.y += velY * dt;
+
+        if (player.position.y <= groundHeight) {
+          if (!isGrounded && velY < -6) {
+            squashAmount = -0.22;
+          }
+          player.position.y = groundHeight;
+          velY = 0;
+          isGrounded = true;
+          airPushUsed = false;
+        }
+
+        // Wenn in Welt 1 Geschwindigkeit 800 erreicht wird -> Planetenflug-Animationsszene!
+        if (currentWorld === 1 && currentSpeed >= 800 && !planetTravelTriggered) {
+          planetTravelTriggered = true;
+          startCutscene('planet');
+        }
+
+        // Button "Neue Welt" freischalten, sobald Max-Speed erreicht wurde
+        if (currentSpeed >= getMaxSpeed() - 0.5 && getMaxSpeed() >= 120) {
+          ui.newWorldBtn.disabled = false;
+        }
       }
 
       // ---------- Charakter-Animationen ----------
@@ -1992,8 +2341,8 @@
       const scaleXZ = 1 - squashAmount * 0.55;
       characterRig.scale.set(scaleXZ, scaleY, scaleXZ);
 
-      if (isGrounded && currentSpeed > 0.35) {
-        const strideFreq = 6.5 + Math.min(currentSpeed * 0.55, 26);
+      if (isGrounded && currentSpeed > 0.35 && !cutsceneActive) {
+        const strideFreq = 6.5 + Math.min(currentSpeed * 0.22, 24);
         animCycle += dt * strideFreq;
 
         const swing = Math.sin(animCycle);
@@ -2003,7 +2352,7 @@
         const elbowBendL = -0.55 - Math.max(0, Math.sin(animCycle)) * 0.65;
         const elbowBendR = -0.55 - Math.max(0, Math.sin(animCycle + Math.PI)) * 0.65;
 
-        const sprintLean = sprintActiveTimer > 0 ? 0.38 : 0.14 + Math.min(currentSpeed * 0.004, 0.2);
+        const sprintLean = sprintActiveTimer > 0 ? 0.38 : 0.14 + Math.min(currentSpeed * 0.001, 0.2);
         chestPivot.rotation.x = sprintLean + Math.abs(Math.sin(animCycle)) * 0.06;
         chestPivot.rotation.y = Math.sin(animCycle) * 0.18;
         chestPivot.position.y = 1.06 + Math.abs(Math.cos(animCycle)) * 0.08;
@@ -2022,7 +2371,7 @@
 
         rightArm.root.rotation.x = swing * 1.05;
         rightArm.mid.rotation.x = elbowBendR;
-      } else if (!isGrounded) {
+      } else if (!isGrounded || cutsceneActive) {
         chestPivot.rotation.x = velY > 0 ? -0.14 : 0.22;
         chestPivot.rotation.y = 0;
         chestPivot.position.y = 1.08;
@@ -2059,40 +2408,57 @@
         rightArm.mid.rotation.x = THREE.MathUtils.lerp(rightArm.mid.rotation.x, -0.22, 0.15);
       }
 
-      // ---------- Geschwindigkeits-Effekte: Feuer ab 100, Blitz ab 500 ----------
-      const hasFireEffect = currentSpeed >= 100;
-      const hasLightningEffect = currentSpeed >= 500;
+      // ---------- Bessere Geschwindigkeits-Effekte: Feuer 100+, Frost 250+, Blitz 500+ ----------
+      const hasFire = currentSpeed >= 100;
+      const hasFrost = currentSpeed >= 250;
+      const hasLightning = currentSpeed >= 500;
 
-      if (hasLightningEffect) {
-        if (Math.random() < 0.65) spawnLightningStrike();
-        if (Math.random() < 0.75) {
+      if (hasLightning) {
+        if (Math.random() < 0.75) spawnLightningStrike();
+        if (Math.random() < 0.85) {
           spawnParticle(
             new THREE.Vector3(
-              player.position.x + (Math.random() - 0.5) * 1.4,
-              player.position.y + 0.4 + Math.random() * 1.8,
-              player.position.z + (Math.random() - 0.5) * 1.4
+              player.position.x + (Math.random() - 0.5) * 1.8,
+              player.position.y + 0.5 + Math.random() * 2.2,
+              player.position.z + (Math.random() - 0.5) * 1.8
             ),
             0xe879f9,
-            new THREE.Vector3((Math.random() - 0.5) * 9, 2 + Math.random() * 5, (Math.random() - 0.5) * 9),
-            0.35,
-            1.2
+            new THREE.Vector3((Math.random() - 0.5) * 11, 2.5 + Math.random() * 5.5, (Math.random() - 0.5) * 11),
+            0.38,
+            1.35
           );
         }
       }
 
-      if (hasFireEffect) {
-        if (Math.random() < 0.85) {
-          const fireCol = Math.random() < 0.55 ? 0xf97316 : 0xfacc15;
+      if (hasFrost) {
+        if (Math.random() < 0.7) {
           spawnParticle(
             new THREE.Vector3(
-              player.position.x + (Math.random() - 0.5) * 1.1,
-              player.position.y + 0.3 + Math.random() * 1.2,
-              player.position.z + (Math.random() - 0.5) * 1.1
+              player.position.x + (Math.random() - 0.5) * 1.6,
+              player.position.y + 0.4 + Math.random() * 1.6,
+              player.position.z + (Math.random() - 0.5) * 1.6
             ),
-            fireCol,
-            new THREE.Vector3((Math.random() - 0.5) * 4.5, 2.5 + Math.random() * 4.5, (Math.random() - 0.5) * 4.5),
-            0.42,
-            1.35
+            Math.random() < 0.5 ? 0x22d3ee : 0xe0f2fe,
+            new THREE.Vector3((Math.random() - 0.5) * 6.5, 1.5 + Math.random() * 3.5, (Math.random() - 0.5) * 6.5),
+            0.45,
+            1.25
+          );
+        }
+      }
+
+      if (hasFire) {
+        if (Math.random() < 0.9) {
+          const fc = Math.random() < 0.55 ? 0xf97316 : 0xfacc15;
+          spawnParticle(
+            new THREE.Vector3(
+              player.position.x + (Math.random() - 0.5) * 1.2,
+              player.position.y + 0.3 + Math.random() * 1.4,
+              player.position.z + (Math.random() - 0.5) * 1.2
+            ),
+            fc,
+            new THREE.Vector3((Math.random() - 0.5) * 5.0, 2.8 + Math.random() * 5.0, (Math.random() - 0.5) * 5.0),
+            0.44,
+            1.45
           );
         }
       } else if (isMoving && Math.random() < 0.25) {
@@ -2109,7 +2475,6 @@
         );
       }
 
-      // Blitzlinien aktualisieren
       for (let i = lightningBolts.length - 1; i >= 0; i--) {
         const lb = lightningBolts[i];
         lb.life -= dt;
@@ -2119,28 +2484,33 @@
           lb.line.material.dispose();
           lightningBolts.splice(i, 1);
         } else {
-          lb.line.material.opacity = lb.life / 0.14;
+          lb.line.material.opacity = lb.life / 0.15;
         }
       }
 
       core.rotation.y += dt * 4.5;
       core.rotation.x += dt * 2.5;
 
-      auraRing.rotation.z += dt * (hasLightningEffect ? 10 : hasFireEffect ? 6.5 : 2.5);
-      if (hasLightningEffect) {
-        auraRing.material.opacity = 0.85;
+      auraRing.rotation.z += dt * (hasLightning ? 11 : hasFrost ? 7 : hasFire ? 5 : 2.5);
+      if (hasLightning) {
+        auraRing.material.opacity = 0.88;
         auraRing.material.color.setHex(0xe879f9);
-        playerLight.intensity = 3.6;
+        playerLight.intensity = 3.8;
         playerLight.color.setHex(0xe879f9);
-      } else if (hasFireEffect) {
+      } else if (hasFrost) {
+        auraRing.material.opacity = 0.82;
+        auraRing.material.color.setHex(0x22d3ee);
+        playerLight.intensity = 3.2;
+        playerLight.color.setHex(0x22d3ee);
+      } else if (hasFire) {
         auraRing.material.opacity = 0.8;
         auraRing.material.color.setHex(0xf97316);
         playerLight.intensity = 3.0;
         playerLight.color.setHex(0xf97316);
       } else {
-        auraRing.material.opacity = Math.min(0.45, currentSpeed / 40);
+        auraRing.material.opacity = Math.min(0.45, currentSpeed / 80);
         auraRing.material.color.setHex(0x38bdf8);
-        playerLight.intensity = Math.min(2.0, currentSpeed / 15);
+        playerLight.intensity = Math.min(2.0, currentSpeed / 40);
         playerLight.color.setHex(0x38bdf8);
       }
       playerLight.position.set(player.position.x, player.position.y + 2.2, player.position.z);
@@ -2156,11 +2526,11 @@
         bp.beamMesh.position.y = 1.9 + Math.sin(now * 0.004 + bp.x) * 0.25;
 
         const dist = Math.hypot(player.position.x - bp.x, player.position.z - bp.z);
-        if (dist < bp.radius && Math.abs(player.position.y - bp.group.position.y) < 4.0 && bp.cooldown <= 0) {
+        if (dist < bp.radius && Math.abs(player.position.y - bp.group.position.y) < 4.2 && bp.cooldown <= 0) {
           bp.cooldown = 1.6;
           padBoostTimer = 3.5;
           steps += 6 * (1 + Math.floor(upgrades.stepPower * 0.5));
-          currentSpeed = Math.min(currentSpeed + 22.0, getMaxSpeed() + 18.0);
+          currentSpeed = Math.min(currentSpeed + 35.0, getMaxSpeed());
           if (isGrounded) velY = 8.0;
           playSound('boost');
 
@@ -2186,14 +2556,14 @@
         const dx = player.position.x - orb.x;
         const dy = (player.position.y + 1.1) - orb.mesh.position.y;
         const dz = player.position.z - orb.z;
-        if (dx * dx + dy * dy + dz * dz < 2.5) {
-          scene.remove(orb.mesh);
+        if (dx * dx + dy * dy + dz * dz < 2.6) {
+          worldGroup.remove(orb.mesh);
           orbs.splice(i, 1);
 
           orbsCollected += 1;
           const gainedSteps = 4 * (1 + Math.floor(upgrades.stepPower * 0.5));
           steps += gainedSteps;
-          currentSpeed = Math.min(currentSpeed + 2.2 + upgrades.stepPower * 0.6, getMaxSpeed() + 5.0);
+          currentSpeed = Math.min(currentSpeed + 4.5 + upgrades.stepPower * 1.4, getMaxSpeed());
           playSound('orb', steps);
 
           for (let p = 0; p < 8; p++) {
@@ -2206,9 +2576,8 @@
             );
           }
 
-          const nx = (Math.random() - 0.5) * (WORLD_HALF * 1.88);
-          const nz = (Math.random() - 0.5) * (WORLD_HALF * 1.88);
-          spawnOrbAt(nx, nz, 1.45);
+          const half = getWorldHalf();
+          spawnOrbAt((Math.random() - 0.5) * (half * 1.88), (Math.random() - 0.5) * (half * 1.88), 1.45);
         }
       }
 
@@ -2223,12 +2592,12 @@
         }
         pt.vel.y -= 11.0 * dt;
         pt.mesh.position.addScaledVector(pt.vel, dt);
-        pt.mesh.scale.setScalar(Math.max(0.01, (pt.life / pt.maxLife) * 1.15));
+        pt.mesh.scale.setScalar(Math.max(0.01, (pt.life / pt.maxLife) * 1.2));
         pt.mesh.material.opacity = pt.life / pt.maxLife;
       }
 
       // ---------- Kamera & dynamisches FOV ----------
-      const distBack = 7.6 + Math.min(currentSpeed * 0.08, 7.0);
+      const distBack = 7.8 + Math.min(currentSpeed * 0.015, 7.5);
       const horizDist = Math.cos(cameraPitch) * distBack;
       const vertDist = Math.sin(cameraPitch) * distBack;
 
@@ -2246,7 +2615,7 @@
 
       camera.lookAt(player.position.x, player.position.y + 1.55, player.position.z);
 
-      const targetFov = 70 + Math.min(currentSpeed * 0.35, 28);
+      const targetFov = 70 + Math.min(currentSpeed * 0.03, 28);
       camera.fov = THREE.MathUtils.lerp(camera.fov, targetFov, 1 - Math.exp(-8 * dt));
       camera.updateProjectionMatrix();
 
@@ -2257,11 +2626,15 @@
         ui.steps.textContent = steps;
         ui.orbs.textContent = orbsCollected;
         ui.speed.textContent = currentSpeed.toFixed(1);
-        ui.capSpeed.textContent = getMaxSpeed().toFixed(1);
+        ui.capSpeed.textContent = getMaxSpeed().toFixed(0);
         ui.coords.textContent = `${Math.round(player.position.x)}, ${Math.round(player.position.z)}`;
 
         const pct = Math.min(100, (currentSpeed / Math.max(getMaxSpeed(), 1)) * 100);
         ui.speedFill.style.width = `${pct}%`;
+
+        ui.worldBadge.textContent = currentWorld === 1
+          ? '🌍 Welt 1: Terra Prime (Max 800)'
+          : '🌌 Welt 2: Aetheris Nova (Max 1500)';
 
         const bInfo = getBiomeInfo(player.position.x, player.position.z);
         ui.biomeBadge.textContent = bInfo.label;
@@ -2288,14 +2661,17 @@
           ui.sprintBtnSub.textContent = '5.0s';
         }
 
-        if (hasLightningEffect) {
-          ui.auraBadge.textContent = '⚡🔥 Effekt: Blitz & Feuer (500+)';
+        if (hasLightning) {
+          ui.auraBadge.textContent = '⚡❄️🔥 Effekt: Blitz & Frost & Feuer (500+)';
           ui.auraBadge.className = 'badge lightning';
-        } else if (hasFireEffect) {
-          ui.auraBadge.textContent = '🔥 Effekt: Feuer (100+)';
+        } else if (hasFrost) {
+          ui.auraBadge.textContent = '❄️🔥 Effekt: Frost-Sturm & Feuer (250+)';
+          ui.auraBadge.className = 'badge frost';
+        } else if (hasFire) {
+          ui.auraBadge.textContent = '🔥 Effekt: Feuer-Flamme (100+)';
           ui.auraBadge.className = 'badge fire';
         } else {
-          ui.auraBadge.textContent = '✨ Effekt: Basis (Feuer ab 100 · Blitz ab 500)';
+          ui.auraBadge.textContent = '✨ Effekt: Basis (Feuer 100 · Frost 250 · Blitz 500)';
           ui.auraBadge.className = 'badge';
         }
       }
