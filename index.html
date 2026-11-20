@@ -3,47 +3,125 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no" />
-  <title>Step Rush 3D - Infinite Overdrive</title>
+  <title>Step Rush 3D - Open World Overdrive</title>
   <style>
     * { box-sizing: border-box; }
     html, body {
       margin: 0;
       height: 100%;
       overflow: hidden;
-      background: #0b1020;
+      background: #070b14;
       font-family: system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
       color: white;
       user-select: none;
+      -webkit-user-select: none;
     }
     canvas { display: block; touch-action: none; }
 
+    /* ---------- Startmenü ---------- */
+    #startMenu {
+      position: fixed;
+      inset: 0;
+      display: grid;
+      place-items: center;
+      background: radial-gradient(circle at center, rgba(15, 23, 42, 0.86), rgba(3, 7, 18, 0.96));
+      backdrop-filter: blur(12px);
+      z-index: 50;
+      padding: 20px;
+    }
+    #startMenu.hidden { display: none; }
+
+    .menu-card {
+      width: min(94vw, 560px);
+      background: rgba(15, 23, 42, 0.92);
+      border: 1px solid rgba(56, 189, 248, 0.45);
+      border-radius: 28px;
+      padding: 32px 28px;
+      text-align: center;
+      box-shadow: 0 30px 90px rgba(0, 0, 0, 0.75), 0 0 40px rgba(34, 211, 238, 0.15);
+    }
+
+    .menu-title {
+      font-size: clamp(28px, 5vw, 42px);
+      font-weight: 900;
+      margin: 0 0 8px;
+      background: linear-gradient(90deg, #22d3ee, #60a5fa, #c084fc);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      letter-spacing: 0.02em;
+    }
+
+    .menu-subtitle {
+      color: #94a3b8;
+      font-size: 15px;
+      margin: 0 0 26px;
+      line-height: 1.5;
+    }
+
+    .device-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+      margin-bottom: 18px;
+    }
+
+    @media (max-width: 500px) {
+      .device-grid { grid-template-columns: 1fr; }
+    }
+
+    .device-btn {
+      background: rgba(30, 41, 59, 0.85);
+      border: 2px solid rgba(96, 165, 250, 0.35);
+      border-radius: 20px;
+      padding: 22px 16px;
+      color: white;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .device-btn:hover, .device-btn:active {
+      transform: translateY(-3px);
+      border-color: #22d3ee;
+      background: rgba(30, 58, 138, 0.45);
+      box-shadow: 0 12px 30px rgba(34, 211, 238, 0.25);
+    }
+
+    .device-icon { font-size: 38px; }
+    .device-name { font-size: 18px; font-weight: 800; color: #f8fafc; }
+    .device-desc { font-size: 12px; color: #94a3b8; line-height: 1.4; }
+
+    /* ---------- HUD ---------- */
     #hud {
       position: fixed;
       top: 14px;
       left: 14px;
       right: 14px;
       display: flex;
-      gap: 12px;
+      gap: 10px;
       flex-wrap: wrap;
       align-items: flex-start;
       pointer-events: none;
       text-shadow: 0 2px 8px rgba(0,0,0,.7);
-      z-index: 10;
+      z-index: 15;
     }
 
     .card {
       background: rgba(15, 23, 42, .75);
       border: 1px solid rgba(96, 165, 250, .35);
       border-radius: 14px;
-      padding: 10px 14px;
-      min-width: 90px;
+      padding: 8px 14px;
+      min-width: 88px;
       backdrop-filter: blur(8px);
-      transition: border-color 0.3s ease, box-shadow 0.3s ease;
+      transition: border-color 0.3s ease;
     }
 
     .label {
       display: block;
-      font-size: 11px;
+      font-size: 10px;
       letter-spacing: .12em;
       text-transform: uppercase;
       color: #93c5fd;
@@ -51,18 +129,32 @@
     }
 
     .value {
-      font-size: 22px;
+      font-size: 20px;
       font-weight: 800;
       line-height: 1.1;
     }
 
+    #menuSwitchBtn {
+      pointer-events: auto;
+      margin-left: auto;
+      background: rgba(15, 23, 42, 0.85);
+      border: 1px solid rgba(148, 163, 184, 0.4);
+      color: #e2e8f0;
+      border-radius: 12px;
+      padding: 10px 14px;
+      font-size: 13px;
+      font-weight: 700;
+      cursor: pointer;
+      backdrop-filter: blur(8px);
+    }
+
     #tierBadge {
       position: fixed;
-      top: 88px;
+      top: 78px;
       left: 14px;
       padding: 6px 14px;
       border-radius: 999px;
-      font-size: 13px;
+      font-size: 12px;
       font-weight: 800;
       letter-spacing: 0.08em;
       text-transform: uppercase;
@@ -70,149 +162,183 @@
       border: 1px solid rgba(34, 211, 238, 0.5);
       color: #67e8f9;
       pointer-events: none;
+      z-index: 15;
       transition: all 0.3s ease;
-      z-index: 10;
     }
 
     #speedBar {
       position: fixed;
       left: 14px;
       right: 14px;
-      bottom: 16px;
-      height: 14px;
+      top: 114px;
+      height: 8px;
+      max-width: 320px;
       border-radius: 999px;
       background: rgba(15, 23, 42, .85);
       border: 1px solid rgba(96, 165, 250, .35);
       overflow: hidden;
       pointer-events: none;
-      z-index: 10;
+      z-index: 15;
     }
 
     #speedFill {
       height: 100%;
       width: 0%;
       border-radius: 999px;
-      background: linear-gradient(90deg, #22d3ee, #3b82f6, #a855f7);
-      transition: width .08s linear, background 0.3s ease;
+      background: linear-gradient(90deg, #22d3ee, #3b82f6);
+      transition: width .08s linear;
     }
 
-    #gameover {
+    #pcHint {
+      position: fixed;
+      bottom: 16px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: rgba(15, 23, 42, 0.78);
+      border: 1px solid rgba(96, 165, 250, 0.3);
+      padding: 8px 18px;
+      border-radius: 999px;
+      font-size: 13px;
+      color: #cbd5e1;
+      pointer-events: none;
+      z-index: 15;
+      text-align: center;
+      white-space: nowrap;
+    }
+    #pcHint.hidden { display: none; }
+
+    /* ---------- Touch Steuerung (Handy & Tablet) ---------- */
+    #touchControls {
       position: fixed;
       inset: 0;
-      display: grid;
-      place-items: center;
-      background: rgba(2, 6, 23, .76);
-      backdrop-filter: blur(8px);
+      pointer-events: none;
       z-index: 20;
     }
+    #touchControls.hidden { display: none; }
 
-    #gameover.hidden { display: none; }
-
-    .panel {
-      width: min(92vw, 440px);
-      text-align: center;
-      background: rgba(15, 23, 42, .95);
-      border: 1px solid rgba(96, 165, 250, .45);
-      border-radius: 24px;
-      padding: 28px;
-      box-shadow: 0 30px 80px rgba(0,0,0,.65);
-    }
-
-    .panel h1 {
-      margin: 0 0 8px;
-      font-size: 34px;
-      letter-spacing: .03em;
-    }
-
-    .panel p {
-      margin: 6px 0;
-      color: #cbd5e1;
-    }
-
-    .stats-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 10px;
-      margin: 16px 0;
-    }
-
-    .stat-box {
-      background: rgba(30, 41, 59, 0.7);
-      padding: 10px;
-      border-radius: 12px;
-      border: 1px solid rgba(148, 163, 184, 0.2);
-    }
-
-    .final {
-      font-size: 44px;
-      font-weight: 900;
-      color: #facc15;
-      margin: 14px 0 4px;
-    }
-
-    button {
-      margin-top: 14px;
-      border: 0;
-      border-radius: 999px;
-      padding: 14px 26px;
-      font-size: 17px;
-      font-weight: 800;
-      cursor: pointer;
-      color: #082f49;
-      background: linear-gradient(90deg, #22d3ee, #60a5fa);
-      box-shadow: 0 10px 30px rgba(34, 211, 238, .35);
-      transition: transform 0.1s ease;
-    }
-
-    button:active { transform: translateY(2px); }
-
-    #hint {
+    #joystickZone {
       position: fixed;
+      left: 24px;
+      bottom: 28px;
+      width: 136px;
+      height: 136px;
+      border-radius: 50%;
+      background: rgba(15, 23, 42, 0.55);
+      border: 2px solid rgba(56, 189, 248, 0.45);
+      pointer-events: auto;
+      touch-action: none;
+      backdrop-filter: blur(4px);
+    }
+
+    #joystickKnob {
+      position: absolute;
       left: 50%;
-      bottom: 42px;
-      transform: translateX(-50%);
-      color: #94a3b8;
-      font-size: 13px;
-      text-align: center;
+      top: 50%;
+      width: 56px;
+      height: 56px;
+      margin-left: -28px;
+      margin-top: -28px;
+      border-radius: 50%;
+      background: radial-gradient(circle at 30% 30%, #67e8f9, #0284c7);
+      box-shadow: 0 4px 16px rgba(34, 211, 238, 0.5);
       pointer-events: none;
-      text-shadow: 0 2px 8px #000;
-      width: 90%;
-      z-index: 10;
+    }
+
+    #touchLookZone {
+      position: fixed;
+      top: 0;
+      right: 0;
+      width: 55%;
+      height: 100%;
+      pointer-events: auto;
+      touch-action: none;
+    }
+
+    .action-buttons {
+      position: fixed;
+      right: 24px;
+      bottom: 32px;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+      pointer-events: auto;
+      z-index: 25;
+    }
+
+    .touch-btn {
+      width: 74px;
+      height: 74px;
+      border-radius: 50%;
+      border: 2px solid rgba(255, 255, 255, 0.35);
+      background: rgba(15, 23, 42, 0.72);
+      color: white;
+      font-weight: 800;
+      font-size: 13px;
+      display: grid;
+      place-items: center;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5);
+      backdrop-filter: blur(6px);
+      touch-action: none;
+    }
+
+    .touch-btn:active, .touch-btn.active {
+      transform: scale(0.93);
+      border-color: #22d3ee;
+      background: rgba(34, 211, 238, 0.35);
+    }
+
+    #sprintBtn {
+      border-color: rgba(249, 115, 22, 0.6);
+      color: #fdba74;
     }
   </style>
 </head>
 <body>
+
+  <!-- Startmenü -->
+  <div id="startMenu">
+    <div class="menu-card">
+      <h1 class="menu-title">STEP RUSH 3D</h1>
+      <p class="menu-subtitle">
+        Erkunde eine riesige offene 3D-Welt, sammle Energie-Orbs, rase durch Speed-Tore und entfessle Feuer- &amp; Blitz-Effekte ohne Tempolimit!
+      </p>
+      <div class="device-grid">
+        <button class="device-btn" id="btnPC">
+          <span class="device-icon">🖱️⌨️</span>
+          <span class="device-name">Maus &amp; Keyboard</span>
+          <span class="device-desc">WASD / Pfeile zum Laufen<br>Maus zum Umschauen · Shift Sprint</span>
+        </button>
+        <button class="device-btn" id="btnTouch">
+          <span class="device-icon">📱📟</span>
+          <span class="device-name">Handy &amp; Tablet</span>
+          <span class="device-desc">Virtueller Joystick links<br>Wischen rechts · Touch-Buttons</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- HUD -->
   <div id="hud">
-    <div class="card"><span class="label">Score</span><span class="value" id="score">0</span></div>
-    <div class="card"><span class="label">Schritte</span><span class="value" id="steps">0</span></div>
-    <div class="card"><span class="label">Combo</span><span class="value" id="combo">x1</span></div>
-    <div class="card"><span class="label">Level</span><span class="value" id="level">1</span></div>
-    <div class="card"><span class="label">Leben</span><span class="value" id="lives">❤️❤️❤️</span></div>
-    <div class="card" id="speedCard"><span class="label">Speed</span><span class="value" id="speed">8.0</span></div>
+    <div class="card"><span class="label">Orbs</span><span class="value" id="orbs">0</span></div>
+    <div class="card" id="speedCard"><span class="label">Speed</span><span class="value" id="speed">0.0</span></div>
+    <div class="card"><span class="label">Max Speed</span><span class="value" id="maxSpeed">10.0</span></div>
+    <div class="card"><span class="label">Position</span><span class="value" id="coords" style="font-size:15px;">0, 0</span></div>
+    <button id="menuSwitchBtn">⚙️ Steuerung</button>
   </div>
 
   <div id="tierBadge">Normal</div>
-
   <div id="speedBar"><div id="speedFill"></div></div>
-  <div id="hint">A/D oder ←/→ = Spur · Leertaste/W/↑ = springen · Mobil: wischen</div>
+  <div id="pcHint" class="hidden">Klick ins Bild für Maus-Kamera · WASD = Bewegen · Shift = Sprint · Leertaste = Sprung · ESC = Maus frei</div>
 
-  <div id="gameover" class="hidden">
-    <div class="panel">
-      <h1>Game Over</h1>
-      <p>Dein Run ist vorbei.</p>
-      <div class="final" id="finalScore">0</div>
-      <p>Punkte</p>
-      <div class="stats-grid">
-        <div class="stat-box">
-          <span class="label">Max Speed</span>
-          <span class="value" id="finalMaxSpeed" style="font-size: 18px;">8.0</span>
-        </div>
-        <div class="stat-box">
-          <span class="label">Schritte</span>
-          <span class="value" id="finalSteps" style="font-size: 18px;">0</span>
-        </div>
-      </div>
-      <button id="restartBtn">Nochmal schneller!</button>
+  <!-- Touch UI -->
+  <div id="touchControls" class="hidden">
+    <div id="touchLookZone"></div>
+    <div id="joystickZone">
+      <div id="joystickKnob"></div>
+    </div>
+    <div class="action-buttons">
+      <button class="touch-btn" id="sprintBtn">⚡ SPRINT</button>
+      <button class="touch-btn" id="jumpBtn">⬆️ JUMP</button>
     </div>
   </div>
 
@@ -227,16 +353,14 @@
   <script type="module">
     import * as THREE from 'three';
 
-    // ---------- Einfacher Web Audio Synthesizer (ohne externe Dateien) ----------
+    // ---------- Audio Synthesizer ----------
     let audioCtx = null;
     function initAudio() {
-      if (!audioCtx) {
-        audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-      }
+      if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
       if (audioCtx.state === 'suspended') audioCtx.resume();
     }
 
-    function playSound(type, comboVal = 1) {
+    function playSound(type, pitchFactor = 1) {
       if (!audioCtx) return;
       const osc = audioCtx.createOscillator();
       const gain = audioCtx.createGain();
@@ -244,43 +368,40 @@
       gain.connect(audioCtx.destination);
       const now = audioCtx.currentTime;
 
-      if (type === 'step') {
+      if (type === 'orb') {
         osc.type = 'sine';
-        const baseFreq = 420 + Math.min(comboVal, 25) * 28;
-        osc.frequency.setValueAtTime(baseFreq, now);
-        osc.frequency.exponentialRampToValueAtTime(baseFreq * 1.45, now + 0.11);
-        gain.gain.setValueAtTime(0.12, now);
-        gain.gain.exponentialRampToValueAtTime(0.001, now + 0.12);
+        const freq = 440 + Math.min(pitchFactor, 40) * 18;
+        osc.frequency.setValueAtTime(freq, now);
+        osc.frequency.exponentialRampToValueAtTime(freq * 1.5, now + 0.12);
+        gain.gain.setValueAtTime(0.11, now);
+        gain.gain.exponentialRampToValueAtTime(0.001, now + 0.13);
         osc.start(now);
-        osc.stop(now + 0.12);
+        osc.stop(now + 0.13);
+      } else if (type === 'boost') {
+        osc.type = 'sawtooth';
+        osc.frequency.setValueAtTime(220, now);
+        osc.frequency.exponentialRampToValueAtTime(880, now + 0.25);
+        gain.gain.setValueAtTime(0.14, now);
+        gain.gain.exponentialRampToValueAtTime(0.001, now + 0.26);
+        osc.start(now);
+        osc.stop(now + 0.26);
       } else if (type === 'jump') {
         osc.type = 'triangle';
-        osc.frequency.setValueAtTime(190, now);
-        osc.frequency.exponentialRampToValueAtTime(480, now + 0.16);
-        gain.gain.setValueAtTime(0.14, now);
+        osc.frequency.setValueAtTime(180, now);
+        osc.frequency.exponentialRampToValueAtTime(420, now + 0.15);
+        gain.gain.setValueAtTime(0.12, now);
         gain.gain.exponentialRampToValueAtTime(0.001, now + 0.16);
         osc.start(now);
         osc.stop(now + 0.16);
-      } else if (type === 'hit') {
-        osc.type = 'sawtooth';
-        osc.frequency.setValueAtTime(150, now);
-        osc.frequency.exponentialRampToValueAtTime(42, now + 0.28);
-        gain.gain.setValueAtTime(0.22, now);
-        gain.gain.exponentialRampToValueAtTime(0.001, now + 0.28);
-        osc.start(now);
-        osc.stop(now + 0.28);
       }
     }
 
-    // ---------- Grundsetup ----------
+    // ---------- Szene, Kamera & Renderer ----------
     const scene = new THREE.Scene();
-    scene.background = new THREE.Color(0x0b1020);
-    scene.fog = new THREE.Fog(0x0b1020, 32, 115);
+    scene.background = new THREE.Color(0x070b14);
+    scene.fog = new THREE.FogExp2(0x070b14, 0.0045);
 
-    const baseCameraPos = new THREE.Vector3(0, 5.4, 10);
-    const camera = new THREE.PerspectiveCamera(70, innerWidth / innerHeight, 0.1, 250);
-    camera.position.copy(baseCameraPos);
-    camera.lookAt(0, 1.2, -16);
+    const camera = new THREE.PerspectiveCamera(68, innerWidth / innerHeight, 0.1, 650);
 
     const renderer = new THREE.WebGLRenderer({ antialias: true });
     renderer.setSize(innerWidth, innerHeight);
@@ -289,174 +410,370 @@
     renderer.shadowMap.type = THREE.PCFSoftShadowMap;
     document.body.appendChild(renderer.domElement);
 
-    // ---------- Licht ----------
-    const ambientLight = new THREE.AmbientLight(0xffffff, 0.65);
-    scene.add(ambientLight);
+    // ---------- Beleuchtung ----------
+    const hemiLight = new THREE.HemisphereLight(0x93c5fd, 0x0f172a, 0.85);
+    scene.add(hemiLight);
 
-    const sun = new THREE.DirectionalLight(0xffffff, 1.4);
-    sun.position.set(6, 14, 8);
+    const sun = new THREE.DirectionalLight(0xffffff, 1.5);
+    sun.position.set(80, 140, 60);
     sun.castShadow = true;
-    sun.shadow.mapSize.set(1024, 1024);
+    sun.shadow.mapSize.set(2048, 2048);
+    sun.shadow.camera.near = 10;
+    sun.shadow.camera.far = 350;
+    const d = 110;
+    sun.shadow.camera.left = -d;
+    sun.shadow.camera.right = d;
+    sun.shadow.camera.top = d;
+    sun.shadow.camera.bottom = -d;
     scene.add(sun);
 
-    const rim = new THREE.DirectionalLight(0x3b82f6, 0.9);
-    rim.position.set(-8, 6, -10);
-    scene.add(rim);
+    const playerLight = new THREE.PointLight(0x22d3ee, 0, 14);
+    scene.add(playerLight);
 
-    const playerAuraLight = new THREE.PointLight(0x22d3ee, 0, 9);
-    playerAuraLight.position.set(0, 1.5, 0);
-    scene.add(playerAuraLight);
+    // ---------- Riesige Open-World-Map (800 x 800) ----------
+    const WORLD_HALF = 400;
 
-    // ---------- Straße & Umgebung ----------
-    const road = new THREE.Mesh(
-      new THREE.PlaneGeometry(9, 280),
-      new THREE.MeshStandardMaterial({ color: 0x141d36, roughness: 0.9, metalness: 0.1 })
+    // Prozedurale Gitter-Textur für den riesigen Open-World-Boden
+    function createGridTexture() {
+      const canvas = document.createElement('canvas');
+      canvas.width = 512;
+      canvas.height = 512;
+      const ctx = canvas.getContext('2d');
+
+      ctx.fillStyle = '#0f172a';
+      ctx.fillRect(0, 0, 512, 512);
+
+      // Feine Linien
+      ctx.strokeStyle = 'rgba(56, 189, 248, 0.14)';
+      ctx.lineWidth = 2;
+      for (let i = 0; i <= 512; i += 64) {
+        ctx.beginPath(); ctx.moveTo(i, 0); ctx.lineTo(i, 512); ctx.stroke();
+        ctx.beginPath(); ctx.moveTo(0, i); ctx.lineTo(512, i); ctx.stroke();
+      }
+
+      // Starke Hauptlinien
+      ctx.strokeStyle = 'rgba(34, 211, 238, 0.35)';
+      ctx.lineWidth = 4;
+      ctx.strokeRect(0, 0, 512, 512);
+
+      const tex = new THREE.CanvasTexture(canvas);
+      tex.wrapS = THREE.RepeatWrapping;
+      tex.wrapT = THREE.RepeatWrapping;
+      tex.repeat.set(80, 80);
+      tex.anisotropy = 8;
+      return tex;
+    }
+
+    const ground = new THREE.Mesh(
+      new THREE.PlaneGeometry(WORLD_HALF * 2, WORLD_HALF * 2),
+      new THREE.MeshStandardMaterial({
+        map: createGridTexture(),
+        roughness: 0.85,
+        metalness: 0.15
+      })
     );
-    road.rotation.x = -Math.PI / 2;
-    road.position.set(0, 0, -65);
-    road.receiveShadow = true;
-    scene.add(road);
+    ground.rotation.x = -Math.PI / 2;
+    ground.receiveShadow = true;
+    scene.add(ground);
 
-    // Fahrspurlinien
-    const laneLines = [];
-    for (const x of [-1, 1]) {
-      const mat = new THREE.MeshStandardMaterial({
-        color: 0x3b82f6,
-        emissive: 0x1d4ed8,
-        emissiveIntensity: 0.7
-      });
-      const line = new THREE.Mesh(new THREE.BoxGeometry(0.06, 0.02, 280), mat);
-      line.position.set(x, 0.02, -65);
-      scene.add(line);
-      laneLines.push(line);
+    // Welt-Begrenzungsmauern (Neon-Horizont)
+    const wallMat = new THREE.MeshStandardMaterial({
+      color: 0x1e3a8a,
+      emissive: 0x2563eb,
+      emissiveIntensity: 0.6
+    });
+    const wallConfigs = [
+      { x: 0, z: -WORLD_HALF, w: WORLD_HALF * 2, d: 4 },
+      { x: 0, z: WORLD_HALF, w: WORLD_HALF * 2, d: 4 },
+      { x: -WORLD_HALF, z: 0, w: 4, d: WORLD_HALF * 2 },
+      { x: WORLD_HALF, z: 0, w: 4, d: WORLD_HALF * 2 }
+    ];
+    for (const wc of wallConfigs) {
+      const wall = new THREE.Mesh(new THREE.BoxGeometry(wc.w, 12, wc.d), wallMat);
+      wall.position.set(wc.x, 6, wc.z);
+      scene.add(wall);
     }
 
-    // Neon-Seitenbegrenzungen
-    const rails = [];
-    for (const x of [-4.75, 4.75]) {
-      const mat = new THREE.MeshStandardMaterial({
-        color: 0x1e40af,
-        emissive: 0x2563eb,
-        emissiveIntensity: 0.6
+    // ---------- Open-World Objekte: Plattformen, Gebäude, Berge & Speed-Tore ----------
+    const colliders = []; // Begehbare Plattformen & Blöcke { minX, maxX, minZ, maxZ, topY }
+    const boostGates = [];
+    const orbs = [];
+
+    function addPlatform(x, y, z, w, h, d, color = 0x1e293b, emissive = 0x0f172a) {
+      const mesh = new THREE.Mesh(
+        new THREE.BoxGeometry(w, h, d),
+        new THREE.MeshStandardMaterial({
+          color,
+          emissive,
+          emissiveIntensity: 0.35,
+          roughness: 0.5,
+          metalness: 0.3
+        })
+      );
+      mesh.position.set(x, y + h / 2, z);
+      mesh.castShadow = true;
+      mesh.receiveShadow = true;
+      scene.add(mesh);
+
+      colliders.push({
+        minX: x - w / 2,
+        maxX: x + w / 2,
+        minZ: z - d / 2,
+        maxZ: z + d / 2,
+        topY: y + h
       });
-      const rail = new THREE.Mesh(new THREE.BoxGeometry(0.18, 0.55, 280), mat);
-      rail.position.set(x, 0.28, -65);
-      rail.castShadow = true;
-      rail.receiveShadow = true;
-      scene.add(rail);
-      rails.push(rail);
+      return mesh;
     }
 
-    // Bewegliche Geschwindigkeits-Markierungen & Seitenpfeiler für echtes Speed-Feeling
-    const roadStripes = [];
-    const sidePillars = [];
-    const stripeGeo = new THREE.BoxGeometry(0.28, 0.025, 2.2);
-    const stripeMat = new THREE.MeshBasicMaterial({ color: 0x38bdf8, transparent: true, opacity: 0.45 });
+    // 1. Zentrale Start-Plaza & Stufen-Pyramide
+    const plazaRing = new THREE.Mesh(
+      new THREE.RingGeometry(12, 13.5, 48),
+      new THREE.MeshBasicMaterial({ color: 0x22d3ee, side: THREE.DoubleSide })
+    );
+    plazaRing.rotation.x = -Math.PI / 2;
+    plazaRing.position.y = 0.03;
+    scene.add(plazaRing);
 
-    const pillarGeo = new THREE.BoxGeometry(0.35, 4.5, 0.35);
-    const pillarMat = new THREE.MeshStandardMaterial({
-      color: 0x1e293b,
-      emissive: 0x3b82f6,
-      emissiveIntensity: 0.5
+    // Parkour-Treppen & Aussichtsturm im Nordosten
+    for (let i = 0; i < 8; i++) {
+      addPlatform(28 + i * 5, 0, -25 - i * 4, 6, (i + 1) * 1.4, 6, 0x1d4ed8, 0x1e40af);
+    }
+    addPlatform(72, 0, -58, 16, 12, 16, 0x312e81, 0x4338ca);
+
+    // 2. Riesige monolithische Wolkenkratzer / Neon-Türme in der Open World
+    const towerPositions = [
+      [-65, -70, 18, 45, 18],
+      [95, 80, 22, 55, 22],
+      [-120, 110, 25, 60, 25],
+      [140, -130, 28, 70, 28],
+      [-190, -160, 30, 65, 30],
+      [210, 170, 24, 50, 24],
+      [0, -180, 32, 48, 20],
+      [-230, 20, 26, 58, 26]
+    ];
+    for (const [tx, tz, tw, th, td] of towerPositions) {
+      addPlatform(tx, 0, tz, tw, th, td, 0x0f172a, 0x0284c7);
+    }
+
+    // 3. Zufällige Sprung-Plattformen, Brücken & Kristall-Felsen in der ganzen Welt
+    for (let i = 0; i < 65; i++) {
+      const rx = (Math.random() - 0.5) * 680;
+      const rz = (Math.random() - 0.5) * 680;
+      if (Math.hypot(rx, rz) < 22) continue; // Startbereich frei lassen
+
+      const rw = 5 + Math.random() * 10;
+      const rd = 5 + Math.random() * 10;
+      const rh = 1.2 + Math.random() * 5.5;
+      addPlatform(rx, 0, rz, rw, rh, rd, 0x1e293b, 0x1d4ed8);
+    }
+
+    // 4. Dekorative Leucht-Kristalle & Berge am Horizont
+    const crystalGeo = new THREE.OctahedronGeometry(3.2, 0);
+    const crystalMat = new THREE.MeshStandardMaterial({
+      color: 0xa855f7,
+      emissive: 0x7e22ce,
+      emissiveIntensity: 0.8,
+      roughness: 0.2
+    });
+    for (let i = 0; i < 45; i++) {
+      const angle = (i / 45) * Math.PI * 2;
+      const dist = 280 + Math.random() * 100;
+      const mountain = new THREE.Mesh(
+        new THREE.ConeGeometry(25 + Math.random() * 30, 45 + Math.random() * 55, 5),
+        new THREE.MeshStandardMaterial({ color: 0x0b132b, roughness: 0.9 })
+      );
+      mountain.position.set(Math.cos(angle) * dist, 20, Math.sin(angle) * dist);
+      scene.add(mountain);
+
+      const crystal = new THREE.Mesh(crystalGeo, crystalMat);
+      crystal.position.set((Math.random() - 0.5) * 700, 3.2, (Math.random() - 0.5) * 700);
+      scene.add(crystal);
+    }
+
+    // 5. Speed-Booster-Tore (durchlaufen = riesiger Tempo-Schub!)
+    const gateGeo = new THREE.TorusGeometry(4.2, 0.35, 12, 32);
+    const gateMat = new THREE.MeshStandardMaterial({
+      color: 0x22d3ee,
+      emissive: 0x06b6d4,
+      emissiveIntensity: 1.4
     });
 
-    for (let z = 10; z > -130; z -= 10) {
-      for (const x of [-2, 0, 2]) {
-        const stripe = new THREE.Mesh(stripeGeo, stripeMat);
-        stripe.position.set(x, 0.015, z);
-        scene.add(stripe);
-        roadStripes.push(stripe);
-      }
+    const gateCoords = [
+      [0, -35, 0],
+      [45, 0, Math.PI / 2],
+      [-50, 30, Math.PI / 4],
+      [110, -90, -Math.PI / 4],
+      [-130, -110, 0],
+      [160, 120, Math.PI / 2],
+      [-170, 180, -Math.PI / 3],
+      [0, 150, 0]
+    ];
 
-      for (const sideX of [-6.2, 6.2]) {
-        const pillar = new THREE.Mesh(pillarGeo, pillarMat);
-        pillar.position.set(sideX, 2.25, z);
-        scene.add(pillar);
-        sidePillars.push(pillar);
-      }
+    for (const [gx, gz, rotY] of gateCoords) {
+      const gate = new THREE.Mesh(gateGeo, gateMat);
+      gate.position.set(gx, 4.2, gz);
+      gate.rotation.y = rotY;
+      scene.add(gate);
+      boostGates.push({ mesh: gate, cooldown: 0 });
     }
 
-    // ---------- Detaillierter Spieler mit Gelenken für Geh-Animation ----------
+    // 6. Hunderte Energie-Orbs in der gesamten Open World verteilen
+    const orbGeo = new THREE.OctahedronGeometry(0.65, 1);
+    const orbMat = new THREE.MeshStandardMaterial({
+      color: 0xfacc15,
+      emissive: 0xf59e0b,
+      emissiveIntensity: 1.2,
+      roughness: 0.2,
+      metalness: 0.6
+    });
+
+    function spawnOrbAt(x, y, z) {
+      const mesh = new THREE.Mesh(orbGeo, orbMat);
+      mesh.position.set(x, y, z);
+      scene.add(mesh);
+      orbs.push({ mesh, baseY: y, phase: Math.random() * Math.PI * 2 });
+    }
+
+    // Orbs auf den Treppen/Plattformen & frei in der Welt
+    for (let i = 0; i < 8; i++) {
+      spawnOrbAt(28 + i * 5, (i + 1) * 1.4 + 1.2, -25 - i * 4);
+    }
+    for (let i = 0; i < 240; i++) {
+      const ox = (Math.random() - 0.5) * 720;
+      const oz = (Math.random() - 0.5) * 720;
+      spawnOrbAt(ox, 1.3, oz);
+    }
+
+    // ---------- Hochdetaillierter Spieler-Charakter (mit Ellbogen & Knien!) ----------
     const player = new THREE.Group();
     const characterRig = new THREE.Group();
     player.add(characterRig);
 
-    const bodyMat = new THREE.MeshStandardMaterial({
+    const suitMat = new THREE.MeshStandardMaterial({
       color: 0x22d3ee,
       emissive: 0x0891b2,
-      emissiveIntensity: 0.65,
+      emissiveIntensity: 0.55,
       roughness: 0.35,
-      metalness: 0.25
-    });
-
-    const limbMat = new THREE.MeshStandardMaterial({
-      color: 0x0ea5e9,
-      emissive: 0x0369a1,
-      emissiveIntensity: 0.45,
-      roughness: 0.4,
       metalness: 0.3
     });
 
-    // Torso
-    const torso = new THREE.Mesh(new THREE.BoxGeometry(0.76, 0.92, 0.48), bodyMat);
-    torso.position.y = 1.08;
+    const jointMat = new THREE.MeshStandardMaterial({
+      color: 0x0f172a,
+      roughness: 0.5,
+      metalness: 0.6
+    });
+
+    const limbMat = new THREE.MeshStandardMaterial({
+      color: 0x38bdf8,
+      emissive: 0x0284c7,
+      emissiveIntensity: 0.4,
+      roughness: 0.4
+    });
+
+    // Becken / Hüfte als Basis
+    const pelvis = new THREE.Mesh(new THREE.BoxGeometry(0.56, 0.24, 0.36), jointMat);
+    pelvis.position.y = 0.92;
+    pelvis.castShadow = true;
+    characterRig.add(pelvis);
+
+    // Oberkörper (neigt sich beim Rennen dynamisch nach vorne)
+    const chestPivot = new THREE.Group();
+    chestPivot.position.set(0, 1.02, 0);
+    characterRig.add(chestPivot);
+
+    const torso = new THREE.Mesh(new THREE.BoxGeometry(0.68, 0.72, 0.42), suitMat);
+    torso.position.y = 0.36;
     torso.castShadow = true;
-    characterRig.add(torso);
+    chestPivot.add(torso);
+
+    // Energie-Kern auf der Brust & Rücken
+    const core = new THREE.Mesh(
+      new THREE.BoxGeometry(0.24, 0.24, 0.46),
+      new THREE.MeshBasicMaterial({ color: 0xe0f2fe })
+    );
+    core.position.y = 0.42;
+    chestPivot.add(core);
 
     // Kopf + Visier
-    const headGroup = new THREE.Group();
-    headGroup.position.set(0, 1.82, 0);
-    characterRig.add(headGroup);
+    const headPivot = new THREE.Group();
+    headPivot.position.set(0, 0.82, 0);
+    chestPivot.add(headPivot);
 
     const head = new THREE.Mesh(
-      new THREE.SphereGeometry(0.33, 20, 20),
-      new THREE.MeshStandardMaterial({ color: 0xf8fafc, roughness: 0.45 })
+      new THREE.SphereGeometry(0.3, 20, 20),
+      new THREE.MeshStandardMaterial({ color: 0xf8fafc, roughness: 0.4 })
     );
+    head.position.y = 0.24;
     head.castShadow = true;
-    headGroup.add(head);
+    headPivot.add(head);
 
     const visorMat = new THREE.MeshStandardMaterial({
       color: 0x0f172a,
       emissive: 0x22d3ee,
-      emissiveIntensity: 0.8
+      emissiveIntensity: 0.9
     });
-    const visor = new THREE.Mesh(new THREE.BoxGeometry(0.46, 0.13, 0.1), visorMat);
-    visor.position.set(0, 0.02, -0.31);
-    headGroup.add(visor);
+    const visor = new THREE.Mesh(new THREE.BoxGeometry(0.42, 0.12, 0.12), visorMat);
+    visor.position.set(0, 0.25, 0.26); // Blickt in +Z Richtung des Rigs
+    headPivot.add(visor);
 
-    // Funktion für Arme & Beine mit sauberem Drehpunkt (Pivot) oben am Gelenk
-    function createLimb(w, h, d, mat, pivotX, pivotY, pivotZ) {
-      const pivot = new THREE.Group();
-      pivot.position.set(pivotX, pivotY, pivotZ);
-      const mesh = new THREE.Mesh(new THREE.BoxGeometry(w, h, d), mat);
-      mesh.position.y = -h / 2;
-      mesh.castShadow = true;
-      pivot.add(mesh);
-      return pivot;
+    // Hilfsfunktion für zweigliedrige Gliedmaßen (Oberschenkel+Unterschenkel / Oberarm+Unterarm)
+    function createTwoPartLimb(x, y, z, upperLen, lowerLen, thickness) {
+      const rootPivot = new THREE.Group();
+      rootPivot.position.set(x, y, z);
+
+      const upperMesh = new THREE.Mesh(
+        new THREE.BoxGeometry(thickness, upperLen, thickness),
+        limbMat
+      );
+      upperMesh.position.y = -upperLen / 2;
+      upperMesh.castShadow = true;
+      rootPivot.add(upperMesh);
+
+      const midJoint = new THREE.Group();
+      midJoint.position.set(0, -upperLen, 0);
+      rootPivot.add(midJoint);
+
+      const jointSphere = new THREE.Mesh(
+        new THREE.SphereGeometry(thickness * 0.55, 10, 10),
+        jointMat
+      );
+      midJoint.add(jointSphere);
+
+      const lowerMesh = new THREE.Mesh(
+        new THREE.BoxGeometry(thickness * 0.88, lowerLen, thickness * 0.88),
+        suitMat
+      );
+      lowerMesh.position.y = -lowerLen / 2;
+      lowerMesh.castShadow = true;
+      midJoint.add(lowerMesh);
+
+      return { root: rootPivot, mid: midJoint };
     }
 
-    const leftLeg = createLimb(0.26, 0.68, 0.28, limbMat, -0.21, 0.68, 0);
-    const rightLeg = createLimb(0.26, 0.68, 0.28, limbMat, 0.21, 0.68, 0);
-    const leftArm = createLimb(0.22, 0.66, 0.24, limbMat, -0.53, 1.46, 0);
-    const rightArm = createLimb(0.22, 0.66, 0.24, limbMat, 0.53, 1.46, 0);
+    // Beine (an Hüfte befestigt)
+    const leftLeg = createTwoPartLimb(-0.19, 0.88, 0, 0.44, 0.44, 0.22);
+    const rightLeg = createTwoPartLimb(0.19, 0.88, 0, 0.44, 0.44, 0.22);
+    characterRig.add(leftLeg.root, rightLeg.root);
 
-    characterRig.add(leftLeg, rightLeg, leftArm, rightArm);
+    // Arme (an Schultern befestigt)
+    const leftArm = createTwoPartLimb(-0.46, 0.66, 0, 0.36, 0.36, 0.18);
+    const rightArm = createTwoPartLimb(0.46, 0.66, 0, 0.36, 0.36, 0.18);
+    chestPivot.add(leftArm.root, rightArm.root);
 
-    // Energie-Aura-Ring um den Spieler (für hohe Geschwindigkeiten)
+    // Energie-Aura unter dem Spieler
     const auraRing = new THREE.Mesh(
-      new THREE.TorusGeometry(0.85, 0.04, 8, 32),
-      new THREE.MeshBasicMaterial({ color: 0x22d3ee, transparent: true, opacity: 0 })
+      new THREE.RingGeometry(0.65, 0.95, 32),
+      new THREE.MeshBasicMaterial({ color: 0x22d3ee, side: THREE.DoubleSide, transparent: true, opacity: 0 })
     );
-    auraRing.rotation.x = Math.PI / 2;
-    auraRing.position.y = 0.06;
+    auraRing.rotation.x = -Math.PI / 2;
+    auraRing.position.y = 0.05;
     player.add(auraRing);
 
-    player.position.set(0, 0, 0);
     scene.add(player);
 
-    // ---------- Partikel & Blitz-System für Speed-Effekte ----------
+    // ---------- Partikel & Blitz-System ----------
     const particles = [];
-    const particleGeo = new THREE.BoxGeometry(0.16, 0.16, 0.16);
+    const particleGeo = new THREE.BoxGeometry(0.18, 0.18, 0.18);
 
     function spawnParticle(pos, colorHex, velocity, life = 0.45, scale = 1) {
       const mat = new THREE.MeshBasicMaterial({
@@ -468,35 +785,27 @@
       mesh.position.copy(pos);
       mesh.scale.setScalar(scale);
       scene.add(mesh);
-      particles.push({
-        mesh,
-        vel: velocity,
-        life,
-        maxLife: life
-      });
+      particles.push({ mesh, vel: velocity, life, maxLife: life });
     }
 
-    // 3D-Blitze um den Spieler im Blitz-Modus
     const lightningBolts = [];
-    function spawnLightningAroundPlayer() {
+    function spawnLightningAroundPlayer(isOverdrive) {
       const points = [];
-      const startAngle = Math.random() * Math.PI * 2;
-      const radius = 0.75 + Math.random() * 0.45;
-      let curX = player.position.x + Math.cos(startAngle) * radius;
-      let curY = player.position.y + 0.1;
-      let curZ = player.position.z + Math.sin(startAngle) * radius;
+      const angle = Math.random() * Math.PI * 2;
+      const radius = 0.7 + Math.random() * 0.6;
+      let cx = player.position.x + Math.cos(angle) * radius;
+      let cy = player.position.y + 0.15;
+      let cz = player.position.z + Math.sin(angle) * radius;
 
-      points.push(new THREE.Vector3(curX, curY, curZ));
-      const segments = 5;
-      for (let i = 1; i <= segments; i++) {
-        curX += (Math.random() - 0.5) * 0.65;
-        curY += (2.1 / segments);
-        curZ += (Math.random() - 0.5) * 0.65;
-        points.push(new THREE.Vector3(curX, curY, curZ));
+      points.push(new THREE.Vector3(cx, cy, cz));
+      for (let i = 1; i <= 5; i++) {
+        cx += (Math.random() - 0.5) * 0.75;
+        cy += 0.42;
+        cz += (Math.random() - 0.5) * 0.75;
+        points.push(new THREE.Vector3(cx, cy, cz));
       }
 
       const geo = new THREE.BufferGeometry().setFromPoints(points);
-      const isOverdrive = speed >= 110;
       const mat = new THREE.LineBasicMaterial({
         color: isOverdrive ? 0xf472b6 : 0xc084fc,
         transparent: true,
@@ -507,55 +816,217 @@
       lightningBolts.push({ line, life: 0.12 });
     }
 
-    // ---------- Spielzustand (Unendliche Geschwindigkeit!) ----------
-    const lanes = [-2, 0, 2];
-    const minSpeed = 8;
+    // ---------- Steuerung & Kamera-Status ----------
+    let controlMode = null; // 'pc' oder 'touch'
+    let gameStarted = false;
 
-    let laneIndex = 1;
-    let jumpY = 0;
-    let velocityY = 0;
-    let onGround = true;
+    let cameraYaw = 0;     // Horizontale Kameradrehung
+    let cameraPitch = 0.32; // Vertikale Kameraneigung
 
-    let speed = minSpeed;
-    let peakSpeed = minSpeed;
-    let steps = 0;
-    let score = 0;
-    let combo = 1;
-    let lives = 3;
-    let gameOver = false;
+    const keys = {};
+    let touchMoveVec = { x: 0, y: 0 };
+    let touchSprint = false;
 
-    let walkCycle = 0;
-    let shakeIntensity = 0;
-    let waveTimer = 0;
-    let effectTimer = 0;
-
-    const objects = [];
-
-    // ---------- UI ----------
     const ui = {
-      score: document.getElementById('score'),
-      steps: document.getElementById('steps'),
-      combo: document.getElementById('combo'),
-      level: document.getElementById('level'),
-      lives: document.getElementById('lives'),
+      startMenu: document.getElementById('startMenu'),
+      pcHint: document.getElementById('pcHint'),
+      touchControls: document.getElementById('touchControls'),
+      orbs: document.getElementById('orbs'),
       speed: document.getElementById('speed'),
+      maxSpeed: document.getElementById('maxSpeed'),
+      coords: document.getElementById('coords'),
       speedCard: document.getElementById('speedCard'),
       speedFill: document.getElementById('speedFill'),
-      tierBadge: document.getElementById('tierBadge'),
-      gameover: document.getElementById('gameover'),
-      finalScore: document.getElementById('finalScore'),
-      finalMaxSpeed: document.getElementById('finalMaxSpeed'),
-      finalSteps: document.getElementById('finalSteps')
+      tierBadge: document.getElementById('tierBadge')
     };
 
-    // ---------- Speed-Stufen & Effekte ----------
+    function selectControlMode(mode) {
+      initAudio();
+      controlMode = mode;
+      gameStarted = true;
+      ui.startMenu.classList.add('hidden');
+
+      if (mode === 'pc') {
+        ui.pcHint.classList.remove('hidden');
+        ui.touchControls.classList.add('hidden');
+        renderer.domElement.requestPointerLock?.();
+      } else {
+        ui.pcHint.classList.add('hidden');
+        ui.touchControls.classList.remove('hidden');
+        if (document.pointerLockElement) document.exitPointerLock?.();
+      }
+    }
+
+    document.getElementById('btnPC').addEventListener('click', () => selectControlMode('pc'));
+    document.getElementById('btnTouch').addEventListener('click', () => selectControlMode('touch'));
+    document.getElementById('menuSwitchBtn').addEventListener('click', () => {
+      if (document.pointerLockElement) document.exitPointerLock?.();
+      ui.startMenu.classList.remove('hidden');
+    });
+
+    // PC Maus-Kamera (Pointer Lock oder Ziehen)
+    let isMouseDragging = false;
+    renderer.domElement.addEventListener('mousedown', (e) => {
+      if (controlMode !== 'pc' || !gameStarted) return;
+      if (document.pointerLockElement !== renderer.domElement) {
+        renderer.domElement.requestPointerLock?.();
+      }
+      isMouseDragging = true;
+    });
+
+    window.addEventListener('mouseup', () => { isMouseDragging = false; });
+
+    window.addEventListener('mousemove', (e) => {
+      if (controlMode !== 'pc' || !gameStarted) return;
+      if (document.pointerLockElement === renderer.domElement || isMouseDragging) {
+        cameraYaw -= e.movementX * 0.0032;
+        cameraPitch = THREE.MathUtils.clamp(cameraPitch + e.movementY * 0.0025, 0.08, 1.15);
+      }
+    });
+
+    window.addEventListener('keydown', (e) => {
+      keys[e.code] = true;
+      if (e.code === 'Space' && gameStarted) {
+        e.preventDefault();
+        tryJump();
+      }
+    });
+    window.addEventListener('keyup', (e) => { keys[e.code] = false; });
+
+    // Touch-Steuerung (Joystick + Look-Zone + Buttons)
+    const joystickZone = document.getElementById('joystickZone');
+    const joystickKnob = document.getElementById('joystickKnob');
+    let joyTouchId = null;
+
+    joystickZone.addEventListener('touchstart', (e) => {
+      e.preventDefault();
+      initAudio();
+      const t = e.changedTouches[0];
+      joyTouchId = t.identifier;
+      updateJoystick(t.clientX, t.clientY);
+    }, { passive: false });
+
+    joystickZone.addEventListener('touchmove', (e) => {
+      e.preventDefault();
+      for (const t of e.changedTouches) {
+        if (t.identifier === joyTouchId) updateJoystick(t.clientX, t.clientY);
+      }
+    }, { passive: false });
+
+    function resetJoystick(e) {
+      for (const t of e.changedTouches) {
+        if (t.identifier === joyTouchId) {
+          joyTouchId = null;
+          touchMoveVec = { x: 0, y: 0 };
+          joystickKnob.style.transform = 'translate(0px, 0px)';
+        }
+      }
+    }
+    joystickZone.addEventListener('touchend', resetJoystick);
+    joystickZone.addEventListener('touchcancel', resetJoystick);
+
+    function updateJoystick(clientX, clientY) {
+      const rect = joystickZone.getBoundingClientRect();
+      const centerX = rect.left + rect.width / 2;
+      const centerY = rect.top + rect.height / 2;
+      const maxRadius = rect.width * 0.36;
+
+      let dx = clientX - centerX;
+      let dy = clientY - centerY;
+      const dist = Math.hypot(dx, dy);
+
+      if (dist > maxRadius) {
+        dx = (dx / dist) * maxRadius;
+        dy = (dy / dist) * maxRadius;
+      }
+
+      joystickKnob.style.transform = `translate(${dx}px, ${dy}px)`;
+      touchMoveVec.x = dx / maxRadius;
+      touchMoveVec.y = dy / maxRadius;
+    }
+
+    // Kamera drehen per Wischen rechts auf dem Display
+    const touchLookZone = document.getElementById('touchLookZone');
+    let lookTouchId = null;
+    let lastLookX = 0;
+    let lastLookY = 0;
+
+    touchLookZone.addEventListener('touchstart', (e) => {
+      const t = e.changedTouches[0];
+      lookTouchId = t.identifier;
+      lastLookX = t.clientX;
+      lastLookY = t.clientY;
+    }, { passive: true });
+
+    touchLookZone.addEventListener('touchmove', (e) => {
+      for (const t of e.changedTouches) {
+        if (t.identifier === lookTouchId) {
+          const dx = t.clientX - lastLookX;
+          const dy = t.clientY - lastLookY;
+          lastLookX = t.clientX;
+          lastLookY = t.clientY;
+          cameraYaw -= dx * 0.0065;
+          cameraPitch = THREE.MathUtils.clamp(cameraPitch + dy * 0.005, 0.08, 1.15);
+        }
+      }
+    }, { passive: true });
+
+    touchLookZone.addEventListener('touchend', (e) => {
+      for (const t of e.changedTouches) {
+        if (t.identifier === lookTouchId) lookTouchId = null;
+      }
+    });
+
+    const sprintBtn = document.getElementById('sprintBtn');
+    sprintBtn.addEventListener('touchstart', (e) => {
+      e.preventDefault();
+      touchSprint = true;
+      sprintBtn.classList.add('active');
+    }, { passive: false });
+    sprintBtn.addEventListener('touchend', () => {
+      touchSprint = false;
+      sprintBtn.classList.remove('active');
+    });
+
+    document.getElementById('jumpBtn').addEventListener('touchstart', (e) => {
+      e.preventDefault();
+      tryJump();
+    }, { passive: false });
+
+    // ---------- Spieler-Physik & Unendliches Tempo ----------
+    let maxTopSpeed = 12.0;   // Steigt unendlich durch Orbs & Booster!
+    let currentSpeed = 0.0;
+    let velocityY = 0;
+    let onGround = true;
+    let playerRotationY = Math.PI;
+    let collectedOrbs = 0;
+
+    let walkCycle = 0;
+    let effectTimer = 0;
+
+    function tryJump() {
+      if (!onGround) return;
+      velocityY = 11.5;
+      onGround = false;
+      playSound('jump');
+
+      for (let i = 0; i < 8; i++) {
+        spawnParticle(
+          new THREE.Vector3(player.position.x + (Math.random() - 0.5) * 0.6, player.position.y + 0.1, player.position.z + (Math.random() - 0.5) * 0.6),
+          0x38bdf8,
+          new THREE.Vector3((Math.random() - 0.5) * 4, Math.random() * 2.5, (Math.random() - 0.5) * 4),
+          0.35,
+          0.9
+        );
+      }
+    }
+
     function getSpeedTier(spd) {
       if (spd >= 110) {
         return {
           name: '⚡🔥 KOSMISCHER OVERDRIVE',
           color: 0xf472b6,
           emissive: 0xdb2777,
-          fogColor: 0x1e0924,
           badgeBg: 'rgba(244, 114, 182, 0.25)',
           badgeBorder: '#f472b6',
           badgeText: '#fbcfe8',
@@ -567,7 +1038,6 @@
           name: '⚡ BLITZ-MODUS',
           color: 0xc084fc,
           emissive: 0x7e22ce,
-          fogColor: 0x160d2e,
           badgeBg: 'rgba(168, 85, 247, 0.25)',
           badgeBorder: '#c084fc',
           badgeText: '#e9d5ff',
@@ -579,7 +1049,6 @@
           name: '🔥 FEUER-MODUS',
           color: 0xf97316,
           emissive: 0xc2410c,
-          fogColor: 0x220d0b,
           badgeBg: 'rgba(249, 115, 22, 0.25)',
           badgeBorder: '#fb923c',
           badgeText: '#fed7aa',
@@ -591,7 +1060,6 @@
           name: '💨 TURBO-AURA',
           color: 0x38bdf8,
           emissive: 0x0284c7,
-          fogColor: 0x0b1630,
           badgeBg: 'rgba(56, 189, 248, 0.22)',
           badgeBorder: '#38bdf8',
           badgeText: '#bae6fd',
@@ -602,7 +1070,6 @@
         name: 'Normal',
         color: 0x22d3ee,
         emissive: 0x0891b2,
-        fogColor: 0x0b1020,
         badgeBg: 'rgba(34, 211, 238, 0.16)',
         badgeBorder: 'rgba(34, 211, 238, 0.45)',
         badgeText: '#67e8f9',
@@ -610,467 +1077,375 @@
       };
     }
 
-    function updateUI() {
-      const tier = getSpeedTier(speed);
+    // ---------- Sehr detaillierte Geh-, Lauf- & Sprint-Animation ----------
+    function updateCharacterAnimation(dt, speed, turnRate) {
+      if (speed < 0.3 && onGround) {
+        // Entspannte Idle-Atmung im Stehen
+        const breath = Math.sin(performance.now() * 0.003);
+        characterRig.position.y = THREE.MathUtils.lerp(characterRig.position.y, breath * 0.025, 10 * dt);
+        chestPivot.rotation.x = THREE.MathUtils.lerp(chestPivot.rotation.x, 0.03 + breath * 0.02, 10 * dt);
+        characterRig.rotation.z = THREE.MathUtils.lerp(characterRig.rotation.z, 0, 10 * dt);
 
-      ui.score.textContent = Math.floor(score);
-      ui.steps.textContent = steps;
-      ui.combo.textContent = 'x' + combo;
-      ui.level.textContent = Math.floor(steps / 10) + 1;
-      ui.lives.textContent = '❤️'.repeat(Math.max(0, lives)) + '🖤'.repeat(Math.max(0, 3 - lives));
-      ui.speed.textContent = speed.toFixed(1);
+        leftLeg.root.rotation.x = THREE.MathUtils.lerp(leftLeg.root.rotation.x, 0, 10 * dt);
+        rightLeg.root.rotation.x = THREE.MathUtils.lerp(rightLeg.root.rotation.x, 0, 10 * dt);
+        leftLeg.mid.rotation.x = THREE.MathUtils.lerp(leftLeg.mid.rotation.x, 0, 10 * dt);
+        rightLeg.mid.rotation.x = THREE.MathUtils.lerp(rightLeg.mid.rotation.x, 0, 10 * dt);
 
-      // Speed-Leiste skaliert logarithmisch/dynamisch für unendlichen Speed
-      const fillPercent = Math.min(100, ((speed - minSpeed) / (speed + 25)) * 125);
-      ui.speedFill.style.width = fillPercent + '%';
-      ui.speedFill.style.background = tier.barGradient;
-
-      ui.tierBadge.textContent = tier.name;
-      ui.tierBadge.style.background = tier.badgeBg;
-      ui.tierBadge.style.borderColor = tier.badgeBorder;
-      ui.tierBadge.style.color = tier.badgeText;
-      ui.speedCard.style.borderColor = tier.badgeBorder;
-    }
-
-    // ---------- Koordinierter Wellen-Spawner (verhindert unmögliche Wände) ----------
-    function spawnWave() {
-      const zPos = -95;
-      const availableLanes = [0, 1, 2];
-
-      // Zufällig entscheiden, wie viele Hindernisse in dieser Welle erscheinen (1 bis 2)
-      const obstacleCount = Math.random() < 0.45 ? 2 : 1;
-
-      // Spuren mischen
-      for (let i = availableLanes.length - 1; i > 0; i--) {
-        const j = Math.floor(Math.random() * (i + 1));
-        [availableLanes[i], availableLanes[j]] = [availableLanes[j], availableLanes[i]];
+        leftArm.root.rotation.x = THREE.MathUtils.lerp(leftArm.root.rotation.x, 0, 10 * dt);
+        rightArm.root.rotation.x = THREE.MathUtils.lerp(rightArm.root.rotation.x, 0, 10 * dt);
+        leftArm.mid.rotation.x = THREE.MathUtils.lerp(leftArm.mid.rotation.x, -0.15, 10 * dt);
+        rightArm.mid.rotation.x = THREE.MathUtils.lerp(rightArm.mid.rotation.x, -0.15, 10 * dt);
+        return;
       }
 
-      const obstacleLanes = availableLanes.slice(0, obstacleCount);
-      const freeLanes = availableLanes.slice(obstacleCount);
+      // Kurvenlage beim Lenken (Banking)
+      const targetBank = THREE.MathUtils.clamp(-turnRate * 0.35, -0.45, 0.45);
+      characterRig.rotation.z = THREE.MathUtils.lerp(characterRig.rotation.z, targetBank, 10 * dt);
 
-      // Hindernisse platzieren
-      for (const lane of obstacleLanes) {
-        const low = Math.random() < 0.4;
-        const height = low ? 0.8 : 2.0;
+      if (!onGround) {
+        // Sprung-Pose: Ein Knie hochgezogen, Arme dynamisch ausgestreckt
+        leftLeg.root.rotation.x = THREE.MathUtils.lerp(leftLeg.root.rotation.x, -0.65, 12 * dt);
+        leftLeg.mid.rotation.x = THREE.MathUtils.lerp(leftLeg.mid.rotation.x, 1.1, 12 * dt);
+        rightLeg.root.rotation.x = THREE.MathUtils.lerp(rightLeg.root.rotation.x, 0.35, 12 * dt);
+        rightLeg.mid.rotation.x = THREE.MathUtils.lerp(rightLeg.mid.rotation.x, 0.45, 12 * dt);
 
-        const mesh = new THREE.Mesh(
-          new THREE.BoxGeometry(low ? 1.5 : 1.1, height, 1.1),
-          new THREE.MeshStandardMaterial({
-            color: low ? 0xf59e0b : 0xef4444,
-            emissive: low ? 0x7c2d12 : 0x7f1d1d,
-            emissiveIntensity: 0.75,
-            roughness: 0.35
-          })
-        );
-
-        mesh.position.set(lanes[lane], height / 2, zPos);
-        mesh.castShadow = true;
-        mesh.receiveShadow = true;
-        mesh.userData = { type: 'obstacle', lane, low, hit: false };
-
-        scene.add(mesh);
-        objects.push(mesh);
+        leftArm.root.rotation.x = THREE.MathUtils.lerp(leftArm.root.rotation.x, -0.95, 12 * dt);
+        rightArm.root.rotation.x = THREE.MathUtils.lerp(rightArm.root.rotation.x, 0.65, 12 * dt);
+        chestPivot.rotation.x = THREE.MathUtils.lerp(chestPivot.rotation.x, 0.18, 12 * dt);
+        return;
       }
 
-      // Sammel-Ring immer auf einer garantiert freien Spur platzieren!
-      if (freeLanes.length > 0 && Math.random() < 0.85) {
-        const stepLane = freeLanes[0];
-        const ring = new THREE.Mesh(
-          new THREE.TorusGeometry(0.38, 0.13, 12, 24),
-          new THREE.MeshStandardMaterial({
-            color: 0xfacc15,
-            emissive: 0xf59e0b,
-            emissiveIntensity: 1.25,
-            roughness: 0.25,
-            metalness: 0.5
-          })
-        );
+      // Schrittfrequenz passt sich flüssig an (Gehen -> Joggen -> Sprint)
+      const strideFreq = 6.5 + Math.min(speed, 90) * 0.28;
+      walkCycle += strideFreq * dt;
 
-        ring.rotation.x = Math.PI / 2;
-        ring.position.set(lanes[stepLane], 1.05, zPos);
-        ring.castShadow = true;
-        ring.userData = { type: 'step', lane: stepLane, collected: false };
+      // Intensität von 0 (Gehen) bis 1 (Vollsprint)
+      const runFactor = THREE.MathUtils.clamp((speed - 4) / 22, 0, 1);
 
-        scene.add(ring);
-        objects.push(ring);
-      }
+      const hipSwingAmp = 0.48 + runFactor * 0.65;
+      const leftPhase = Math.sin(walkCycle);
+      const rightPhase = Math.sin(walkCycle + Math.PI);
+
+      // Oberschenkel-Bewegung
+      leftLeg.root.rotation.x = leftPhase * hipSwingAmp;
+      rightLeg.root.rotation.x = rightPhase * hipSwingAmp;
+
+      // Knie-Beugung (Knie beugt sich stark, wenn das Bein nach hinten schwingt/angehoben wird!)
+      const leftKneeBend = Math.max(0, -Math.cos(walkCycle)) * (0.55 + runFactor * 0.85);
+      const rightKneeBend = Math.max(0, -Math.cos(walkCycle + Math.PI)) * (0.55 + runFactor * 0.85);
+      leftLeg.mid.rotation.x = leftKneeBend;
+      rightLeg.mid.rotation.x = rightKneeBend;
+
+      // Arme schwingen gegengleich + Ellbogen angewinkelt beim Sprinten
+      const armSwingAmp = 0.42 + runFactor * 0.72;
+      leftArm.root.rotation.x = rightPhase * armSwingAmp;
+      rightArm.root.rotation.x = leftPhase * armSwingAmp;
+
+      const elbowBend = -0.25 - runFactor * 0.85;
+      leftArm.mid.rotation.x = elbowBend;
+      rightArm.mid.rotation.x = elbowBend;
+
+      // Oberkörper neigt sich bei hohem Tempo weit nach vorne, Kopf blickt geradeaus
+      const forwardLean = 0.05 + runFactor * 0.34 + Math.min(0.2, speed * 0.002);
+      chestPivot.rotation.x = THREE.MathUtils.lerp(chestPivot.rotation.x, forwardLean, 10 * dt);
+      headPivot.rotation.x = -chestPivot.rotation.x * 0.85;
+
+      // Leichtes Hüft-Drehen & Auf- und Abwippen bei jedem Schritt
+      chestPivot.rotation.y = Math.sin(walkCycle) * (0.06 + runFactor * 0.08);
+      const verticalBounce = Math.abs(Math.sin(walkCycle)) * (0.06 + runFactor * 0.08);
+      characterRig.position.y = verticalBounce;
     }
 
-    // ---------- Steuerung ----------
-    function moveLane(dir) {
-      if (gameOver) return;
-      initAudio();
-      laneIndex = THREE.MathUtils.clamp(laneIndex + dir, 0, 2);
-    }
-
-    function jump() {
-      if (gameOver || !onGround) return;
-      initAudio();
-      velocityY = 8.2;
-      onGround = false;
-      playSound('jump');
-
-      // Kleine Sprung-Partikel unter den Füßen
-      for (let i = 0; i < 6; i++) {
-        spawnParticle(
-          new THREE.Vector3(player.position.x + (Math.random() - 0.5) * 0.5, 0.1, 0),
-          0x38bdf8,
-          new THREE.Vector3((Math.random() - 0.5) * 3, Math.random() * 2, Math.random() * 3),
-          0.3,
-          0.8
-        );
-      }
-    }
-
-    window.addEventListener('keydown', (e) => {
-      if (e.code === 'ArrowLeft' || e.code === 'KeyA') moveLane(-1);
-      if (e.code === 'ArrowRight' || e.code === 'KeyD') moveLane(1);
-      if (e.code === 'Space' || e.code === 'ArrowUp' || e.code === 'KeyW') {
-        e.preventDefault();
-        jump();
-      }
-      if (e.code === 'KeyR' && gameOver) restart();
-    });
-
-    let touchStart = null;
-
-    renderer.domElement.addEventListener('pointerdown', (e) => {
-      initAudio();
-      touchStart = { x: e.clientX, y: e.clientY };
-    });
-
-    renderer.domElement.addEventListener('pointerup', (e) => {
-      if (!touchStart) return;
-      const dx = e.clientX - touchStart.x;
-      const dy = e.clientY - touchStart.y;
-      touchStart = null;
-
-      if (Math.abs(dx) > Math.abs(dy)) {
-        if (dx > 30) moveLane(1);
-        else if (dx < -30) moveLane(-1);
-      } else if (dy < -30) {
-        jump();
-      }
-    });
-
-    // ---------- Neustart ----------
-    function restart() {
-      for (const obj of objects) scene.remove(obj);
-      objects.length = 0;
-
-      for (const p of particles) scene.remove(p.mesh);
-      particles.length = 0;
-
-      for (const b of lightningBolts) scene.remove(b.line);
-      lightningBolts.length = 0;
-
-      laneIndex = 1;
-      jumpY = 0;
-      velocityY = 0;
-      onGround = true;
-
-      speed = minSpeed;
-      peakSpeed = minSpeed;
-      steps = 0;
-      score = 0;
-      combo = 1;
-      lives = 3;
-      gameOver = false;
-
-      walkCycle = 0;
-      shakeIntensity = 0;
-      waveTimer = 0.4;
-
-      player.position.set(0, 0, 0);
-      characterRig.rotation.set(0, 0, 0);
-      camera.position.copy(baseCameraPos);
-      camera.fov = 70;
-      camera.updateProjectionMatrix();
-
-      ui.gameover.classList.add('hidden');
-      updateUI();
-    }
-
-    document.getElementById('restartBtn').addEventListener('click', restart);
-
-    function endGame() {
-      gameOver = true;
-      ui.finalScore.textContent = Math.floor(score);
-      ui.finalMaxSpeed.textContent = peakSpeed.toFixed(1);
-      ui.finalSteps.textContent = steps;
-      ui.gameover.classList.remove('hidden');
-    }
-
-    // ---------- Geh- & Laufanimation ----------
-    function updateCharacterAnimation(dt, deltaX) {
-      // Neigung beim Spurwechsel (Banking)
-      const targetBank = -deltaX * 0.25;
-      characterRig.rotation.z += (targetBank - characterRig.rotation.z) * Math.min(1, 14 * dt);
-
-      if (onGround) {
-        // Schrittfrequenz steigt mit der Geschwindigkeit
-        const strideFreq = 7 + speed * 0.42;
-        walkCycle += strideFreq * dt;
-
-        const swingAngle = Math.min(1.15, 0.55 + speed * 0.012);
-        const legSwing = Math.sin(walkCycle) * swingAngle;
-        const armSwing = Math.sin(walkCycle) * (swingAngle * 0.9);
-
-        leftLeg.rotation.x = legSwing;
-        rightLeg.rotation.x = -legSwing;
-
-        // Gegengleiches Armschwingen + leichtes Abspreizen bei hohem Tempo
-        leftArm.rotation.x = -armSwing;
-        rightArm.rotation.x = armSwing;
-        leftArm.rotation.z = 0.08 + Math.min(0.25, speed * 0.003);
-        rightArm.rotation.z = -0.08 - Math.min(0.25, speed * 0.003);
-
-        // Leichtes Auf- und Abwippen des Körpers bei jedem Schritt
-        const bounce = Math.abs(Math.cos(walkCycle)) * 0.11;
-        characterRig.position.y = bounce;
-
-        // Nach vorne lehnen je schneller man wird (Sprint-Haltung!)
-        const forwardLean = Math.min(0.38, 0.06 + (speed - minSpeed) * 0.0045);
-        characterRig.rotation.x = forwardLean;
-        headGroup.rotation.x = -forwardLean * 0.7; // Kopf schaut weiter geradeaus
-      } else {
-        // Sprung-Pose: Beine anziehen, Arme nach oben reißen
-        leftLeg.rotation.x += (0.55 - leftLeg.rotation.x) * Math.min(1, 12 * dt);
-        rightLeg.rotation.x += (-0.45 - rightLeg.rotation.x) * Math.min(1, 12 * dt);
-        leftArm.rotation.x += (-0.85 - leftArm.rotation.x) * Math.min(1, 12 * dt);
-        rightArm.rotation.x += (-0.85 - rightArm.rotation.x) * Math.min(1, 12 * dt);
-        characterRig.position.y = 0;
-        characterRig.rotation.x = 0.15;
-      }
-    }
-
-    // ---------- Geschwindigkeits-Effekte (Turbo, Feuer, Blitz, Overdrive) ----------
+    // ---------- Geschwindigkeits-Effekte (Aura, Feuer, Blitz, Overdrive) ----------
     function updateSpeedEffects(dt) {
-      const tier = getSpeedTier(speed);
+      const tier = getSpeedTier(currentSpeed);
 
-      // Farben von Spieler, Licht & Umgebung sanft an die Speed-Stufe anpassen
-      bodyMat.color.lerp(new THREE.Color(tier.color), 5 * dt);
-      bodyMat.emissive.lerp(new THREE.Color(tier.emissive), 5 * dt);
+      suitMat.color.lerp(new THREE.Color(tier.color), 5 * dt);
+      suitMat.emissive.lerp(new THREE.Color(tier.emissive), 5 * dt);
       visorMat.emissive.lerp(new THREE.Color(tier.color), 5 * dt);
-      scene.fog.color.lerp(new THREE.Color(tier.fogColor), 3 * dt);
-      scene.background.lerp(new THREE.Color(tier.fogColor), 3 * dt);
 
-      for (const rail of rails) {
-        rail.material.emissive.lerp(new THREE.Color(tier.color), 4 * dt);
-      }
-      pillarMat.emissive.lerp(new THREE.Color(tier.color), 4 * dt);
-      stripeMat.color.lerp(new THREE.Color(tier.color), 4 * dt);
+      playerLight.position.set(player.position.x, player.position.y + 1.5, player.position.z);
+      playerLight.color.lerp(new THREE.Color(tier.color), 5 * dt);
 
-      // Aura-Ring & PointLight
-      playerAuraLight.position.set(player.position.x, player.position.y + 1.2, 0);
-      playerAuraLight.color.lerp(new THREE.Color(tier.color), 5 * dt);
-
-      if (speed >= 20) {
-        auraRing.material.opacity = Math.min(0.75, (speed - 20) * 0.02);
+      if (currentSpeed >= 20) {
+        auraRing.material.opacity = Math.min(0.8, (currentSpeed - 20) * 0.02);
         auraRing.material.color.setHex(tier.color);
-        auraRing.scale.setScalar(1 + Math.sin(performance.now() * 0.015) * 0.12);
-        playerAuraLight.intensity = Math.min(4.5, (speed - 18) * 0.08);
+        auraRing.scale.setScalar(1 + Math.sin(performance.now() * 0.015) * 0.15);
+        playerLight.intensity = Math.min(6, (currentSpeed - 18) * 0.09);
       } else {
         auraRing.material.opacity = 0;
-        playerAuraLight.intensity = 0;
+        playerLight.intensity = 0;
       }
 
-      // Dynamisches Kamera-FOV (Speed-Tunnel-Effekt)
-      const targetFov = Math.min(104, 70 + (speed - minSpeed) * 0.32);
-      camera.fov += (targetFov - camera.fov) * Math.min(1, 5 * dt);
+      // Dynamisches Kamera-FOV (je schneller, desto weiter das Sichtfeld!)
+      const targetFov = Math.min(106, 68 + Math.max(0, currentSpeed - 10) * 0.28);
+      camera.fov = THREE.MathUtils.lerp(camera.fov, targetFov, 5 * dt);
       camera.updateProjectionMatrix();
 
-      // Partikel & Blitze spawnen je nach Geschwindigkeit
+      // Partikel & Blitze erzeugen
       effectTimer -= dt;
-      if (effectTimer <= 0) {
-        if (speed >= 110) {
-          // Kosmischer Overdrive: Feuer + Regenbogen/Plasma + Blitze
+      if (effectTimer <= 0 && currentSpeed >= 20) {
+        const backDir = new THREE.Vector3(
+          -Math.sin(playerRotationY),
+          0,
+          -Math.cos(playerRotationY)
+        );
+
+        if (currentSpeed >= 110) {
+          // Kosmischer Overdrive
           const colors = [0xf472b6, 0x22d3ee, 0xfacc15, 0xa855f7];
           const col = colors[Math.floor(Math.random() * colors.length)];
           spawnParticle(
-            new THREE.Vector3(player.position.x + (Math.random() - 0.5) * 0.7, player.position.y + 0.2, 0.2),
+            new THREE.Vector3(
+              player.position.x + (Math.random() - 0.5) * 0.8,
+              player.position.y + 0.3 + Math.random() * 1.2,
+              player.position.z + (Math.random() - 0.5) * 0.8
+            ),
             col,
-            new THREE.Vector3((Math.random() - 0.5) * 3, 1.5 + Math.random() * 2.5, 6 + speed * 0.15),
-            0.4,
+            backDir.clone().multiplyScalar(8).add(new THREE.Vector3((Math.random() - 0.5) * 3, 1.5 + Math.random() * 2, (Math.random() - 0.5) * 3)),
+            0.45,
             1.4
           );
-          if (Math.random() < 0.75) spawnLightningAroundPlayer();
-          effectTimer = 0.025;
-        } else if (speed >= 70) {
-          // Blitz-Modus: Elektrische Blitze + violette Funken
-          spawnLightningAroundPlayer();
+          if (Math.random() < 0.8) spawnLightningAroundPlayer(true);
+          effectTimer = 0.022;
+        } else if (currentSpeed >= 70) {
+          // Blitz-Modus
+          spawnLightningAroundPlayer(false);
           spawnParticle(
-            new THREE.Vector3(player.position.x + (Math.random() - 0.5) * 0.6, player.position.y + 0.3, 0.2),
+            new THREE.Vector3(
+              player.position.x + (Math.random() - 0.5) * 0.7,
+              player.position.y + 0.2 + Math.random() * 1.1,
+              player.position.z + (Math.random() - 0.5) * 0.7
+            ),
             Math.random() < 0.5 ? 0xc084fc : 0x38bdf8,
-            new THREE.Vector3((Math.random() - 0.5) * 2.5, 1 + Math.random() * 2, 5 + speed * 0.12),
-            0.35,
+            backDir.clone().multiplyScalar(6).add(new THREE.Vector3((Math.random() - 0.5) * 2.5, 1 + Math.random() * 2, (Math.random() - 0.5) * 2.5)),
+            0.38,
             1.2
           );
-          effectTimer = 0.04;
-        } else if (speed >= 40) {
-          // Feuer-Modus: Flammenschweif unter den Füßen & Rücken
+          effectTimer = 0.035;
+        } else if (currentSpeed >= 40) {
+          // Feuer-Modus
           const fireColors = [0xf97316, 0xef4444, 0xfacc15];
-          const fireCol = fireColors[Math.floor(Math.random() * fireColors.length)];
+          const col = fireColors[Math.floor(Math.random() * fireColors.length)];
           spawnParticle(
-            new THREE.Vector3(player.position.x + (Math.random() - 0.5) * 0.55, player.position.y + 0.15, 0.25),
-            fireCol,
-            new THREE.Vector3((Math.random() - 0.5) * 1.8, 1.2 + Math.random() * 2.2, 4 + speed * 0.1),
+            new THREE.Vector3(
+              player.position.x + (Math.random() - 0.5) * 0.6,
+              player.position.y + 0.15 + Math.random() * 0.8,
+              player.position.z + (Math.random() - 0.5) * 0.6
+            ),
+            col,
+            backDir.clone().multiplyScalar(5).add(new THREE.Vector3((Math.random() - 0.5) * 1.8, 1.4 + Math.random() * 2.2, (Math.random() - 0.5) * 1.8)),
             0.42,
             1.25
           );
-          effectTimer = 0.035;
-        } else if (speed >= 20) {
-          // Turbo-Aura: Blaue Energie-Spuren
+          effectTimer = 0.032;
+        } else {
+          // Turbo-Aura (ab 20)
           spawnParticle(
-            new THREE.Vector3(player.position.x + (Math.random() - 0.5) * 0.45, player.position.y + 0.15, 0.2),
+            new THREE.Vector3(
+              player.position.x + (Math.random() - 0.5) * 0.5,
+              player.position.y + 0.2,
+              player.position.z + (Math.random() - 0.5) * 0.5
+            ),
             0x38bdf8,
-            new THREE.Vector3((Math.random() - 0.5) * 1.2, 0.6 + Math.random(), 3 + speed * 0.08),
+            backDir.clone().multiplyScalar(4).add(new THREE.Vector3((Math.random() - 0.5) * 1.2, 0.8, (Math.random() - 0.5) * 1.2)),
             0.35,
             0.9
           );
-          effectTimer = 0.055;
+          effectTimer = 0.05;
         }
       }
     }
 
-    // ---------- Update ----------
+    // ---------- Haupt-Update-Loop ----------
     function update(dt) {
-      // Spur weich wechseln
-      const targetX = lanes[laneIndex];
-      const deltaX = targetX - player.position.x;
-      player.position.x += deltaX * Math.min(1, 14 * dt);
+      if (!gameStarted) return;
 
-      // Sprungphysik
-      if (!onGround) {
-        velocityY -= 22 * dt;
-        jumpY += velocityY * dt;
-        if (jumpY <= 0) {
-          jumpY = 0;
-          velocityY = 0;
-          onGround = true;
+      // 1. Eingabe-Richtung relativ zur Kamera berechnen
+      let inputForward = 0;
+      let inputRight = 0;
+      let isSprinting = false;
+
+      if (controlMode === 'pc') {
+        if (keys['KeyW'] || keys['ArrowUp']) inputForward += 1;
+        if (keys['KeyS'] || keys['ArrowDown']) inputForward -= 1;
+        if (keys['KeyD'] || keys['ArrowRight']) inputRight += 1;
+        if (keys['KeyA'] || keys['ArrowLeft']) inputRight -= 1;
+        isSprinting = !!(keys['ShiftLeft'] || keys['ShiftRight']);
+      } else if (controlMode === 'touch') {
+        inputForward = -touchMoveVec.y;
+        inputRight = touchMoveVec.x;
+        isSprinting = touchSprint || Math.hypot(inputForward, inputRight) > 0.85;
+      }
+
+      const inputMag = Math.min(1, Math.hypot(inputForward, inputRight));
+
+      // Kamera-Richtungsvektoren auf der XZ-Ebene
+      const forwardVec = new THREE.Vector3(-Math.sin(cameraYaw), 0, -Math.cos(cameraYaw));
+      const rightVec = new THREE.Vector3(Math.cos(cameraYaw), 0, -Math.sin(cameraYaw));
+
+      const moveDir = new THREE.Vector3()
+        .addScaledVector(forwardVec, inputForward)
+        .addScaledVector(rightVec, inputRight);
+
+      if (moveDir.lengthSq() > 0.001) moveDir.normalize();
+
+      // Zielgeschwindigkeit berechnen (Gehen = 45% von maxTopSpeed, Sprinten = 100% von maxTopSpeed)
+      // Außerdem steigt maxTopSpeed beim Sprinten langsam unendlich weiter!
+      if (inputMag > 0.05 && isSprinting) {
+        maxTopSpeed += 1.4 * dt; // Je länger man rennt, desto schneller wird man!
+      }
+
+      const targetSpeed = inputMag > 0.05
+        ? maxTopSpeed * (isSprinting ? 1.0 : 0.52) * inputMag
+        : 0;
+
+      // Sanfte Beschleunigung & Bremsen
+      const accelRate = targetSpeed > currentSpeed ? 4.5 : 8.5;
+      currentSpeed = THREE.MathUtils.lerp(currentSpeed, targetSpeed, Math.min(1, accelRate * dt));
+
+      // Charakter sanft in Laufrichtung drehen
+      let turnRate = 0;
+      if (inputMag > 0.05) {
+        const targetAngle = Math.atan2(moveDir.x, moveDir.z);
+        let angleDiff = targetAngle - playerRotationY;
+        while (angleDiff > Math.PI) angleDiff -= Math.PI * 2;
+        while (angleDiff < -Math.PI) angleDiff += Math.PI * 2;
+
+        turnRate = angleDiff;
+        playerRotationY += angleDiff * Math.min(1, 12 * dt);
+      }
+      player.rotation.y = playerRotationY;
+
+      // Horizontale Bewegung + Weltgrenzen + Plattform-Kollision
+      const nextX = THREE.MathUtils.clamp(
+        player.position.x + moveDir.x * currentSpeed * dt,
+        -WORLD_HALF + 3,
+        WORLD_HALF - 3
+      );
+      const nextZ = THREE.MathUtils.clamp(
+        player.position.z + moveDir.z * currentSpeed * dt,
+        -WORLD_HALF + 3,
+        WORLD_HALF - 3
+      );
+
+      // Prüfen, ob wir seitlich gegen eine hohe Plattform laufen
+      let blockedX = false;
+      let blockedZ = false;
+      const playerRadius = 0.5;
+
+      for (const c of colliders) {
+        if (player.position.y < c.topY - 0.35) {
+          if (
+            nextX + playerRadius > c.minX && nextX - playerRadius < c.maxX &&
+            player.position.z + playerRadius > c.minZ && player.position.z - playerRadius < c.maxZ
+          ) blockedX = true;
+
+          if (
+            player.position.x + playerRadius > c.minX && player.position.x - playerRadius < c.maxX &&
+            nextZ + playerRadius > c.minZ && nextZ - playerRadius < c.maxZ
+          ) blockedZ = true;
         }
       }
-      player.position.y = jumpY;
 
-      // Geh-Animation & Speed-Effekte aktualisieren
-      updateCharacterAnimation(dt, deltaX);
+      if (!blockedX) player.position.x = nextX;
+      if (!blockedZ) player.position.z = nextZ;
+
+      // Vertikale Physik & Landen auf Plattformen
+      let floorHeight = 0;
+      for (const c of colliders) {
+        if (
+          player.position.x + playerRadius > c.minX && player.position.x - playerRadius < c.maxX &&
+          player.position.z + playerRadius > c.minZ && player.position.z - playerRadius < c.maxZ
+        ) {
+          if (player.position.y >= c.topY - 0.5 && c.topY > floorHeight) {
+            floorHeight = c.topY;
+          }
+        }
+      }
+
+      velocityY -= 26 * dt;
+      player.position.y += velocityY * dt;
+
+      if (player.position.y <= floorHeight) {
+        player.position.y = floorHeight;
+        velocityY = 0;
+        onGround = true;
+      } else {
+        onGround = false;
+      }
+
+      // Animation & Effekte updaten
+      updateCharacterAnimation(dt, currentSpeed, turnRate);
       updateSpeedEffects(dt);
 
-      // Welt bewegt sich auf Spieler zu
-      const dz = speed * dt;
+      // Energie-Orbs einsammeln & animieren
+      const time = performance.now() * 0.003;
+      for (let i = orbs.length - 1; i >= 0; i--) {
+        const orb = orbs[i];
+        orb.mesh.rotation.y += 2.5 * dt;
+        orb.mesh.position.y = orb.baseY + Math.sin(time + orb.phase) * 0.25;
 
-      // Bodenstreifen & Seitenpfeiler bewegen für Geschwindigkeitsgefühl
-      for (const stripe of roadStripes) {
-        stripe.position.z += dz;
-        if (stripe.position.z > 15) stripe.position.z -= 140;
+        if (player.position.distanceTo(orb.mesh.position) < 1.8) {
+          collectedOrbs += 1;
+          maxTopSpeed += 2.2; // Unendliches Tempo-Wachstum!
+          currentSpeed = Math.max(currentSpeed, maxTopSpeed * 0.85);
+          playSound('orb', collectedOrbs);
+
+          for (let p = 0; p < 10; p++) {
+            spawnParticle(
+              orb.mesh.position.clone(),
+              0xfacc15,
+              new THREE.Vector3((Math.random() - 0.5) * 6, Math.random() * 5, (Math.random() - 0.5) * 6),
+              0.4,
+              1.1
+            );
+          }
+
+          // Orb an neuer Zufallsposition in der Open World neu spawnen
+          orb.mesh.position.set(
+            (Math.random() - 0.5) * 720,
+            1.3,
+            (Math.random() - 0.5) * 720
+          );
+        }
       }
-      for (const pillar of sidePillars) {
-        pillar.position.z += dz;
-        if (pillar.position.z > 15) pillar.position.z -= 140;
-      }
 
-      // Objekte (Ringe & Hindernisse) bewegen
-      for (let i = objects.length - 1; i >= 0; i--) {
-        const obj = objects[i];
-        obj.position.z += dz;
+      // Speed-Tore prüfen
+      for (const gate of boostGates) {
+        if (gate.cooldown > 0) gate.cooldown -= dt;
+        const dist = player.position.distanceTo(gate.mesh.position);
+        if (dist < 4.5 && gate.cooldown <= 0) {
+          gate.cooldown = 2.0;
+          maxTopSpeed += 12.0;
+          currentSpeed = maxTopSpeed;
+          playSound('boost');
 
-        if (obj.userData.type === 'step') {
-          obj.rotation.z += 3.5 * dt; // Ringe drehen sich schön
-
-          if (
-            obj.userData.lane === laneIndex &&
-            Math.abs(obj.position.z) < 1.3 &&
-            !obj.userData.collected
-          ) {
-            obj.userData.collected = true;
-            steps += 1;
-            score += 10 * combo;
-            combo = Math.min(combo + 1, 50);
-
-            // Unendliche Geschwindigkeitssteigerung!
-            speed += 0.35;
-            if (speed > peakSpeed) peakSpeed = speed;
-
-            playSound('step', combo);
-
-            // Goldene Sammel-Explosion
-            for (let p = 0; p < 10; p++) {
-              spawnParticle(
-                obj.position.clone(),
-                0xfacc15,
-                new THREE.Vector3((Math.random() - 0.5) * 6, Math.random() * 5, (Math.random() - 0.5) * 6),
-                0.4,
-                1.0
-              );
-            }
-
-            scene.remove(obj);
-            objects.splice(i, 1);
-            continue;
+          for (let p = 0; p < 22; p++) {
+            spawnParticle(
+              player.position.clone().add(new THREE.Vector3(0, 1, 0)),
+              0x22d3ee,
+              new THREE.Vector3((Math.random() - 0.5) * 12, Math.random() * 8, (Math.random() - 0.5) * 12),
+              0.55,
+              1.5
+            );
           }
         }
-
-        if (obj.userData.type === 'obstacle') {
-          if (
-            obj.userData.lane === laneIndex &&
-            Math.abs(obj.position.z) < 1.25 &&
-            !obj.userData.hit
-          ) {
-            const avoidedByJump = obj.userData.low && jumpY > 0.78;
-
-            if (!avoidedByJump) {
-              obj.userData.hit = true;
-              lives -= 1;
-              combo = 1;
-              speed = Math.max(minSpeed, speed * 0.65);
-              shakeIntensity = 0.45;
-              playSound('hit');
-
-              // Rote Treffer-Partikel
-              for (let p = 0; p < 16; p++) {
-                spawnParticle(
-                  new THREE.Vector3(player.position.x, player.position.y + 1, 0),
-                  0xef4444,
-                  new THREE.Vector3((Math.random() - 0.5) * 8, Math.random() * 6, (Math.random() - 0.5) * 8),
-                  0.5,
-                  1.3
-                );
-              }
-
-              scene.remove(obj);
-              objects.splice(i, 1);
-
-              if (lives <= 0) {
-                endGame();
-                return;
-              }
-              continue;
-            }
-          }
-        }
-
-        if (obj.position.z > 14) {
-          scene.remove(obj);
-          objects.splice(i, 1);
-        }
       }
 
-      // Partikel updaten
+      // Partikel & Blitze updaten
       for (let i = particles.length - 1; i >= 0; i--) {
         const p = particles[i];
         p.life -= dt;
         p.mesh.position.addScaledVector(p.vel, dt);
         p.mesh.material.opacity = Math.max(0, p.life / p.maxLife);
         p.mesh.scale.multiplyScalar(0.96);
-
         if (p.life <= 0) {
           scene.remove(p.mesh);
           particles.splice(i, 1);
         }
       }
 
-      // Blitze updaten
       for (let i = lightningBolts.length - 1; i >= 0; i--) {
         const b = lightningBolts[i];
         b.life -= dt;
@@ -1082,56 +1457,55 @@
         }
       }
 
-      // Kamera-Wackeln (Screen Shake bei Crash + leichtes Vibrieren bei extremem Tempo)
-      let camOffsetX = 0;
-      let camOffsetY = 0;
-      if (shakeIntensity > 0) {
-        camOffsetX += (Math.random() - 0.5) * shakeIntensity;
-        camOffsetY += (Math.random() - 0.5) * shakeIntensity;
-        shakeIntensity = Math.max(0, shakeIntensity - 1.8 * dt);
-      }
-      if (speed >= 40) {
-        const speedJitter = Math.min(0.08, (speed - 40) * 0.0008);
-        camOffsetX += (Math.random() - 0.5) * speedJitter;
-        camOffsetY += (Math.random() - 0.5) * speedJitter;
-      }
-      camera.position.set(baseCameraPos.x + camOffsetX, baseCameraPos.y + camOffsetY, baseCameraPos.z);
+      // Third-Person-Kamera weich hinter dem Spieler positionieren
+      const camDist = 7.2 + Math.min(4.5, currentSpeed * 0.035);
+      const camTarget = new THREE.Vector3(
+        player.position.x,
+        player.position.y + 1.85,
+        player.position.z
+      );
 
-      // Passiver Score & minimale kontinuierliche Beschleunigung
-      score += speed * dt * 0.65;
-      speed += 0.12 * dt; // Man wird auch passiv immer schneller!
-      if (speed > peakSpeed) peakSpeed = speed;
+      const desiredCamPos = new THREE.Vector3(
+        camTarget.x + Math.sin(cameraYaw) * Math.cos(cameraPitch) * camDist,
+        camTarget.y + Math.sin(cameraPitch) * camDist,
+        camTarget.z + Math.cos(cameraYaw) * Math.cos(cameraPitch) * camDist
+      );
 
-      // Wellen-Spawn-Timer (Abstand bleibt durch speed-Skalierung auch bei Speed 200+ fair!)
-      waveTimer -= dt;
-      if (waveTimer <= 0) {
-        spawnWave();
-        // Abstand in Metern bleibt konstant genug zum Reagieren (~16 bis 22 Einheiten)
-        const distanceBetweenWaves = Math.max(15, 22 - speed * 0.04);
-        waveTimer = distanceBetweenWaves / speed;
-      }
+      // Kamera nicht unter den Boden lassen
+      desiredCamPos.y = Math.max(0.8, desiredCamPos.y);
+      camera.position.lerp(desiredCamPos, Math.min(1, 14 * dt));
+      camera.lookAt(camTarget);
 
-      updateUI();
+      // HUD aktualisieren
+      const tier = getSpeedTier(currentSpeed);
+      ui.orbs.textContent = collectedOrbs;
+      ui.speed.textContent = currentSpeed.toFixed(1);
+      ui.maxSpeed.textContent = maxTopSpeed.toFixed(1);
+      ui.coords.textContent = `${Math.round(player.position.x)}, ${Math.round(player.position.z)}`;
+
+      const fillPct = Math.min(100, (currentSpeed / (currentSpeed + 35)) * 130);
+      ui.speedFill.style.width = fillPct + '%';
+      ui.speedFill.style.background = tier.barGradient;
+
+      ui.tierBadge.textContent = tier.name;
+      ui.tierBadge.style.background = tier.badgeBg;
+      ui.tierBadge.style.borderColor = tier.badgeBorder;
+      ui.tierBadge.style.color = tier.badgeText;
+      ui.speedCard.style.borderColor = tier.badgeBorder;
     }
 
-    // ---------- Loop ----------
+    // ---------- Render-Loop ----------
     let lastTime = performance.now();
-
     function animate(now) {
       requestAnimationFrame(animate);
-
       const dt = Math.min((now - lastTime) / 1000, 0.05);
       lastTime = now;
 
-      if (!gameOver) update(dt);
-
+      update(dt);
       renderer.render(scene, camera);
     }
-
-    updateUI();
     requestAnimationFrame(animate);
 
-    // ---------- Resize ----------
     window.addEventListener('resize', () => {
       camera.aspect = innerWidth / innerHeight;
       camera.updateProjectionMatrix();
