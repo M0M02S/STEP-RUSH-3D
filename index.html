@@ -652,7 +652,7 @@
     <div class="menu-card">
       <h1 class="menu-title">STEP RUSH 3D</h1>
       <p class="menu-subtitle">
-        Helle Tages-Insel mit blauem Himmel &amp; Wolken, düstere Sternennacht-Insel ab 800 Speed, einzigartige Skins mit eigener 3D-Ausrüstung, flüssige Animationen und eigenständige Speed-Effekte (Feuer, Frost, Blitz &amp; Astral-Plasma)!
+        Hartes Speed-Progression-System, bei dem sich jedes Shop-Upgrade lohnt: Helle Tages-Insel mit blauem Himmel &amp; Wolken, Sternennacht-Insel ab 800 Speed, 3D-Skins und aufwendige 3D-Effekte (Flammenkegel, Eisprismen, Plasmablitze &amp; Supernova-Ringe)!
       </p>
       <div class="device-grid">
         <button class="device-btn" id="btnPC">
@@ -674,7 +674,7 @@
     <div class="card"><span class="label">Schritte</span><span class="value" id="steps">0</span></div>
     <div class="card"><span class="label">Orbs</span><span class="value" id="orbs">0</span></div>
     <div class="card" id="speedCard"><span class="label">Speed</span><span class="value" id="speed">0.0</span></div>
-    <div class="card"><span class="label">Max-Speed</span><span class="value" id="capSpeed">120</span></div>
+    <div class="card"><span class="label">Max-Speed</span><span class="value" id="capSpeed">35</span></div>
     <div class="card"><span class="label">Koordinaten</span><span class="value" id="coords" style="font-size:15px;">0, 0</span></div>
     <div class="hud-actions">
       <button class="hud-btn" id="openShopBtn">🛒 Shop</button>
@@ -710,37 +710,37 @@
       </div>
       <div class="shop-wallet-bar">
         <span>⚡ Verfügbarer Speed: <strong id="shopSpeedDisplay">0.0</strong></span>
-        <span>🚀 Aktuelles Max-Speed-Limit: <strong id="shopMaxSpeedDisplay">120</strong></span>
+        <span>🚀 Aktuelles Max-Speed-Limit: <strong id="shopMaxSpeedDisplay">35</strong></span>
       </div>
 
       <div class="section-heading">⚡ Tempo &amp; Fähigkeit-Upgrades (kostet Speed)</div>
       <div class="shop-grid">
         <div class="upgrade-card">
           <div class="upgrade-name">🚀 Max-Geschwindigkeit</div>
-          <div class="upgrade-desc">Erhöht dein Max-Speed-Limit (+150 Speed pro Stufe) und gibt dir direkt +20 Speed-Power.</div>
+          <div class="upgrade-desc">Erhöht dein Max-Speed-Limit (+55 Speed pro Stufe) und gibt dir direkt +8 Speed-Power.</div>
           <div class="upgrade-lvl">Stufe: <span id="lvlMaxSpeed">0</span></div>
-          <button class="buy-btn" id="buyMaxSpeedBtn">Kaufen (-15 Speed)</button>
+          <button class="buy-btn" id="buyMaxSpeedBtn">Kaufen (-12 Speed)</button>
         </div>
 
         <div class="upgrade-card">
           <div class="upgrade-name">⚡ Beschleunigung</div>
-          <div class="upgrade-desc">Du erreichst dein hohes Tempo deutlich schneller beim Laufen.</div>
+          <div class="upgrade-desc">Erhöht dein Tempo spürbar beim aktiven Laufen.</div>
           <div class="upgrade-lvl">Stufe: <span id="lvlAccel">0</span></div>
           <button class="buy-btn" id="buyAccelBtn">Kaufen (-10 Speed)</button>
         </div>
 
         <div class="upgrade-card">
           <div class="upgrade-name">👟 Schritt-Power</div>
-          <div class="upgrade-desc">Jeder Schritt &amp; Orb bringt dir mehr Speed-Schub und Schritt-Punkte.</div>
+          <div class="upgrade-desc">Verstärkt den Speed-Gewinn pro Schritt und Orb.</div>
           <div class="upgrade-lvl">Stufe: <span id="lvlStepPower">0</span></div>
-          <button class="buy-btn" id="buyStepPowerBtn">Kaufen (-20 Speed)</button>
+          <button class="buy-btn" id="buyStepPowerBtn">Kaufen (-15 Speed)</button>
         </div>
 
         <div class="upgrade-card">
           <div class="upgrade-name">🔥 Sprint-Superkraft</div>
           <div class="upgrade-desc">Verstärkt den Speed-Schub während deiner 5 Sekunden Sprint.</div>
           <div class="upgrade-lvl">Stufe: <span id="lvlSprintPower">0</span></div>
-          <button class="buy-btn" id="buySprintPowerBtn">Kaufen (-25 Speed)</button>
+          <button class="buy-btn" id="buySprintPowerBtn">Kaufen (-18 Speed)</button>
         </div>
       </div>
 
@@ -906,7 +906,7 @@
     sun.shadow.camera.bottom = -sd;
     scene.add(sun);
 
-    const playerLight = new THREE.PointLight(0x38bdf8, 0, 38);
+    const playerLight = new THREE.PointLight(0x38bdf8, 0, 42);
     scene.add(playerLight);
 
     // ---------- Wolken für Welt 1 (blauer Taghimmel) ----------
@@ -920,7 +920,7 @@
     const puffGeo = new THREE.IcosahedronGeometry(1, 1);
     const clouds = [];
 
-    for (let i = 0; i < 52; i++) {
+    for (let i = 0; i < 56; i++) {
       const cGroup = new THREE.Group();
       const puffCount = 4 + Math.floor(Math.random() * 4);
       for (let p = 0; p < puffCount; p++) {
@@ -942,12 +942,12 @@
       clouds.push({ group: cGroup, speedX: 2.2 + Math.random() * 3.5 });
     }
 
-    // ---------- Welt 2: Sternenhimmel, Mond, Kosmos-Bogen & Sternschnuppen ----------
+    // ---------- Welt 2: Sternenhimmel, Mond, Kosmos-Bogen & Planeten ----------
     const cosmosGroup = new THREE.Group();
     cosmosGroup.visible = false;
     scene.add(cosmosGroup);
 
-    const starCount = 2400;
+    const starCount = 2600;
     const starPositions = new Float32Array(starCount * 3);
     const starColors = new Float32Array(starCount * 3);
     const paletteStar = [
@@ -974,16 +974,30 @@
     const starGeo = new THREE.BufferGeometry();
     starGeo.setAttribute('position', new THREE.BufferAttribute(starPositions, 3));
     starGeo.setAttribute('color', new THREE.BufferAttribute(starColors, 3));
-    const starMat = new THREE.PointsMaterial({ vertexColors: true, size: 5.8, transparent: true, opacity: 0.98 });
+    const starMat = new THREE.PointsMaterial({ vertexColors: true, size: 6.0, transparent: true, opacity: 0.98 });
     const starsPoints = new THREE.Points(starGeo, starMat);
     cosmosGroup.add(starsPoints);
 
     const nightMoon = new THREE.Mesh(
-      new THREE.SphereGeometry(82, 28, 28),
+      new THREE.SphereGeometry(85, 28, 28),
       new THREE.MeshStandardMaterial({ color: 0xe0e7ff, emissive: 0x6366f1, emissiveIntensity: 0.95, roughness: 0.55 })
     );
     nightMoon.position.set(-760, 540, -1120);
     cosmosGroup.add(nightMoon);
+
+    const ringPlanet = new THREE.Mesh(
+      new THREE.SphereGeometry(52, 24, 24),
+      new THREE.MeshStandardMaterial({ color: 0xf472b6, emissive: 0x9d174d, emissiveIntensity: 0.65, roughness: 0.45 })
+    );
+    ringPlanet.position.set(860, 420, -1250);
+    const planetRing = new THREE.Mesh(
+      new THREE.RingGeometry(74, 118, 48),
+      new THREE.MeshBasicMaterial({ color: 0xfde047, side: THREE.DoubleSide, transparent: true, opacity: 0.48 })
+    );
+    planetRing.rotation.x = Math.PI * 0.36;
+    planetRing.rotation.y = 0.25;
+    ringPlanet.add(planetRing);
+    cosmosGroup.add(ringPlanet);
 
     const cosmosArc = new THREE.Mesh(
       new THREE.TorusGeometry(980, 12, 12, 96),
@@ -1248,7 +1262,7 @@
         worldGroup.add(wall);
       }
 
-      const propCount = worldId === 1 ? 260 : 340;
+      const propCount = worldId === 1 ? 280 : 360;
       for (let i = 0; i < propCount; i++) {
         const rx = (Math.random() - 0.5) * (half * 1.88);
         const rz = (Math.random() - 0.5) * (half * 1.88);
@@ -1344,9 +1358,9 @@
       }
 
       for (let i = 1; i <= 16; i++) {
-        spawnOrbAt(0, -i * 6.5, 1.45);
+        spawnOrbAt(0, -i * 7.5, 1.45);
       }
-      const orbTotal = worldId === 1 ? 420 : 580;
+      const orbTotal = worldId === 1 ? 360 : 480;
       for (let i = 0; i < orbTotal; i++) {
         spawnOrbAt((Math.random() - 0.5) * (half * 1.88), (Math.random() - 0.5) * (half * 1.88), 1.45);
       }
@@ -1643,11 +1657,61 @@
     const rightArm = createDetailedLimb(0.48, 0.62, 0, 0.36, 0.34, 0.18, false);
     chestPivot.add(leftArm.root, rightArm.root);
 
+    // ---------- Detaillierte 3D-Effekt-Rigs am Charakter (Flammenkegel, Eisprismen, Plasma-Kerne) ----------
+    const fireRig = new THREE.Group();
+    fireRig.visible = false;
+    const flameConeGeo = new THREE.ConeGeometry(0.26, 0.95, 6);
+    const flameMatOuter = new THREE.MeshBasicMaterial({ color: 0xff4500, transparent: true, opacity: 0.78 });
+    const flameMatInner = new THREE.MeshBasicMaterial({ color: 0xfacc15, transparent: true, opacity: 0.92 });
+    for (let i = 0; i < 6; i++) {
+      const ang = (i / 6) * Math.PI * 2;
+      const cone = new THREE.Mesh(flameConeGeo, i % 2 === 0 ? flameMatOuter : flameMatInner);
+      cone.position.set(Math.cos(ang) * 0.55, 0.55 + (i % 3) * 0.25, Math.sin(ang) * 0.55);
+      cone.rotation.z = -Math.cos(ang) * 0.22;
+      cone.rotation.x = Math.sin(ang) * 0.22;
+      fireRig.add(cone);
+    }
+    player.add(fireRig);
+
+    const frostRig = new THREE.Group();
+    frostRig.visible = false;
+    const icePrismGeo = new THREE.CylinderGeometry(0.05, 0.22, 0.95, 6);
+    const icePrismMat = new THREE.MeshStandardMaterial({
+      color: 0x67e8f9,
+      emissive: 0x06b6d4,
+      emissiveIntensity: 1.2,
+      roughness: 0.1,
+      metalness: 0.75,
+      transparent: true,
+      opacity: 0.85
+    });
+    for (let i = 0; i < 6; i++) {
+      const ang = (i / 6) * Math.PI * 2;
+      const shard = new THREE.Mesh(icePrismGeo, icePrismMat);
+      shard.position.set(Math.cos(ang) * 0.88, 1.05, Math.sin(ang) * 0.88);
+      shard.rotation.set(0.35, ang, 0.25);
+      frostRig.add(shard);
+    }
+    player.add(frostRig);
+
+    const plasmaRig = new THREE.Group();
+    plasmaRig.visible = false;
+    const plasmaCoreGeo = new THREE.OctahedronGeometry(0.24, 0);
+    const plasmaMatA = new THREE.MeshBasicMaterial({ color: 0x38bdf8, transparent: true, opacity: 0.9 });
+    const plasmaMatB = new THREE.MeshBasicMaterial({ color: 0xf472b6, transparent: true, opacity: 0.9 });
+    for (let i = 0; i < 4; i++) {
+      const ang = (i / 4) * Math.PI * 2;
+      const orbCore = new THREE.Mesh(plasmaCoreGeo, i % 2 === 0 ? plasmaMatA : plasmaMatB);
+      orbCore.position.set(Math.cos(ang) * 1.15, 1.35, Math.sin(ang) * 1.15);
+      plasmaRig.add(orbCore);
+    }
+    player.add(plasmaRig);
+
     scene.add(player);
 
-    // ---------- Partikel-Pool & Effekte (getrennte, qualitativ abgestimmte Stufen) ----------
-    const PARTICLE_POOL_SIZE = 320;
-    const sharedParticleGeo = new THREE.OctahedronGeometry(0.26, 0);
+    // ---------- Partikel-Pool, Blitzbögen & Sternschnuppen ----------
+    const PARTICLE_POOL_SIZE = 340;
+    const sharedParticleGeo = new THREE.OctahedronGeometry(0.24, 0);
     const particlePool = [];
 
     for (let i = 0; i < PARTICLE_POOL_SIZE; i++) {
@@ -1682,31 +1746,30 @@
       p.baseScale = scale;
     }
 
-    // Verzweigte Blitzstrahlen-Pool für Blitz-Stufe (500–749 Speed)
     const lightningBolts = [];
     const boltMatMain = new THREE.LineBasicMaterial({ color: 0xf0abfc, transparent: true, opacity: 1 });
     const boltMatCore = new THREE.LineBasicMaterial({ color: 0xfef08a, transparent: true, opacity: 1 });
 
     function spawnLightningStrike() {
-      if (lightningBolts.length > 26) return;
+      if (lightningBolts.length > 30) return;
       const angle = Math.random() * Math.PI * 2;
-      const radius = 0.3 + Math.random() * 1.9;
+      const radius = 0.25 + Math.random() * 1.8;
       let cx = player.position.x + Math.cos(angle) * radius;
       let cy = player.position.y + 0.15;
       let cz = player.position.z + Math.sin(angle) * radius;
 
       const pts = [new THREE.Vector3(cx, cy, cz)];
-      for (let i = 1; i <= 9; i++) {
-        cx += (Math.random() - 0.5) * 2.1;
+      for (let i = 1; i <= 10; i++) {
+        cx += (Math.random() - 0.5) * 2.2;
         cy += 0.65;
-        cz += (Math.random() - 0.5) * 2.1;
+        cz += (Math.random() - 0.5) * 2.2;
         pts.push(new THREE.Vector3(cx, cy, cz));
       }
 
       const geo = new THREE.BufferGeometry().setFromPoints(pts);
       const line = new THREE.Line(geo, Math.random() < 0.5 ? boltMatMain : boltMatCore);
       scene.add(line);
-      lightningBolts.push({ line, geo, life: 0.15 });
+      lightningBolts.push({ line, geo, life: 0.16 });
 
       if (pts.length > 4) {
         const startPt = pts[3];
@@ -1715,34 +1778,33 @@
         let by = startPt.y;
         let bz = startPt.z;
         for (let b = 0; b < 5; b++) {
-          bx += (Math.random() - 0.5) * 2.4;
+          bx += (Math.random() - 0.5) * 2.5;
           by += 0.35 + Math.random() * 0.45;
-          bz += (Math.random() - 0.5) * 2.4;
+          bz += (Math.random() - 0.5) * 2.5;
           branchPts.push(new THREE.Vector3(bx, by, bz));
         }
         const bGeo = new THREE.BufferGeometry().setFromPoints(branchPts);
         const bLine = new THREE.Line(bGeo, boltMatCore);
         scene.add(bLine);
-        lightningBolts.push({ line: bLine, geo: bGeo, life: 0.12 });
+        lightningBolts.push({ line: bLine, geo: bGeo, life: 0.13 });
       }
     }
 
-    // Sternschnuppen-Linien für Welt 2 (Sternennacht)
     const shootingStars = [];
-    const shootingStarMat = new THREE.LineBasicMaterial({ color: 0xe0f2fe, transparent: true, opacity: 0.9 });
+    const shootingStarMat = new THREE.LineBasicMaterial({ color: 0xe0f2fe, transparent: true, opacity: 0.92 });
 
     function spawnShootingStarInWorld2() {
-      if (currentWorld !== 2 || shootingStars.length > 8) return;
-      const sx = player.position.x + (Math.random() - 0.5) * 480;
-      const sy = 140 + Math.random() * 140;
-      const sz = player.position.z - 160 - Math.random() * 240;
-      const dx = (Math.random() < 0.5 ? 1 : -1) * (45 + Math.random() * 35);
-      const dy = -18 - Math.random() * 14;
+      if (currentWorld !== 2 || shootingStars.length > 10) return;
+      const sx = player.position.x + (Math.random() - 0.5) * 520;
+      const sy = 140 + Math.random() * 160;
+      const sz = player.position.z - 160 - Math.random() * 260;
+      const dx = (Math.random() < 0.5 ? 1 : -1) * (50 + Math.random() * 38);
+      const dy = -20 - Math.random() * 14;
       const dz = 25 + Math.random() * 25;
 
       const geo = new THREE.BufferGeometry().setFromPoints([
         new THREE.Vector3(sx, sy, sz),
-        new THREE.Vector3(sx + dx * 0.35, sy + dy * 0.35, sz + dz * 0.35)
+        new THREE.Vector3(sx + dx * 0.42, sy + dy * 0.42, sz + dz * 0.42)
       ]);
       const line = new THREE.Line(geo, shootingStarMat);
       scene.add(line);
@@ -1750,11 +1812,11 @@
         line,
         geo,
         vel: new THREE.Vector3(dx, dy, dz),
-        life: 0.85
+        life: 0.9
       });
     }
 
-    // ---------- Spielzustand, Speed-Speicherung & Weltwechsel-Szene ----------
+    // ---------- Spielzustand, Härtere Progression & Weltwechsel-Szene ----------
     let controlMode = null;
     let gameStarted = false;
     let uiModalOpen = false;
@@ -1848,19 +1910,20 @@
     }
 
     function getStepBonusSpeed() {
-      const mult = 0.12 + upgrades.stepPower * 0.08;
-      return Math.min(steps * mult, getWorldHardCap() - 120);
+      const mult = 0.03 + upgrades.stepPower * 0.025;
+      return Math.min(steps * mult, getWorldHardCap() - 35);
     }
 
+    // Deutlich schwereres Limit: startet bei 35 und wächst gezielt durch Shop-Upgrades
     function getMaxSpeed() {
-      const base = 160 + upgrades.maxSpeed * 150 + getStepBonusSpeed();
-      const sprintBonus = sprintActiveTimer > 0 ? (60 + upgrades.sprintPower * 40) : 0;
-      const padBonus = padBoostTimer > 0 ? 75 : 0;
+      const base = 35 + upgrades.maxSpeed * 55 + getStepBonusSpeed();
+      const sprintBonus = sprintActiveTimer > 0 ? (18 + upgrades.sprintPower * 16) : 0;
+      const padBonus = padBoostTimer > 0 ? 18 : 0;
       return Math.min(base + sprintBonus + padBonus, getWorldHardCap());
     }
 
     function getUpgradeSpeedCost(baseCost, lvl) {
-      return Math.round(baseCost + lvl * 12);
+      return Math.round(baseCost + lvl * 10);
     }
 
     function check800Unlock() {
@@ -1932,10 +1995,10 @@
       ui.lvlStepPower.textContent = upgrades.stepPower;
       ui.lvlSprintPower.textContent = upgrades.sprintPower;
 
-      const c1 = getUpgradeSpeedCost(15, upgrades.maxSpeed);
+      const c1 = getUpgradeSpeedCost(12, upgrades.maxSpeed);
       const c2 = getUpgradeSpeedCost(10, upgrades.accel);
-      const c3 = getUpgradeSpeedCost(20, upgrades.stepPower);
-      const c4 = getUpgradeSpeedCost(25, upgrades.sprintPower);
+      const c3 = getUpgradeSpeedCost(15, upgrades.stepPower);
+      const c4 = getUpgradeSpeedCost(18, upgrades.sprintPower);
 
       ui.buyMaxSpeedBtn.textContent = `Kaufen (-${c1} Speed)`;
       ui.buyAccelBtn.textContent = `Kaufen (-${c2} Speed)`;
@@ -1969,11 +2032,11 @@
     document.getElementById('closeAdminBtn').addEventListener('click', () => closeModal(ui.adminModal));
 
     ui.buyMaxSpeedBtn.addEventListener('click', () => {
-      const cost = getUpgradeSpeedCost(15, upgrades.maxSpeed);
+      const cost = getUpgradeSpeedCost(12, upgrades.maxSpeed);
       if (currentSpeed >= cost) {
         currentSpeed = Math.max(0, currentSpeed - cost);
         upgrades.maxSpeed += 1;
-        currentSpeed = Math.min(currentSpeed + 20, getMaxSpeed());
+        currentSpeed = Math.min(currentSpeed + 8, getMaxSpeed());
         playSound('buy');
         refreshShopUI();
       }
@@ -1990,7 +2053,7 @@
     });
 
     ui.buyStepPowerBtn.addEventListener('click', () => {
-      const cost = getUpgradeSpeedCost(20, upgrades.stepPower);
+      const cost = getUpgradeSpeedCost(15, upgrades.stepPower);
       if (currentSpeed >= cost) {
         currentSpeed = Math.max(0, currentSpeed - cost);
         upgrades.stepPower += 1;
@@ -2000,7 +2063,7 @@
     });
 
     ui.buySprintPowerBtn.addEventListener('click', () => {
-      const cost = getUpgradeSpeedCost(25, upgrades.sprintPower);
+      const cost = getUpgradeSpeedCost(18, upgrades.sprintPower);
       if (currentSpeed >= cost) {
         currentSpeed = Math.max(0, currentSpeed - cost);
         upgrades.sprintPower += 1;
@@ -2064,7 +2127,7 @@
 
     document.getElementById('adminAddSpeedBtn').addEventListener('click', () => {
       if (!adminUnlocked) return;
-      upgrades.maxSpeed = Math.max(upgrades.maxSpeed, 8);
+      upgrades.maxSpeed = Math.max(upgrades.maxSpeed, 14);
       currentSpeed = Math.min(currentSpeed + 250, getMaxSpeed());
       check800Unlock();
       playSound('boost');
@@ -2082,7 +2145,7 @@
 
     document.getElementById('adminSet800SpeedBtn').addEventListener('click', () => {
       if (!adminUnlocked) return;
-      upgrades.maxSpeed = Math.max(upgrades.maxSpeed, 8);
+      upgrades.maxSpeed = Math.max(upgrades.maxSpeed, 14);
       currentSpeed = 800;
       check800Unlock();
       playSound('boost');
@@ -2307,7 +2370,7 @@
       } else if (isDoubleTap && !airPushUsed) {
         airPushUsed = true;
         velY = Math.max(velY, 10.5);
-        currentSpeed = Math.min(currentSpeed + 14.0, getMaxSpeed());
+        currentSpeed = Math.min(currentSpeed + 3.0 + upgrades.sprintPower * 1.5, getMaxSpeed());
         check800Unlock();
         squashAmount = 0.2;
         playSound('airpush');
@@ -2349,7 +2412,8 @@
       if (cosmosGroup.visible) {
         starsPoints.rotation.y += dt * 0.014;
         cosmosArc.rotation.z += dt * 0.04;
-        if (Math.random() < 0.06) spawnShootingStarInWorld2();
+        ringPlanet.rotation.y += dt * 0.08;
+        if (Math.random() < 0.08) spawnShootingStarInWorld2();
 
         for (const prop of floatingCosmosProps) {
           prop.mesh.position.y = prop.baseY + Math.sin(now * 0.0022 + prop.phase) * 0.85;
@@ -2412,7 +2476,7 @@
 
             if (worldSceneTargetWorld === 2) {
               upgrades.maxSpeed = Math.max(upgrades.maxSpeed, 4);
-              currentSpeed = Math.max(currentSpeed, 260);
+              currentSpeed = Math.min(260, getMaxSpeed());
               steps = 0;
               padBoostTimer = 0;
               sprintActiveTimer = 0;
@@ -2470,7 +2534,7 @@
           player.position.set(0, getTerrainHeight(0, 0), 0);
         }
       } else {
-        // ---------- Normales Gameplay ----------
+        // ---------- Normales Gameplay (schwere Progression) ----------
         const wantsSprint = Boolean(keys['ShiftLeft'] || keys['ShiftRight'] || touchSprintHeld);
 
         if (sprintCooldownTimer > 0) {
@@ -2485,7 +2549,7 @@
           }
         } else if (wantsSprint && !sprintExhaustedThisHold && sprintCooldownTimer <= 0 && gameStarted && !uiModalOpen) {
           sprintActiveTimer = SPRINT_DURATION;
-          currentSpeed = Math.min(currentSpeed + (30 + upgrades.sprintPower * 14), getMaxSpeed());
+          currentSpeed = Math.min(currentSpeed + (7.5 + upgrades.sprintPower * 5.0), getMaxSpeed());
           check800Unlock();
           squashAmount = 0.22;
           playSound('sprint');
@@ -2539,10 +2603,10 @@
           dX /= len;
           dZ /= len;
 
-          const accelGain = (18 + upgrades.accel * 7 + (sprintActiveTimer > 0 ? 24 : 0)) * inputMag;
+          const accelGain = (2.8 + upgrades.accel * 1.8 + (sprintActiveTimer > 0 ? 4.5 + upgrades.sprintPower * 2.2 : 0)) * inputMag;
           currentSpeed = Math.min(currentSpeed + accelGain * dt, maxSpd);
 
-          const visualMoveSpeed = Math.min(18 + currentSpeed * 0.22, 145);
+          const visualMoveSpeed = Math.min(16 + currentSpeed * 0.14, 115);
           player.position.x += dX * visualMoveSpeed * dt;
           player.position.z += dZ * visualMoveSpeed * dt;
 
@@ -2555,17 +2619,20 @@
           while (diff > Math.PI) diff -= Math.PI * 2;
           while (diff < -Math.PI) diff += Math.PI * 2;
           player.rotation.y += diff * Math.min(1, dt * 16);
+        } else if (currentSpeed > 35) {
+          // Im Stand fällt überschüssiges Tempo langsam ab, damit aktives Laufen & Upgrades zählen
+          currentSpeed = Math.max(35, currentSpeed - 2.4 * dt);
         }
 
         const stepDist = Math.hypot(player.position.x - prevX, player.position.z - prevZ);
         if (isGrounded && stepDist > 0.001) {
           distanceAccumulator += stepDist;
-          const stepLength = 2.2;
+          const stepLength = 2.6;
           if (distanceAccumulator >= stepLength) {
             const earned = Math.floor(distanceAccumulator / stepLength) * (1 + Math.floor(upgrades.stepPower * 0.5));
             distanceAccumulator = 0;
             steps += earned;
-            currentSpeed = Math.min(currentSpeed + earned * (1.6 + upgrades.stepPower * 0.8), getMaxSpeed());
+            currentSpeed = Math.min(currentSpeed + earned * (0.28 + upgrades.stepPower * 0.22), getMaxSpeed());
           }
         }
 
@@ -2667,7 +2734,7 @@
         rightArm.mid.rotation.x = THREE.MathUtils.lerp(rightArm.mid.rotation.x, -0.25, 0.15);
       }
 
-      // ---------- Eigenständige, hochwertige Speed-Stufen (ohne Ring-Aura & ohne Überladung) ----------
+      // ---------- Neue, detaillierte 3D-Effekte (Flammenkegel, Eisprismen, Blitze, Supernova-Kerne) ----------
       const effectMode = currentSpeed >= 750
         ? 'plasma'
         : currentSpeed >= 500
@@ -2678,75 +2745,101 @@
               ? 'fire'
               : 'base';
 
+      fireRig.visible = (effectMode === 'fire' && !worldSceneActive);
+      frostRig.visible = (effectMode === 'frost' && !worldSceneActive);
+      plasmaRig.visible = (effectMode === 'plasma' && !worldSceneActive);
+
+      if (fireRig.visible) {
+        fireRig.rotation.y += dt * 7.5;
+        fireRig.children.forEach((cone, idx) => {
+          const pulse = 0.85 + Math.sin(now * 0.024 + idx * 1.4) * 0.35;
+          cone.scale.set(1.0, pulse, 1.0);
+        });
+      }
+
+      if (frostRig.visible) {
+        frostRig.rotation.y -= dt * 4.2;
+        frostRig.children.forEach((shard, idx) => {
+          shard.position.y = 1.0 + Math.sin(now * 0.008 + idx * 1.1) * 0.28;
+          shard.rotation.z += dt * 3.0;
+        });
+      }
+
+      if (plasmaRig.visible) {
+        plasmaRig.rotation.y += dt * 6.5;
+        plasmaRig.rotation.z = Math.sin(now * 0.005) * 0.35;
+        plasmaRig.children.forEach((orbCore, idx) => {
+          orbCore.rotation.x += dt * 5.0;
+          orbCore.rotation.y += dt * 5.0;
+          orbCore.position.y = 1.3 + Math.cos(now * 0.01 + idx * 1.6) * 0.38;
+        });
+      }
+
       if (!worldSceneActive && (hasMoveInput || !isGrounded || currentSpeed >= 250)) {
         if (effectMode === 'fire') {
-          // Stufe 1 (100–249): Aufsteigende Flammen & Glut-Funken um die Füße/Körper
           for (let k = 0; k < 3; k++) {
             const ang = Math.random() * Math.PI * 2;
-            const rad = 0.25 + Math.random() * 0.75;
+            const rad = 0.35 + Math.random() * 0.85;
             const col = Math.random() < 0.5 ? 0xff4500 : (Math.random() < 0.8 ? 0xf97316 : 0xfacc15);
             spawnParticle(
               player.position.x + Math.cos(ang) * rad,
-              player.position.y + 0.15 + Math.random() * 1.1,
+              player.position.y + 0.2 + Math.random() * 1.1,
               player.position.z + Math.sin(ang) * rad,
               col,
-              (Math.random() - 0.5) * 3.5,
-              4.6 + Math.random() * 4.8,
-              (Math.random() - 0.5) * 3.5,
-              0.44, 1.65, -9.5
+              (Math.random() - 0.5) * 3.8,
+              4.8 + Math.random() * 5.0,
+              (Math.random() - 0.5) * 3.8,
+              0.44, 1.55, -9.5
             );
           }
         } else if (effectMode === 'frost') {
-          // Stufe 2 (250–499): Kristalline Frost-Splitter & schwebende Eis-Partikel
           for (let k = 0; k < 4; k++) {
             const ang = Math.random() * Math.PI * 2;
-            const rad = 0.45 + Math.random() * 1.35;
+            const rad = 0.55 + Math.random() * 1.35;
             const col = Math.random() < 0.65 ? 0x22d3ee : 0xe0f2fe;
             spawnParticle(
               player.position.x + Math.cos(ang) * rad,
-              player.position.y + 0.2 + Math.random() * 1.9,
+              player.position.y + 0.25 + Math.random() * 1.9,
               player.position.z + Math.sin(ang) * rad,
               col,
-              Math.cos(ang) * 5.2 + (Math.random() - 0.5) * 2.5,
+              Math.cos(ang) * 5.5 + (Math.random() - 0.5) * 2.5,
               2.2 + Math.random() * 3.8,
-              Math.sin(ang) * 5.2 + (Math.random() - 0.5) * 2.5,
-              0.52, 1.55, -2.2
+              Math.sin(ang) * 5.5 + (Math.random() - 0.5) * 2.5,
+              0.52, 1.45, -2.0
             );
           }
         } else if (effectMode === 'lightning') {
-          // Stufe 3 (500–749): Verzweigte Blitzbögen & elektrische Funken
-          if (Math.random() < 0.85) spawnLightningStrike();
-          for (let k = 0; k < 3; k++) {
+          if (Math.random() < 0.92) spawnLightningStrike();
+          for (let k = 0; k < 4; k++) {
             const ang = Math.random() * Math.PI * 2;
-            const rad = 0.4 + Math.random() * 1.3;
+            const rad = 0.45 + Math.random() * 1.4;
             spawnParticle(
               player.position.x + Math.cos(ang) * rad,
-              player.position.y + 0.35 + Math.random() * 2.0,
+              player.position.y + 0.35 + Math.random() * 2.1,
               player.position.z + Math.sin(ang) * rad,
               Math.random() < 0.55 ? 0xe879f9 : 0xfef08a,
-              (Math.random() - 0.5) * 13.5, 4.0 + Math.random() * 6.0, (Math.random() - 0.5) * 13.5,
-              0.32, 1.45, 7.0
+              (Math.random() - 0.5) * 14.5, 4.2 + Math.random() * 6.5, (Math.random() - 0.5) * 14.5,
+              0.32, 1.5, 7.0
             );
           }
         } else if (effectMode === 'plasma') {
-          // Stufe 4 (750+): Astral-Plasma-Wirbel & kosmische Lichtfunken (in Welt 2 besonders kräftig)
-          const burstCount = currentWorld === 2 ? 6 : 4;
+          const burstCount = currentWorld === 2 ? 7 : 5;
           for (let k = 0; k < burstCount; k++) {
-            const ang = now * 0.009 + (k / burstCount) * Math.PI * 2;
-            const rad = 0.75 + Math.random() * 1.4;
+            const ang = now * 0.01 + (k / burstCount) * Math.PI * 2;
+            const rad = 0.85 + Math.random() * 1.5;
             const col = currentWorld === 2
               ? (k % 2 === 0 ? 0xc084fc : 0x2dd4bf)
               : (k % 2 === 0 ? 0x38bdf8 : 0xf472b6);
             spawnParticle(
               player.position.x + Math.cos(ang) * rad,
-              player.position.y + 0.4 + Math.random() * 2.1,
+              player.position.y + 0.4 + Math.random() * 2.2,
               player.position.z + Math.sin(ang) * rad,
               col,
-              Math.cos(ang) * 9.5, 3.5 + Math.random() * 5.0, Math.sin(ang) * 9.5,
-              0.45, 1.75, 2.0
+              Math.cos(ang) * 10.5, 3.8 + Math.random() * 5.2, Math.sin(ang) * 10.5,
+              0.46, 1.8, 2.0
             );
           }
-          if (currentWorld === 2 && Math.random() < 0.35) {
+          if (currentWorld === 2 && Math.random() < 0.42) {
             spawnLightningStrike();
           }
         }
@@ -2766,16 +2859,16 @@
       core.rotation.x += dt * 2.8;
 
       if (effectMode === 'plasma') {
-        playerLight.intensity = currentWorld === 2 ? 5.2 : 4.4;
+        playerLight.intensity = currentWorld === 2 ? 5.6 : 4.6;
         playerLight.color.setHex(currentWorld === 2 ? 0xc084fc : 0x38bdf8);
       } else if (effectMode === 'lightning') {
-        playerLight.intensity = 3.8 + Math.random() * 1.2;
+        playerLight.intensity = 4.0 + Math.random() * 1.4;
         playerLight.color.setHex(0xe879f9);
       } else if (effectMode === 'frost') {
-        playerLight.intensity = 3.2;
+        playerLight.intensity = 3.4;
         playerLight.color.setHex(0x22d3ee);
       } else if (effectMode === 'fire') {
-        playerLight.intensity = 2.9;
+        playerLight.intensity = 3.1;
         playerLight.color.setHex(0xf97316);
       } else {
         playerLight.intensity = Math.min(1.5, currentSpeed / 60);
@@ -2787,7 +2880,7 @@
       sun.target.position.copy(player.position);
       sun.target.updateMatrixWorld();
 
-      // ---------- Speed-Boost-Punkte & Orbs ----------
+      // ---------- Speed-Boost-Punkte & Orbs (ausgewogene Progression) ----------
       if (!worldSceneActive) {
         for (const bp of boostPads) {
           if (bp.cooldown > 0) bp.cooldown = Math.max(0, bp.cooldown - dt);
@@ -2797,10 +2890,10 @@
           const dx = player.position.x - bp.x;
           const dz = player.position.z - bp.z;
           if (dx * dx + dz * dz < bp.radius * bp.radius && Math.abs(player.position.y - bp.group.position.y) < 4.2 && bp.cooldown <= 0) {
-            bp.cooldown = 1.6;
-            padBoostTimer = 3.5;
-            steps += 6 * (1 + Math.floor(upgrades.stepPower * 0.5));
-            const padGain = currentWorld === 2 ? 75.0 : 50.0;
+            bp.cooldown = 2.0;
+            padBoostTimer = 3.0;
+            steps += 2 * (1 + Math.floor(upgrades.stepPower * 0.5));
+            const padGain = (currentWorld === 2 ? 16.0 : 12.0) + upgrades.stepPower * 2.5;
             currentSpeed = Math.min(currentSpeed + padGain, getMaxSpeed());
             check800Unlock();
             if (isGrounded) velY = 8.0;
@@ -2835,9 +2928,9 @@
             orbs.splice(i, 1);
 
             orbsCollected += 1;
-            const gainedSteps = 4 * (1 + Math.floor(upgrades.stepPower * 0.5));
+            const gainedSteps = 2 * (1 + Math.floor(upgrades.stepPower * 0.5));
             steps += gainedSteps;
-            const orbGain = (currentWorld === 2 ? 12.0 : 8.5) + upgrades.stepPower * 2.5;
+            const orbGain = (currentWorld === 2 ? 2.2 : 1.6) + upgrades.stepPower * 0.85;
             currentSpeed = Math.min(currentSpeed + orbGain, getMaxSpeed());
             check800Unlock();
             playSound('orb', steps);
@@ -2960,17 +3053,17 @@
 
         if (effectMode === 'plasma') {
           ui.fxBadge.textContent = currentWorld === 2
-            ? '🌌 Effekt: Kosmos-Plasma (750+ · Nacht)'
-            : '✨ Effekt: Astral-Plasma (750+)';
+            ? '🌌 Effekt: Kosmos-Plasma & Kerne (750+)'
+            : '✨ Effekt: Astral-Plasma & Kerne (750+)';
           ui.fxBadge.className = 'badge plasma';
         } else if (effectMode === 'lightning') {
           ui.fxBadge.textContent = '⚡ Effekt: Blitz-Entladung (500–749)';
           ui.fxBadge.className = 'badge lightning';
         } else if (effectMode === 'frost') {
-          ui.fxBadge.textContent = '❄️ Effekt: Kristall-Frost (250–499)';
+          ui.fxBadge.textContent = '❄️ Effekt: Eisprismen & Frost (250–499)';
           ui.fxBadge.className = 'badge frost';
         } else if (effectMode === 'fire') {
-          ui.fxBadge.textContent = '🔥 Effekt: Flammen & Glut (100–249)';
+          ui.fxBadge.textContent = '🔥 Effekt: Flammenkegel & Glut (100–249)';
           ui.fxBadge.className = 'badge fire';
         } else {
           ui.fxBadge.textContent = '✨ Effekt: Basis (<100)';
