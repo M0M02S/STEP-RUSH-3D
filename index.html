@@ -1,995 +1,2847 @@
 <!DOCTYPE html>
 <html lang="de">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, maximum-scale=1.0" />
-<title>Step Rush 3D - Neon Edition</title>
-<style>
-  :root {
-    --primary: #00f3ff;
-    --secondary: #ff00ea;
-    --accent: #ffd500;
-    --bg-dark: #050510;
-    --glass: rgba(10, 15, 30, 0.7);
-    --glass-border: rgba(0, 243, 255, 0.3);
-  }
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no" />
+  <title>Step Rush 3D - Multi-World Edition</title>
+  <style>
+    * { box-sizing: border-box; }
+    html, body {
+      margin: 0;
+      height: 100%;
+      overflow: hidden;
+      background: #0b192c;
+      font-family: 'Segoe UI', system-ui, -apple-system, Roboto, sans-serif;
+      color: #f8fafc;
+      user-select: none;
+      -webkit-user-select: none;
+    }
+    canvas { display: block; touch-action: none; }
 
-  * { box-sizing: border-box; margin: 0; padding: 0; }
-  html, body {
-    height: 100%; overflow: hidden;
-    font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
-    background: var(--bg-dark); color: #fff;
-    user-select: none; -webkit-user-select: none;
-    touch-action: none;
-  }
-  canvas { display: block; }
+    /* ---------- Startmenü ---------- */
+    #startMenu {
+      position: fixed;
+      inset: 0;
+      display: grid;
+      place-items: center;
+      background: radial-gradient(circle at top, rgba(14, 165, 233, 0.28), rgba(6, 12, 24, 0.92));
+      backdrop-filter: blur(14px);
+      z-index: 80;
+      padding: 20px;
+    }
+    #startMenu.hidden { display: none; }
 
-  /* ---- Start Menü ---- */
-  #menu {
-    position: fixed; inset: 0; z-index: 100;
-    display: flex; flex-direction: column; align-items: center; justify-content: center;
-    background: radial-gradient(circle at center, #1a0b2e 0%, var(--bg-dark) 100%);
-    padding: 20px; text-align: center;
-    transition: opacity 0.5s ease;
-  }
-  #menu::before {
-    content: ''; position: absolute; inset: 0;
-    background: 
-      linear-gradient(rgba(0, 243, 255, 0.05) 1px, transparent 1px),
-      linear-gradient(90deg, rgba(0, 243, 255, 0.05) 1px, transparent 1px);
-    background-size: 40px 40px;
-    perspective: 500px; transform: rotateX(60deg) translateY(-200px);
-    pointer-events: none;
-    z-index: -1;
-    animation: gridMove 20s linear infinite;
-  }
-  @keyframes gridMove {
-    0% { transform: rotateX(60deg) translateY(0); }
-    100% { transform: rotateX(60deg) translateY(40px); }
-  }
+    .menu-card {
+      width: min(94vw, 660px);
+      background: linear-gradient(165deg, rgba(15, 23, 42, 0.95), rgba(7, 11, 22, 0.98));
+      border: 1px solid rgba(125, 211, 252, 0.35);
+      border-radius: 28px;
+      padding: 34px 28px;
+      text-align: center;
+      box-shadow: 0 30px 90px rgba(0, 0, 0, 0.7), 0 0 50px rgba(56, 189, 248, 0.18);
+    }
 
-  #menu h1 {
-    font-size: clamp(40px, 8vw, 80px); font-weight: 900;
-    background: linear-gradient(90deg, var(--primary), var(--secondary));
-    -webkit-background-clip: text; background-clip: text; color: transparent;
-    text-transform: uppercase; letter-spacing: 4px;
-    text-shadow: 0 0 20px rgba(0, 243, 255, 0.3);
-    margin-bottom: 10px;
-    animation: pulseTitle 3s infinite alternate;
-  }
-  @keyframes pulseTitle {
-    from { filter: drop-shadow(0 0 10px rgba(0, 243, 255, 0.4)); }
-    to { filter: drop-shadow(0 0 30px rgba(255, 0, 234, 0.6)); }
-  }
-  #menu .subtitle { color: #a0aec0; font-size: 18px; margin-bottom: 50px; letter-spacing: 2px; }
-  
-  .mode-buttons { display: flex; gap: 30px; flex-wrap: wrap; justify-content: center; }
-  .mode-btn {
-    background: var(--glass);
-    border: 2px solid var(--glass-border);
-    border-radius: 20px; padding: 30px 40px; min-width: 240px;
-    cursor: pointer; transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-    color: #fff; font-family: inherit;
-    display: flex; flex-direction: column; align-items: center; gap: 12px;
-    box-shadow: 0 10px 30px rgba(0,0,0,0.5);
-    backdrop-filter: blur(10px);
-  }
-  .mode-btn:hover {
-    border-color: var(--primary);
-    background: rgba(0, 243, 255, 0.1);
-    transform: translateY(-10px) scale(1.05);
-    box-shadow: 0 0 40px rgba(0, 243, 255, 0.4);
-  }
-  .mode-btn .icon { font-size: 50px; filter: drop-shadow(0 0 10px rgba(255,255,255,0.5)); }
-  .mode-btn .title { font-size: 22px; font-weight: 800; letter-spacing: 1px; }
-  .mode-btn .desc { font-size: 14px; color: var(--primary); }
+    .menu-title {
+      font-size: clamp(30px, 5.2vw, 46px);
+      font-weight: 950;
+      margin: 0 0 10px;
+      background: linear-gradient(90deg, #38bdf8, #34d399, #fbbf24, #f472b6);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      letter-spacing: 0.04em;
+    }
 
-  /* ---- HUD ---- */
-  #hud {
-    position: fixed; top: 20px; left: 20px; right: 20px;
-    display: none; gap: 15px; flex-wrap: wrap;
-    pointer-events: none; z-index: 10;
-    justify-content: space-between;
-  }
-  .hud-left { display: flex; gap: 15px; flex-wrap: wrap; }
-  .hud-card {
-    background: var(--glass);
-    border: 1px solid var(--glass-border);
-    border-radius: 16px; padding: 12px 20px; min-width: 100px;
-    backdrop-filter: blur(12px);
-    box-shadow: 0 8px 32px rgba(0,0,0,0.4);
-    display: flex; flex-direction: column; justify-content: center;
-  }
-  .hud-label { font-size: 11px; letter-spacing: 2px; text-transform: uppercase; color: var(--primary); margin-bottom: 4px; font-weight: 700; }
-  .hud-value { font-size: 26px; font-weight: 900; line-height: 1; text-shadow: 0 2px 10px rgba(0,0,0,0.5); }
-  
-  .hud-boost-bar {
-    width: 200px; height: 8px; background: rgba(255,255,255,0.1);
-    border-radius: 10px; margin-top: 8px; overflow: hidden;
-  }
-  .hud-boost-fill {
-    height: 100%; width: 0%; background: linear-gradient(90deg, var(--primary), var(--secondary));
-    border-radius: 10px; transition: width 0.1s;
-    box-shadow: 0 0 10px var(--secondary);
-  }
+    .menu-subtitle {
+      color: #cbd5e1;
+      font-size: 14px;
+      margin: 0 0 26px;
+      line-height: 1.6;
+    }
 
-  /* ---- Speed Lines Overlay ---- */
-  #speedLines {
-    position: fixed; inset: 0; pointer-events: none; z-index: 8;
-    opacity: 0; transition: opacity 0.3s;
-    background: radial-gradient(circle, transparent 40%, rgba(0, 243, 255, 0.15) 100%);
-    box-shadow: inset 0 0 100px rgba(0, 243, 255, 0.3);
-  }
+    .device-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+    }
 
-  /* ---- Hinweis ---- */
-  #hint {
-    position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%);
-    background: var(--glass); border: 1px solid var(--glass-border);
-    border-radius: 20px; padding: 12px 24px;
-    font-size: 14px; color: #fff; text-align: center;
-    pointer-events: none; backdrop-filter: blur(10px);
-    z-index: 10; max-width: 90vw; letter-spacing: 1px;
-    transition: opacity 1s; box-shadow: 0 4px 20px rgba(0,0,0,0.5);
-  }
+    @media (max-width: 520px) {
+      .device-grid { grid-template-columns: 1fr; }
+    }
 
-  /* ---- Mobile Controls ---- */
-  #mobileControls { position: fixed; inset: 0; pointer-events: none; z-index: 5; }
-  #mobileControls.hidden { display: none; }
+    .device-btn {
+      background: rgba(20, 30, 52, 0.88);
+      border: 1px solid rgba(148, 163, 184, 0.32);
+      border-radius: 22px;
+      padding: 22px 18px;
+      color: #f8fafc;
+      cursor: pointer;
+      transition: transform 0.18s ease, border-color 0.18s ease, background 0.18s ease, box-shadow 0.18s ease;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+    }
 
-  #joystick {
-    position: absolute; bottom: 40px; left: 40px;
-    width: 140px; height: 140px; border-radius: 50%;
-    background: rgba(10, 15, 30, 0.5);
-    border: 2px solid var(--glass-border);
-    pointer-events: auto; touch-action: none;
-    box-shadow: inset 0 0 20px rgba(0,0,0,0.5);
-    backdrop-filter: blur(5px);
-  }
-  #joyKnob {
-    position: absolute; top: 50%; left: 50%;
-    width: 60px; height: 60px; border-radius: 50%;
-    background: radial-gradient(circle at 30% 30%, #fff, var(--primary));
-    border: 2px solid #fff;
-    transform: translate(-50%, -50%);
-    pointer-events: none;
-    box-shadow: 0 0 20px var(--primary);
-  }
+    .device-btn:hover, .device-btn:active {
+      transform: translateY(-4px);
+      border-color: #38bdf8;
+      background: rgba(29, 44, 74, 0.96);
+      box-shadow: 0 14px 34px rgba(56, 189, 248, 0.25);
+    }
 
-  .action-btn {
-    position: absolute; border-radius: 50%;
-    background: var(--glass); border: 2px solid var(--glass-border);
-    color: #fff; font-weight: 900; font-size: 16px; letter-spacing: 1px;
-    pointer-events: auto; touch-action: none;
-    display: flex; align-items: center; justify-content: center;
-    user-select: none; backdrop-filter: blur(5px);
-    box-shadow: 0 8px 32px rgba(0,0,0,0.5);
-    transition: transform 0.1s, background 0.1s;
-  }
-  .action-btn:active { transform: scale(0.9); background: rgba(0, 243, 255, 0.3); border-color: var(--primary); }
-  
-  #btnSprint { bottom: 50px; right: 40px; width: 100px; height: 100px; border-color: var(--accent); box-shadow: 0 0 20px rgba(255, 213, 0, 0.2); }
-  #btnSprint:active { background: rgba(255, 213, 0, 0.3); border-color: var(--accent); }
-  #btnJump { bottom: 170px; right: 60px; width: 80px; height: 80px; font-size: 28px; border-color: var(--primary); }
+    .device-icon { font-size: 38px; }
+    .device-name { font-size: 18px; font-weight: 850; color: #ffffff; }
+    .device-desc { font-size: 12px; color: #94a3b8; line-height: 1.45; }
 
-</style>
+    /* ---------- Modernes HUD ---------- */
+    #hud {
+      position: fixed;
+      top: 14px;
+      left: 14px;
+      right: 14px;
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      align-items: flex-start;
+      pointer-events: none;
+      text-shadow: 0 2px 10px rgba(0, 0, 0, 0.85);
+      z-index: 30;
+    }
+
+    .card {
+      background: rgba(10, 16, 30, 0.78);
+      border: 1px solid rgba(148, 163, 184, 0.28);
+      border-radius: 16px;
+      padding: 9px 15px;
+      min-width: 92px;
+      backdrop-filter: blur(12px);
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.35), inset 0 1px 0 rgba(255, 255, 255, 0.08);
+    }
+
+    .label {
+      display: block;
+      font-size: 10px;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: #94a3b8;
+      margin-bottom: 2px;
+      font-weight: 800;
+    }
+
+    .value {
+      font-size: 21px;
+      font-weight: 900;
+      line-height: 1.1;
+      color: #f8fafc;
+    }
+
+    .hud-actions {
+      pointer-events: auto;
+      margin-left: auto;
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      position: relative;
+      z-index: 35;
+    }
+
+    .hud-btn {
+      background: rgba(12, 19, 36, 0.86);
+      border: 1px solid rgba(148, 163, 184, 0.35);
+      color: #f8fafc;
+      border-radius: 14px;
+      padding: 10px 15px;
+      font-size: 13px;
+      font-weight: 800;
+      cursor: pointer;
+      backdrop-filter: blur(10px);
+      box-shadow: 0 6px 18px rgba(0, 0, 0, 0.35);
+      transition: transform 0.15s ease, border-color 0.15s ease, background 0.15s ease, box-shadow 0.15s ease;
+    }
+
+    .hud-btn:hover {
+      transform: translateY(-2px);
+      border-color: #38bdf8;
+      background: rgba(20, 32, 58, 0.96);
+    }
+
+    #openShopBtn {
+      border-color: rgba(251, 191, 36, 0.65);
+      color: #fde047;
+      background: linear-gradient(135deg, rgba(120, 53, 15, 0.55), rgba(15, 23, 42, 0.88));
+    }
+
+    #openAdminBtn {
+      border-color: rgba(251, 113, 133, 0.65);
+      color: #fda4af;
+      background: linear-gradient(135deg, rgba(136, 19, 55, 0.55), rgba(15, 23, 42, 0.88));
+    }
+
+    /* Knopf Neue Welt: komplett versteckt bis Speed >= 800 erreicht ist */
+    #newWorldBtn {
+      display: none;
+      border-color: rgba(192, 132, 252, 0.85);
+      color: #f3e8ff;
+      background: linear-gradient(135deg, rgba(126, 34, 206, 0.85), rgba(37, 99, 235, 0.85));
+      box-shadow: 0 0 26px rgba(168, 85, 247, 0.65);
+      animation: pulsePortal 1.4s infinite alternate;
+    }
+    #newWorldBtn.visible {
+      display: inline-block;
+    }
+
+    @keyframes pulsePortal {
+      from { transform: scale(1); box-shadow: 0 0 18px rgba(168, 85, 247, 0.5); }
+      to { transform: scale(1.04); box-shadow: 0 0 32px rgba(56, 189, 248, 0.85); }
+    }
+
+    #returnOldWorldBtn {
+      display: none;
+      border-color: rgba(56, 189, 248, 0.75);
+      color: #bae6fd;
+      background: linear-gradient(135deg, rgba(3, 105, 161, 0.78), rgba(15, 23, 42, 0.9));
+    }
+    #returnOldWorldBtn.visible {
+      display: inline-block;
+    }
+
+    #statusRow {
+      position: fixed;
+      top: 82px;
+      left: 14px;
+      right: 14px;
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      align-items: center;
+      pointer-events: none;
+      z-index: 25;
+    }
+
+    .badge {
+      padding: 6px 14px;
+      border-radius: 999px;
+      font-size: 12px;
+      font-weight: 800;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      backdrop-filter: blur(10px);
+      background: rgba(10, 16, 30, 0.78);
+      border: 1px solid rgba(148, 163, 184, 0.3);
+      color: #e2e8f0;
+      box-shadow: 0 4px 14px rgba(0, 0, 0, 0.3);
+      transition: all 0.2s ease;
+    }
+
+    #sprintBadge.active {
+      background: rgba(180, 83, 9, 0.78);
+      border-color: #fde047;
+      color: #fef08a;
+      box-shadow: 0 0 20px rgba(250, 204, 21, 0.45);
+    }
+
+    #sprintBadge.cooldown {
+      background: rgba(15, 23, 42, 0.82);
+      border-color: rgba(100, 116, 139, 0.45);
+      color: #94a3b8;
+    }
+
+    #auraBadge.fire {
+      background: rgba(153, 27, 27, 0.78);
+      border-color: #fb923c;
+      color: #ffedd5;
+      box-shadow: 0 0 20px rgba(249, 115, 22, 0.5);
+    }
+
+    #auraBadge.frost {
+      background: rgba(21, 94, 117, 0.78);
+      border-color: #22d3ee;
+      color: #cffafe;
+      box-shadow: 0 0 20px rgba(34, 211, 238, 0.5);
+    }
+
+    #auraBadge.lightning {
+      background: rgba(107, 33, 168, 0.82);
+      border-color: #e879f9;
+      color: #fae8ff;
+      box-shadow: 0 0 24px rgba(217, 70, 239, 0.65);
+    }
+
+    #speedBar {
+      position: fixed;
+      left: 14px;
+      right: 14px;
+      top: 120px;
+      height: 10px;
+      max-width: 420px;
+      border-radius: 999px;
+      background: rgba(10, 16, 30, 0.82);
+      border: 1px solid rgba(148, 163, 184, 0.32);
+      overflow: hidden;
+      pointer-events: none;
+      z-index: 25;
+      box-shadow: 0 4px 14px rgba(0, 0, 0, 0.35);
+    }
+
+    #speedFill {
+      height: 100%;
+      width: 0%;
+      border-radius: 999px;
+      background: linear-gradient(90deg, #0ea5e9, #34d399, #f97316, #e879f9);
+      transition: width 0.08s linear;
+    }
+
+    #pcHint {
+      position: fixed;
+      bottom: 16px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: rgba(10, 16, 30, 0.82);
+      border: 1px solid rgba(148, 163, 184, 0.32);
+      padding: 9px 22px;
+      border-radius: 999px;
+      font-size: 12px;
+      color: #e2e8f0;
+      pointer-events: none;
+      z-index: 25;
+      text-align: center;
+      white-space: nowrap;
+      backdrop-filter: blur(10px);
+    }
+    #pcHint.hidden { display: none; }
+
+    /* ---------- Kinoreifes Weltwechsel-Banner ---------- */
+    #worldSceneBanner {
+      position: fixed;
+      bottom: 34px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: linear-gradient(135deg, rgba(10, 16, 34, 0.9), rgba(30, 27, 75, 0.9));
+      border: 1px solid rgba(192, 132, 252, 0.75);
+      border-radius: 20px;
+      padding: 15px 26px;
+      text-align: center;
+      z-index: 45;
+      min-width: min(90vw, 470px);
+      box-shadow: 0 16px 50px rgba(0, 0, 0, 0.75), 0 0 30px rgba(139, 92, 246, 0.4);
+      pointer-events: none;
+    }
+    #worldSceneBanner.hidden { display: none; }
+
+    #worldSceneTitle {
+      font-size: 16px;
+      font-weight: 950;
+      color: #ffffff;
+      margin-bottom: 4px;
+      letter-spacing: 0.03em;
+    }
+
+    #worldSceneSub {
+      font-size: 12px;
+      color: #ddd6fe;
+    }
+
+    /* ---------- Modals: Shop & Admin Panel ---------- */
+    .modal-backdrop {
+      position: fixed;
+      inset: 0;
+      background: rgba(4, 8, 18, 0.78);
+      backdrop-filter: blur(10px);
+      display: grid;
+      place-items: center;
+      z-index: 70;
+      padding: 18px;
+    }
+    .modal-backdrop.hidden { display: none; }
+
+    .modal-box {
+      width: min(95vw, 660px);
+      max-height: 88vh;
+      overflow-y: auto;
+      background: linear-gradient(165deg, rgba(15, 23, 42, 0.97), rgba(7, 11, 22, 0.99));
+      border: 1px solid rgba(125, 211, 252, 0.35);
+      border-radius: 26px;
+      padding: 24px;
+      box-shadow: 0 28px 85px rgba(0, 0, 0, 0.85);
+    }
+
+    .modal-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 14px;
+    }
+
+    .modal-title {
+      margin: 0;
+      font-size: 22px;
+      font-weight: 950;
+      color: #f8fafc;
+    }
+
+    .close-btn {
+      background: rgba(30, 41, 59, 0.9);
+      border: 1px solid rgba(148, 163, 184, 0.35);
+      color: #f8fafc;
+      border-radius: 12px;
+      padding: 8px 14px;
+      font-weight: 800;
+      cursor: pointer;
+    }
+
+    .section-heading {
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      color: #38bdf8;
+      margin: 18px 0 10px;
+      font-weight: 900;
+    }
+
+    .shop-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
+
+    @media (max-width: 540px) {
+      .shop-grid { grid-template-columns: 1fr; }
+    }
+
+    .upgrade-card {
+      background: rgba(20, 30, 52, 0.85);
+      border: 1px solid rgba(148, 163, 184, 0.25);
+      border-radius: 18px;
+      padding: 15px;
+      display: flex;
+      flex-direction: column;
+      gap: 7px;
+    }
+
+    .upgrade-name {
+      font-weight: 850;
+      font-size: 15px;
+      color: #f8fafc;
+    }
+
+    .upgrade-desc {
+      font-size: 12px;
+      color: #cbd5e1;
+      line-height: 1.42;
+    }
+
+    .upgrade-lvl {
+      font-size: 11px;
+      color: #38bdf8;
+      font-weight: 800;
+    }
+
+    .buy-btn {
+      margin-top: auto;
+      background: linear-gradient(90deg, #0284c7, #2563eb);
+      border: 1px solid rgba(125, 211, 252, 0.4);
+      border-radius: 12px;
+      padding: 9px 12px;
+      color: #ffffff;
+      font-weight: 850;
+      font-size: 13px;
+      cursor: pointer;
+      transition: transform 0.12s ease, opacity 0.15s ease;
+    }
+
+    .buy-btn:hover:not(:disabled) {
+      transform: translateY(-1px);
+    }
+
+    .buy-btn.skin-equipped {
+      background: linear-gradient(90deg, #059669, #10b981);
+      border-color: rgba(110, 231, 183, 0.5);
+    }
+
+    .buy-btn:disabled {
+      opacity: 0.36;
+      cursor: not-allowed;
+    }
+
+    .admin-row {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 12px;
+    }
+
+    .admin-input {
+      flex: 1;
+      background: rgba(15, 23, 42, 0.95);
+      border: 1px solid rgba(251, 113, 133, 0.55);
+      border-radius: 12px;
+      padding: 10px 14px;
+      color: white;
+      font-size: 14px;
+      font-weight: 700;
+      outline: none;
+    }
+
+    .admin-action-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      margin-top: 12px;
+    }
+
+    @media (max-width: 520px) {
+      .admin-action-grid { grid-template-columns: 1fr; }
+    }
+
+    .admin-btn {
+      background: rgba(88, 28, 135, 0.72);
+      border: 1px solid rgba(192, 132, 252, 0.55);
+      color: #f3e8ff;
+      border-radius: 12px;
+      padding: 11px 12px;
+      font-weight: 850;
+      font-size: 13px;
+      cursor: pointer;
+    }
+
+    .admin-btn:hover {
+      background: rgba(107, 33, 168, 0.92);
+    }
+
+    .admin-status {
+      font-size: 13px;
+      color: #fda4af;
+      min-height: 20px;
+      margin-top: 6px;
+    }
+
+    /* ---------- Touch Steuerung ---------- */
+    #touchControls {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 20;
+    }
+    #touchControls.hidden { display: none; }
+
+    #joystickZone {
+      position: fixed;
+      left: 24px;
+      bottom: 28px;
+      width: 138px;
+      height: 138px;
+      border-radius: 50%;
+      background: rgba(10, 16, 30, 0.72);
+      border: 2px solid rgba(56, 189, 248, 0.55);
+      pointer-events: auto;
+      touch-action: none;
+      backdrop-filter: blur(6px);
+    }
+
+    #joystickKnob {
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      width: 58px;
+      height: 58px;
+      margin-left: -29px;
+      margin-top: -29px;
+      border-radius: 50%;
+      background: radial-gradient(circle at 30% 30%, #bae6fd, #0284c7);
+      box-shadow: 0 4px 18px rgba(56, 189, 248, 0.5);
+      pointer-events: none;
+    }
+
+    #touchLookZone {
+      position: fixed;
+      top: 0;
+      right: 0;
+      width: 56%;
+      height: 100%;
+      pointer-events: auto;
+      touch-action: none;
+    }
+
+    .action-buttons {
+      position: fixed;
+      right: 24px;
+      bottom: 32px;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+      pointer-events: auto;
+      z-index: 25;
+    }
+
+    .touch-btn {
+      width: 84px;
+      height: 84px;
+      border-radius: 50%;
+      border: 2px solid rgba(148, 163, 184, 0.45);
+      background: rgba(10, 16, 30, 0.84);
+      color: white;
+      font-weight: 850;
+      font-size: 12px;
+      display: grid;
+      place-items: center;
+      text-align: center;
+      line-height: 1.2;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.45);
+      backdrop-filter: blur(6px);
+      touch-action: none;
+      transition: transform 0.12s ease, border-color 0.2s ease, background 0.2s ease, opacity 0.2s ease;
+    }
+
+    .touch-btn:active, .touch-btn.active {
+      transform: scale(0.93);
+      border-color: #38bdf8;
+      background: rgba(14, 165, 233, 0.35);
+    }
+
+    #sprintBtn {
+      border-color: rgba(251, 146, 60, 0.8);
+      color: #fed7aa;
+    }
+
+    #sprintBtn.sprinting {
+      border-color: #fde047;
+      background: rgba(180, 83, 9, 0.82);
+      color: #fef08a;
+    }
+
+    #sprintBtn.cooldown {
+      opacity: 0.52;
+      border-color: rgba(100, 116, 139, 0.6);
+      color: #94a3b8;
+    }
+
+    #jumpBtn {
+      border-color: rgba(56, 189, 248, 0.8);
+      color: #bae6fd;
+    }
+  </style>
 </head>
 <body>
 
-  <div id="menu">
-    <h1>Step Rush 3D</h1>
-    <p class="subtitle">WÄHLE DEIN SETUP</p>
-    <div class="mode-buttons">
-      <button class="mode-btn" id="btnDesktop">
-        <span class="icon">🖥️</span>
-        <span class="title">DESKTOP</span>
-        <span class="desc">Maus & Tastatur</span>
-      </button>
-      <button class="mode-btn" id="btnMobile">
-        <span class="icon">📱</span>
-        <span class="title">MOBILE</span>
-        <span class="desc">Touch-Steuerung</span>
-      </button>
+  <!-- Startmenü -->
+  <div id="startMenu">
+    <div class="menu-card">
+      <h1 class="menu-title">STEP RUSH 3D</h1>
+      <p class="menu-subtitle">
+        Helle Tages-Insel mit blauem Himmel &amp; Wolken, düstere Sternennacht-Insel ab 800 Speed, einzigartige Skins mit eigener 3D-Ausrüstung, flüssige Animationen und starke Speed-Effekte!
+      </p>
+      <div class="device-grid">
+        <button class="device-btn" id="btnPC">
+          <span class="device-icon">🖱️⌨️</span>
+          <span class="device-name">Maus &amp; Keyboard</span>
+          <span class="device-desc">WASD = Laufen · Shift = 5s Sprint (10s CD)<br>Maus = Kamera · 2x Space = Air-Push</span>
+        </button>
+        <button class="device-btn" id="btnTouch">
+          <span class="device-icon">📱📟</span>
+          <span class="device-name">Handy &amp; Tablet</span>
+          <span class="device-desc">Joystick links · Wischen rechts<br>SPRINT = 5s Boost (10s CD) · 2x Jump = Push</span>
+        </button>
+      </div>
     </div>
   </div>
 
-  <div id="speedLines"></div>
-
+  <!-- HUD -->
   <div id="hud">
-    <div class="hud-left">
-      <div class="hud-card">
-        <span class="hud-label">Schritte</span>
-        <span class="hud-value" id="hudSteps">0</span>
+    <div class="card"><span class="label">Schritte</span><span class="value" id="steps">0</span></div>
+    <div class="card"><span class="label">Orbs</span><span class="value" id="orbs">0</span></div>
+    <div class="card" id="speedCard"><span class="label">Speed</span><span class="value" id="speed">0.0</span></div>
+    <div class="card"><span class="label">Max-Speed</span><span class="value" id="capSpeed">120</span></div>
+    <div class="card"><span class="label">Koordinaten</span><span class="value" id="coords" style="font-size:15px;">0, 0</span></div>
+    <div class="hud-actions">
+      <button class="hud-btn" id="openShopBtn">🛒 Shop</button>
+      <button class="hud-btn" id="openAdminBtn">🛡️ Admin</button>
+      <button class="hud-btn" id="newWorldBtn">🌌 Neue Welt</button>
+      <button class="hud-btn" id="returnOldWorldBtn">☀️ Alte Welt</button>
+      <button class="hud-btn" id="menuSwitchBtn">⚙️ Steuerung</button>
+    </div>
+  </div>
+
+  <div id="statusRow">
+    <div class="badge" id="worldBadge">☀️ Welt 1: Helle Insel (Max 800)</div>
+    <div class="badge" id="biomeBadge">🌿 Saftiges Gras</div>
+    <div class="badge" id="sprintBadge">⚡ Sprint bereit (5.0s)</div>
+    <div class="badge" id="auraBadge">✨ Effekt: Basis</div>
+  </div>
+
+  <div id="speedBar"><div id="speedFill"></div></div>
+  <div id="pcHint" class="hidden">WASD = Bewegen · Shift gedrückt = 5s Sprint (10s CD) · 2x Leertaste = Air-Push · Maus ziehen = Kamera</div>
+
+  <!-- Banner während der 3D-Weltwechsel-Szene -->
+  <div id="worldSceneBanner" class="hidden">
+    <div id="worldSceneTitle">🚀 KAMERA-ZOOM &amp; HIMMELSSPRUNG...</div>
+    <div id="worldSceneSub">Der Charakter katapultiert sich hoch in die Luft und landet auf der neuen Insel!</div>
+  </div>
+
+  <!-- Shop Modal -->
+  <div class="modal-backdrop hidden" id="shopModal">
+    <div class="modal-box">
+      <div class="modal-header">
+        <h2 class="modal-title">🛒 Speed-Shop &amp; Skins</h2>
+        <button class="close-btn" id="closeShopBtn">✕</button>
       </div>
-      <div class="hud-card">
-        <span class="hud-label">Orbs</span>
-        <span class="hud-value" id="hudOrbs">0</span>
+      <div style="margin-bottom:10px; font-size:14px; color:#38bdf8; font-weight:850;">
+        Aktuelle Geschwindigkeit (Zahlungsmittel): <span id="shopSpeedDisplay">0.0</span> Speed · Max-Speed: <span id="shopMaxSpeedDisplay">120</span>
       </div>
-      <div class="hud-card">
-        <span class="hud-label">Speed</span>
-        <span class="hud-value" id="hudSpeed">0.0</span>
-        <div class="hud-boost-bar"><div class="hud-boost-fill" id="hudBoostFill"></div></div>
+
+      <div class="section-heading">⚡ Tempo &amp; Fähigkeit-Upgrades (kostet Speed)</div>
+      <div class="shop-grid">
+        <div class="upgrade-card">
+          <div class="upgrade-name">🚀 Max-Geschwindigkeit</div>
+          <div class="upgrade-desc">Erhöht dein aktuelles Max-Speed-Limit (+95 Speed pro Stufe).</div>
+          <div class="upgrade-lvl">Stufe: <span id="lvlMaxSpeed">0</span></div>
+          <button class="buy-btn" id="buyMaxSpeedBtn">Kaufen (-20 Speed)</button>
+        </div>
+
+        <div class="upgrade-card">
+          <div class="upgrade-name">⚡ Beschleunigung</div>
+          <div class="upgrade-desc">Du erreichst dein Tempo deutlich schneller beim Laufen.</div>
+          <div class="upgrade-lvl">Stufe: <span id="lvlAccel">0</span></div>
+          <button class="buy-btn" id="buyAccelBtn">Kaufen (-15 Speed)</button>
+        </div>
+
+        <div class="upgrade-card">
+          <div class="upgrade-name">👟 Schritt-Power</div>
+          <div class="upgrade-desc">Jeder Schritt bringt dir mehr Speed-Schub &amp; Schritt-Punkte.</div>
+          <div class="upgrade-lvl">Stufe: <span id="lvlStepPower">0</span></div>
+          <button class="buy-btn" id="buyStepPowerBtn">Kaufen (-25 Speed)</button>
+        </div>
+
+        <div class="upgrade-card">
+          <div class="upgrade-name">🔥 Sprint-Superkraft</div>
+          <div class="upgrade-desc">Verstärkt den Speed-Schub während deiner 5 Sekunden Sprint.</div>
+          <div class="upgrade-lvl">Stufe: <span id="lvlSprintPower">0</span></div>
+          <button class="buy-btn" id="buySprintPowerBtn">Kaufen (-30 Speed)</button>
+        </div>
+      </div>
+
+      <div class="section-heading">🎭 Einzigartige Charakter-Skins (kostet Speed)</div>
+      <div class="shop-grid" id="skinShopGrid"></div>
+    </div>
+  </div>
+
+  <!-- Admin Panel Modal -->
+  <div class="modal-backdrop hidden" id="adminModal">
+    <div class="modal-box">
+      <div class="modal-header">
+        <h2 class="modal-title">🛡️ Admin Panel</h2>
+        <button class="close-btn" id="closeAdminBtn">✕</button>
+      </div>
+      <div style="font-size:13px; color:#cbd5e1; margin-bottom:10px; line-height:1.45;">
+        Gib den Admin-Code ein, um Admin-Aktionen freizuschalten:
+      </div>
+      <div class="admin-row">
+        <input class="admin-input" id="adminCodeInput" type="text" placeholder="Admin-Code eingeben..." />
+        <button class="buy-btn" id="submitAdminCodeBtn">Aktivieren</button>
+      </div>
+      <div class="admin-status" id="adminStatusMsg">Noch nicht freigeschaltet.</div>
+
+      <div class="admin-action-grid" id="adminControls" style="opacity:0.45; pointer-events:none;">
+        <button class="admin-btn" id="adminAddSpeedBtn">⚡ +250 Speed geben</button>
+        <button class="admin-btn" id="adminUnlockSkinsBtn">🎭 Alle Skins freischalten</button>
+        <button class="admin-btn" id="adminSet800SpeedBtn">🚀 Direkt auf 800 Speed setzen</button>
+        <button class="admin-btn" id="adminTriggerSceneBtn">🌌 Weltwechsel-Szene testen</button>
       </div>
     </div>
   </div>
 
-  <div id="hint"></div>
-
-  <div id="mobileControls" class="hidden">
-    <div id="joystick"><div id="joyKnob"></div></div>
-    <div class="action-btn" id="btnSprint">SPRINT</div>
-    <div class="action-btn" id="btnJump">↑</div>
+  <!-- Touch UI -->
+  <div id="touchControls" class="hidden">
+    <div id="touchLookZone"></div>
+    <div id="joystickZone">
+      <div id="joystickKnob"></div>
+    </div>
+    <div class="action-buttons">
+      <button class="touch-btn" id="sprintBtn">⚡<br>SPRINT<br><span id="sprintBtnSub">5.0s</span></button>
+      <button class="touch-btn" id="jumpBtn">⬆️<br>JUMP<br>+PUSH</button>
+    </div>
   </div>
 
   <script type="importmap">
-    { "imports": { "three": "https://unpkg.com/three@0.160.0/build/three.module.js" } }
+    {
+      "imports": {
+        "three": "https://unpkg.com/three@0.160.0/build/three.module.js"
+      }
+    }
   </script>
 
   <script type="module">
     import * as THREE from 'three';
 
-    // ============================================================
-    // SETUP & RENDERER
-    // ============================================================
+    const SECRET_ADMIN_CODE = 'SAMI-MAX-999';
+
+    // ---------- Audio Synthesizer ----------
+    let audioCtx = null;
+    function initAudio() {
+      if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+      if (audioCtx.state === 'suspended') audioCtx.resume();
+    }
+
+    function playSound(type, pitchFactor = 1) {
+      if (!audioCtx) return;
+      const osc = audioCtx.createOscillator();
+      const gain = audioCtx.createGain();
+      osc.connect(gain);
+      gain.connect(audioCtx.destination);
+      const now = audioCtx.currentTime;
+
+      if (type === 'orb') {
+        osc.type = 'sine';
+        const freq = 440 + Math.min(pitchFactor, 60) * 10;
+        osc.frequency.setValueAtTime(freq, now);
+        osc.frequency.exponentialRampToValueAtTime(freq * 1.45, now + 0.11);
+        gain.gain.setValueAtTime(0.08, now);
+        gain.gain.exponentialRampToValueAtTime(0.001, now + 0.12);
+        osc.start(now);
+        osc.stop(now + 0.12);
+      } else if (type === 'boost') {
+        osc.type = 'sawtooth';
+        osc.frequency.setValueAtTime(210, now);
+        osc.frequency.exponentialRampToValueAtTime(840, now + 0.24);
+        gain.gain.setValueAtTime(0.1, now);
+        gain.gain.exponentialRampToValueAtTime(0.001, now + 0.25);
+        osc.start(now);
+        osc.stop(now + 0.25);
+      } else if (type === 'sprint') {
+        osc.type = 'triangle';
+        osc.frequency.setValueAtTime(250, now);
+        osc.frequency.exponentialRampToValueAtTime(640, now + 0.18);
+        gain.gain.setValueAtTime(0.1, now);
+        gain.gain.exponentialRampToValueAtTime(0.001, now + 0.19);
+        osc.start(now);
+        osc.stop(now + 0.19);
+      } else if (type === 'jump') {
+        osc.type = 'triangle';
+        osc.frequency.setValueAtTime(200, now);
+        osc.frequency.exponentialRampToValueAtTime(450, now + 0.15);
+        gain.gain.setValueAtTime(0.09, now);
+        gain.gain.exponentialRampToValueAtTime(0.001, now + 0.16);
+        osc.start(now);
+        osc.stop(now + 0.16);
+      } else if (type === 'airpush') {
+        osc.type = 'sine';
+        osc.frequency.setValueAtTime(300, now);
+        osc.frequency.exponentialRampToValueAtTime(720, now + 0.18);
+        gain.gain.setValueAtTime(0.11, now);
+        gain.gain.exponentialRampToValueAtTime(0.001, now + 0.19);
+        osc.start(now);
+        osc.stop(now + 0.19);
+      } else if (type === 'buy') {
+        osc.type = 'sine';
+        osc.frequency.setValueAtTime(520, now);
+        osc.frequency.exponentialRampToValueAtTime(980, now + 0.15);
+        gain.gain.setValueAtTime(0.09, now);
+        gain.gain.exponentialRampToValueAtTime(0.001, now + 0.16);
+        osc.start(now);
+        osc.stop(now + 0.16);
+      } else if (type === 'warp') {
+        osc.type = 'sawtooth';
+        osc.frequency.setValueAtTime(140, now);
+        osc.frequency.exponentialRampToValueAtTime(1040, now + 0.95);
+        gain.gain.setValueAtTime(0.12, now);
+        gain.gain.exponentialRampToValueAtTime(0.001, now + 1.0);
+        osc.start(now);
+        osc.stop(now + 1.0);
+      }
+    }
+
+    // ---------- Szene, Himmel, Wolken, Sterne & Licht ----------
     const scene = new THREE.Scene();
-    scene.background = new THREE.Color(0x050510);
-    scene.fog = new THREE.FogExp2(0x050510, 0.0015);
+    // Welt 1 startet HELL mit blauem Himmel!
+    scene.background = new THREE.Color(0x5ec2ff);
+    scene.fog = new THREE.FogExp2(0x87cefa, 0.00055);
 
-    const camera = new THREE.PerspectiveCamera(65, innerWidth / innerHeight, 0.1, 3000);
+    const camera = new THREE.PerspectiveCamera(70, innerWidth / innerHeight, 0.1, 3200);
 
-    const renderer = new THREE.WebGLRenderer({ antialias: true, powerPreference: "high-performance" });
+    const renderer = new THREE.WebGLRenderer({ antialias: true, powerPreference: 'high-performance' });
     renderer.setSize(innerWidth, innerHeight);
-    renderer.setPixelRatio(Math.min(devicePixelRatio, 2));
+    renderer.setPixelRatio(Math.min(devicePixelRatio, 1.75));
     renderer.shadowMap.enabled = true;
     renderer.shadowMap.type = THREE.PCFSoftShadowMap;
     renderer.toneMapping = THREE.ACESFilmicToneMapping;
-    renderer.toneMappingExposure = 1.2;
+    renderer.toneMappingExposure = 1.06;
     document.body.appendChild(renderer.domElement);
 
-    // ============================================================
-    // LICHTER
-    // ============================================================
-    const ambientLight = new THREE.AmbientLight(0xffffff, 0.4);
-    scene.add(ambientLight);
-
-    const hemiLight = new THREE.HemisphereLight(0x00f3ff, 0x1a0b2e, 0.8);
+    const hemiLight = new THREE.HemisphereLight(0xe0f2fe, 0x3b7a3b, 1.35);
     scene.add(hemiLight);
 
-    const sun = new THREE.DirectionalLight(0xffd500, 1.5);
-    sun.position.set(100, 150, 50);
+    const sun = new THREE.DirectionalLight(0xfffbeb, 1.85);
+    sun.position.set(220, 340, 180);
     sun.castShadow = true;
-    // Schatten-Fix: Verhindert die "Aura" / Glitches um den Spieler
-    sun.shadow.mapSize.width = 2048;
-    sun.shadow.mapSize.height = 2048;
-    sun.shadow.camera.near = 1;
-    sun.shadow.camera.far = 400;
-    sun.shadow.camera.left = -100;
-    sun.shadow.camera.right = 100;
-    sun.shadow.camera.top = 100;
-    sun.shadow.camera.bottom = -100;
-    sun.shadow.bias = -0.0005;
-    sun.shadow.normalBias = 0.05;
+    sun.shadow.mapSize.set(1024, 1024);
+    sun.shadow.camera.near = 40;
+    sun.shadow.camera.far = 780;
+    const sd = 130;
+    sun.shadow.camera.left = -sd;
+    sun.shadow.camera.right = sd;
+    sun.shadow.camera.top = sd;
+    sun.shadow.camera.bottom = -sd;
     scene.add(sun);
-    scene.add(sun.target);
 
-    const fillLight = new THREE.DirectionalLight(0xff00ea, 0.6);
-    fillLight.position.set(-100, 50, -100);
-    scene.add(fillLight);
+    const playerLight = new THREE.PointLight(0x38bdf8, 0, 28);
+    scene.add(playerLight);
 
-    // ============================================================
-    // TERRAIN (NEON GRID MAP)
-    // ============================================================
-    function hash(x, y) {
-      const s = Math.sin(x * 127.1 + y * 311.7) * 43758.5453;
-      return s - Math.floor(s);
-    }
-    function noise(x, y) {
-      const ix = Math.floor(x), iy = Math.floor(y);
-      const fx = x - ix, fy = y - iy;
-      const u = fx * fx * (3 - 2 * fx);
-      const v = fy * fy * (3 - 2 * fy);
-      const a = hash(ix, iy), b = hash(ix + 1, iy);
-      const c = hash(ix, iy + 1), d = hash(ix + 1, iy + 1);
-      return a * (1 - u) * (1 - v) + b * u * (1 - v) + c * (1 - u) * v + d * u * v;
-    }
-    function fbm(x, y, oct) {
-      let v = 0, amp = 1, freq = 1, max = 0;
-      for (let i = 0; i < oct; i++) {
-        v += noise(x * freq, y * freq) * amp;
-        max += amp; amp *= 0.5; freq *= 2;
+    // ---------- Wolken für Welt 1 (blauer Taghimmel) ----------
+    const cloudsGroup = new THREE.Group();
+    scene.add(cloudsGroup);
+    const cloudMat = new THREE.MeshStandardMaterial({
+      color: 0xffffff,
+      roughness: 0.95,
+      metalness: 0.0
+    });
+    const puffGeo = new THREE.IcosahedronGeometry(1, 1);
+    const clouds = [];
+
+    for (let i = 0; i < 42; i++) {
+      const cGroup = new THREE.Group();
+      const puffCount = 4 + Math.floor(Math.random() * 4);
+      for (let p = 0; p < puffCount; p++) {
+        const puff = new THREE.Mesh(puffGeo, cloudMat);
+        const s = 6 + Math.random() * 8;
+        puff.scale.set(s * 1.35, s * 0.68, s * 1.15);
+        puff.position.set(
+          (p - puffCount / 2) * (s * 0.85),
+          (Math.random() - 0.3) * 2.5,
+          (Math.random() - 0.5) * (s * 0.65)
+        );
+        cGroup.add(puff);
       }
-      return v / max;
-    }
-    function terrainHeight(x, z) {
-      let h = fbm(x * 0.0015, z * 0.0015, 5) * 80 - 30;
-      h += fbm(x * 0.008, z * 0.008, 3) * 5;
-      const r = Math.sqrt(x * x + z * z);
-      if (r < 40) { const t = r / 40; h = h * t * t; } // Flach halten am Start
-      return h;
+      const cx = (Math.random() - 0.5) * 3400;
+      const cz = (Math.random() - 0.5) * 3400;
+      const cy = 115 + Math.random() * 85;
+      cGroup.position.set(cx, cy, cz);
+      cloudsGroup.add(cGroup);
+      clouds.push({ group: cGroup, speedX: 2.2 + Math.random() * 3.5 });
     }
 
-    const TERRAIN_SIZE = 5000, TERRAIN_SEG = 250;
-    const tGeo = new THREE.PlaneGeometry(TERRAIN_SIZE, TERRAIN_SIZE, TERRAIN_SEG, TERRAIN_SEG);
-    tGeo.rotateX(-Math.PI / 2);
-
-    const pos = tGeo.attributes.position;
-    const colors = new Float32Array(pos.count * 3);
-    const col = new THREE.Color();
-
-    // Stylische Farben für das Terrain
-    for (let i = 0; i < pos.count; i++) {
-      const x = pos.getX(i), z = pos.getZ(i);
-      const y = terrainHeight(x, z);
-      pos.setY(i, y);
-
-      // Tiefes Wasser -> Dunkelblau
-      if (y < -15) col.setHex(0x0a1a3a);
-      // Strand -> Sand
-      else if (y < -5) col.setHex(0x2a3a5a);
-      // Gras -> Neon Grün/Blau Mix
-      else if (y < 15) col.setHex(0x0a2a1a);
-      // Berge -> Lila/Fels
-      else if (y < 35) col.setHex(0x2a0a3a);
-      // Schnee -> Hellblau
-      else col.setHex(0x5a7a9a);
-
-      colors[i * 3] = col.r;
-      colors[i * 3 + 1] = col.g;
-      colors[i * 3 + 2] = col.b;
+    // ---------- Sterne für Welt 2 (Nachthimmel) ----------
+    const starCount = 1600;
+    const starPositions = new Float32Array(starCount * 3);
+    for (let i = 0; i < starCount; i++) {
+      const theta = Math.random() * Math.PI * 2;
+      const phi = Math.acos(Math.random() * 0.92 + 0.08);
+      const r = 1350 + Math.random() * 450;
+      starPositions[i * 3] = r * Math.sin(phi) * Math.cos(theta);
+      starPositions[i * 3 + 1] = Math.abs(r * Math.cos(phi)) + 40;
+      starPositions[i * 3 + 2] = r * Math.sin(phi) * Math.sin(theta);
     }
-    tGeo.setAttribute('color', new THREE.BufferAttribute(colors, 3));
-    tGeo.computeVertexNormals();
+    const starGeo = new THREE.BufferGeometry();
+    starGeo.setAttribute('position', new THREE.BufferAttribute(starPositions, 3));
+    const starMat = new THREE.PointsMaterial({ color: 0xf8fafc, size: 4.5, transparent: true, opacity: 0.95 });
+    const starsPoints = new THREE.Points(starGeo, starMat);
+    starsPoints.visible = false;
+    scene.add(starsPoints);
 
-    const terrainMat = new THREE.MeshStandardMaterial({
-      vertexColors: true, roughness: 0.8, metalness: 0.2,
-      wireframe: false
-    });
-    const terrain = new THREE.Mesh(tGeo, terrainMat);
-    terrain.receiveShadow = true;
-    scene.add(terrain);
+    // ---------- Multi-Biom Open World (Welt 1: Hell/Tag | Welt 2: Nacht/Sterne) ----------
+    let currentWorld = 1;
+    const WORLD1_HALF = 1800;
+    const WORLD2_HALF = 2500;
+    const WATER_LEVEL = -3.4;
 
-    // Neon Grid über das Terrain legen
-    const gridHelper = new THREE.GridHelper(TERRAIN_SIZE, 100, 0x00f3ff, 0x00f3ff);
-    gridHelper.position.y = 1;
-    gridHelper.material.opacity = 0.15;
-    gridHelper.material.transparent = true;
-    scene.add(gridHelper);
-
-    // Wasser Plane
-    const waterGeo = new THREE.PlaneGeometry(TERRAIN_SIZE, TERRAIN_SIZE);
-    const waterMat = new THREE.MeshStandardMaterial({
-      color: 0x001122, transparent: true, opacity: 0.85,
-      roughness: 0.1, metalness: 0.9, emissive: 0x002244, emissiveIntensity: 0.5
-    });
-    const water = new THREE.Mesh(waterGeo, waterMat);
-    water.rotation.x = -Math.PI / 2;
-    water.position.y = -15;
-    scene.add(water);
-
-    // ============================================================
-    // UMGEBUNG (Bäume, Felsen, schwebende Inseln)
-    // ============================================================
-    const dummy = new THREE.Object3D();
-
-    // Bäume (Instanced)
-    const NUM_TREES = 800;
-    const trunkGeo = new THREE.CylinderGeometry(0.3, 0.5, 4, 6);
-    const leavesGeo = new THREE.ConeGeometry(2.5, 6, 8);
-    const trunkMat = new THREE.MeshStandardMaterial({ color: 0x1a0b2e, roughness: 0.9 });
-    const leavesMat = new THREE.MeshStandardMaterial({ color: 0x00f3ff, emissive: 0x003344, roughness: 0.6, transparent: true, opacity: 0.9 });
-
-    const trunks = new THREE.InstancedMesh(trunkGeo, trunkMat, NUM_TREES);
-    const leaves = new THREE.InstancedMesh(leavesGeo, leavesMat, NUM_TREES);
-    trunks.castShadow = leaves.castShadow = true;
-    trunks.receiveShadow = leaves.receiveShadow = true;
-
-    for (let i = 0; i < NUM_TREES; i++) {
-      let x, z, y;
-      do {
-        x = (Math.random() - 0.5) * (TERRAIN_SIZE - 300);
-        z = (Math.random() - 0.5) * (TERRAIN_SIZE - 300);
-        y = terrainHeight(x, z);
-      } while (y < -10 || (Math.abs(x) < 15 && Math.abs(z) < 15));
-
-      const s = 0.8 + Math.random() * 1.2;
-      
-      dummy.position.set(x, y + 2 * s, z);
-      dummy.rotation.set(0, Math.random() * Math.PI * 2, 0);
-      dummy.scale.setScalar(s);
-      dummy.updateMatrix();
-      trunks.setMatrixAt(i, dummy.matrix);
-
-      dummy.position.set(x, y + 7 * s, z);
-      dummy.updateMatrix();
-      leaves.setMatrixAt(i, dummy.matrix);
+    function getWorldHalf() {
+      return currentWorld === 1 ? WORLD1_HALF : WORLD2_HALF;
     }
-    scene.add(trunks, leaves);
 
-    // Schwebende Inseln
-    const floatIslands = new THREE.Group();
-    const islandMat = new THREE.MeshStandardMaterial({ color: 0x2a0a3a, roughness: 0.9, emissive: 0x110022, emissiveIntensity: 0.5 });
-    for (let i = 0; i < 15; i++) {
-      const size = 10 + Math.random() * 30;
-      const island = new THREE.Mesh(new THREE.DodecahedronGeometry(size, 1), islandMat);
-      island.position.set(
-        (Math.random() - 0.5) * 2500,
-        100 + Math.random() * 150,
-        (Math.random() - 0.5) * 2500
+    function getBiomeWeights(x, z) {
+      if (currentWorld === 1) {
+        const wA = Math.sin(x * 0.0015 + Math.cos(z * 0.0014) * 1.3);
+        const wB = Math.cos(z * 0.0016 - Math.sin(x * 0.0013) * 1.3);
+        const dxV = x - 1050;
+        const dzV = z - 1050;
+        const distV = Math.sqrt(dxV * dxV + dzV * dzV);
+        const b5 = 1 - THREE.MathUtils.smoothstep(distV, 240, 820);
+        const b3 = THREE.MathUtils.smoothstep(-z * 0.85 - x * 0.15 + wB * 240, 240, 820) * (1 - b5 * 0.85);
+        const b2 = THREE.MathUtils.smoothstep(x * 0.85 - z * 0.15 + wA * 240, 240, 820) * (1 - b5 * 0.85) * (1 - b3 * 0.65);
+        const b4 = THREE.MathUtils.smoothstep(z * 0.85 + x * 0.12 + wA * 200, 280, 800) * (1 - b5 * 0.85) * (1 - b2 * 0.65);
+        const b1 = Math.max(0, 1 - b5 - b3 - b2 - b4);
+        const sum = b1 + b2 + b3 + b4 + b5 || 1;
+        return { b1: b1 / sum, b2: b2 / sum, b3: b3 / sum, b4: b4 / sum, b5: b5 / sum };
+      } else {
+        const wA = Math.sin(x * 0.0011 + Math.cos(z * 0.0012) * 1.4);
+        const wB = Math.cos(z * 0.0012 - Math.sin(x * 0.0011) * 1.4);
+        const dxM = x - 1300;
+        const dzM = z - 1200;
+        const distM = Math.sqrt(dxM * dxM + dzM * dzM);
+        const b2 = 1 - THREE.MathUtils.smoothstep(distM, 320, 1050);
+        const b3 = THREE.MathUtils.smoothstep(-z * 0.82 - x * 0.25 + wB * 320, 320, 1050) * (1 - b2 * 0.8);
+        const b4 = THREE.MathUtils.smoothstep(z * 0.82 + x * 0.2 + wA * 280, 360, 1050) * (1 - b2 * 0.8);
+        const b5 = THREE.MathUtils.smoothstep(x * 0.85 - z * 0.2 + wA * 320, 340, 1050) * (1 - b2 * 0.8) * (1 - b3 * 0.6);
+        const b1 = Math.max(0, 1 - b2 - b3 - b4 - b5);
+        const sum = b1 + b2 + b3 + b4 + b5 || 1;
+        return { b1: b1 / sum, b2: b2 / sum, b3: b3 / sum, b4: b4 / sum, b5: b5 / sum };
+      }
+    }
+
+    function getBiomeInfo(x, z) {
+      const w = getBiomeWeights(x, z);
+      if (currentWorld === 1) {
+        const list = [
+          { val: w.b1, label: '🌿 Saftiges Gras', color: '#4ade80' },
+          { val: w.b2, label: '🏜️ Sonnen-Wüste', color: '#fbbf24' },
+          { val: w.b3, label: '❄️ Schnee-Gipfel', color: '#7dd3fc' },
+          { val: w.b4, label: '🌊 Lagunen-Küste', color: '#38bdf8' },
+          { val: w.b5, label: '🌋 Vulkan-Berg', color: '#fb7185' }
+        ];
+        list.sort((a, b) => b.val - a.val);
+        return list[0];
+      } else {
+        const list = [
+          { val: w.b1, label: '💎 Sternen-Kristall', color: '#2dd4bf' },
+          { val: w.b2, label: '🔥 Nacht-Magma', color: '#f87171' },
+          { val: w.b3, label: '🌌 Mond-Gletscher', color: '#c084fc' },
+          { val: w.b4, label: '🌊 Tiefsee-Nacht', color: '#38bdf8' },
+          { val: w.b5, label: '✨ Sternen-Düne', color: '#facc15' }
+        ];
+        list.sort((a, b) => b.val - a.val);
+        return list[0];
+      }
+    }
+
+    function getTerrainHeight(x, z) {
+      const dist0 = Math.sqrt(x * x + z * z);
+      const flatBlend = THREE.MathUtils.smoothstep(dist0, 24, 110);
+      const w = getBiomeWeights(x, z);
+
+      if (currentWorld === 1) {
+        const h1 = Math.sin(x * 0.006) * Math.cos(z * 0.006) * 4.5 + Math.sin(x * 0.016 + z * 0.013) * 1.4;
+        const h2 = (Math.sin(x * 0.01 + Math.cos(z * 0.0065) * 2.2) * 0.5 + 0.5) * 8.5 + Math.cos(z * 0.02 - x * 0.01) * 1.6;
+        const h3 = Math.max(0, Math.sin(x * 0.008) * Math.cos(z * 0.008) + 0.3) * 28 + Math.sin(x * 0.024 + z * 0.02) * 2.5;
+        const h4 = Math.sin(x * 0.0075) * Math.cos(z * 0.0068) * 4.6 - 4.0;
+        const dxV = x - 1050;
+        const dzV = z - 1050;
+        const distV = Math.sqrt(dxV * dxV + dzV * dzV);
+        const h5 = Math.exp(-Math.pow((distV - 220) / 150, 2)) * 36 - 1.5;
+        return (h1 * w.b1 + h2 * w.b2 + h3 * w.b3 + h4 * w.b4 + h5 * w.b5) * flatBlend;
+      } else {
+        const h1 = Math.sin(x * 0.005) * Math.cos(z * 0.005) * 7.5 + Math.cos(x * 0.014 - z * 0.012) * 2.2;
+        const dxM = x - 1300;
+        const dzM = z - 1200;
+        const distM = Math.sqrt(dxM * dxM + dzM * dzM);
+        const h2 = Math.exp(-Math.pow((distM - 280) / 180, 2)) * 44 - 1.8;
+        const h3 = Math.max(0, Math.sin(x * 0.0065) * Math.cos(z * 0.0065) + 0.25) * 34;
+        const h4 = Math.sin(x * 0.006) * Math.cos(z * 0.0055) * 5.2 - 4.2;
+        const h5 = (Math.cos(z * 0.008 + Math.sin(x * 0.005) * 2.0) * 0.5 + 0.5) * 11.5;
+        return (h1 * w.b1 + h2 * w.b2 + h3 * w.b3 + h4 * w.b4 + h5 * w.b5) * flatBlend;
+      }
+    }
+
+    const worldGroup = new THREE.Group();
+    scene.add(worldGroup);
+
+    const waterMesh = new THREE.Mesh(
+      new THREE.PlaneGeometry(12000, 12000),
+      new THREE.MeshStandardMaterial({
+        color: 0x0ea5e9,
+        roughness: 0.22,
+        metalness: 0.45,
+        transparent: true,
+        opacity: 0.78
+      })
+    );
+    waterMesh.rotation.x = -Math.PI / 2;
+    waterMesh.position.y = WATER_LEVEL;
+    scene.add(waterMesh);
+
+    const sharedMats = {
+      trunk: new THREE.MeshStandardMaterial({ color: 0x6b3e26, roughness: 0.9 }),
+      leafBright: new THREE.MeshStandardMaterial({ color: 0x22c55e, roughness: 0.8 }),
+      snowPine: new THREE.MeshStandardMaterial({ color: 0x15803d, roughness: 0.8 }),
+      snowCap: new THREE.MeshStandardMaterial({ color: 0xffffff, roughness: 0.6 }),
+      cactus: new THREE.MeshStandardMaterial({ color: 0x16a34a, roughness: 0.78 }),
+      sandRock: new THREE.MeshStandardMaterial({ color: 0xd97706, roughness: 0.88 }),
+      lavaGlow: new THREE.MeshStandardMaterial({ color: 0xf97316, emissive: 0xea580c, emissiveIntensity: 1.5, roughness: 0.3 }),
+      obsidian: new THREE.MeshStandardMaterial({ color: 0x1e293b, roughness: 0.8, metalness: 0.4 }),
+      crystal: new THREE.MeshStandardMaterial({ color: 0x2dd4bf, emissive: 0x0d9488, emissiveIntensity: 1.25, roughness: 0.15, metalness: 0.5 }),
+      prism: new THREE.MeshStandardMaterial({ color: 0xfacc15, emissive: 0xca8a04, emissiveIntensity: 0.9, roughness: 0.25, metalness: 0.6 }),
+      padBase: new THREE.MeshStandardMaterial({ color: 0x0f172a, emissive: 0xf97316, emissiveIntensity: 0.75, roughness: 0.25, metalness: 0.6 }),
+      padRing: new THREE.MeshBasicMaterial({ color: 0xfacc15 }),
+      padBeam: new THREE.MeshBasicMaterial({ color: 0x38bdf8, transparent: true, opacity: 0.42 }),
+      orb: new THREE.MeshStandardMaterial({ color: 0xfacc15, emissive: 0xf59e0b, emissiveIntensity: 1.25, roughness: 0.2, metalness: 0.5 }),
+      border: new THREE.MeshBasicMaterial({ color: 0xffffff, transparent: true, opacity: 0.18 })
+    };
+
+    const sharedGeos = {
+      trunk: new THREE.CylinderGeometry(0.32, 0.48, 2.5, 6),
+      crown: new THREE.IcosahedronGeometry(2.3, 0),
+      coneBig: new THREE.ConeGeometry(2.2, 4.2, 6),
+      coneSmall: new THREE.ConeGeometry(1.6, 3.4, 6),
+      cactusStem: new THREE.CylinderGeometry(0.4, 0.46, 3.2, 7),
+      rock: new THREE.DodecahedronGeometry(1.9, 0),
+      spire: new THREE.ConeGeometry(2.0, 6.5, 6),
+      crystal: new THREE.CylinderGeometry(0.4, 1.25, 5.5, 6),
+      padBase: new THREE.CylinderGeometry(4.4, 5.0, 0.35, 24),
+      padRing: new THREE.TorusGeometry(4.1, 0.24, 10, 28),
+      padBeam: new THREE.CylinderGeometry(0.42, 0.42, 3.4, 12),
+      orb: new THREE.SphereGeometry(0.68, 12, 12)
+    };
+
+    let boostPads = [];
+    let orbs = [];
+
+    function spawnOrbAt(x, z, yOffset = 1.45) {
+      const groundY = Math.max(getTerrainHeight(x, z), WATER_LEVEL);
+      const mesh = new THREE.Mesh(sharedGeos.orb, sharedMats.orb);
+      mesh.position.set(x, groundY + yOffset, z);
+      worldGroup.add(mesh);
+      orbs.push({ mesh, x, z, yOffset, phase: Math.random() * Math.PI * 2 });
+    }
+
+    function buildWorld(worldId) {
+      currentWorld = worldId;
+      while (worldGroup.children.length > 0) {
+        const child = worldGroup.children[0];
+        if (child.geometry && child !== waterMesh) child.geometry.dispose();
+        worldGroup.remove(child);
+      }
+      boostPads = [];
+      orbs = [];
+
+      const half = getWorldHalf();
+
+      if (worldId === 1) {
+        // Helle Tageswelt mit blauem Himmel & Wolken
+        scene.background = new THREE.Color(0x5ec2ff);
+        scene.fog = new THREE.FogExp2(0x87cefa, 0.00055);
+        hemiLight.color.setHex(0xe0f2fe);
+        hemiLight.groundColor.setHex(0x3b7a3b);
+        hemiLight.intensity = 1.35;
+        sun.color.setHex(0xfffbeb);
+        sun.intensity = 1.85;
+        waterMesh.material.color.setHex(0x0ea5e9);
+        cloudsGroup.visible = true;
+        starsPoints.visible = false;
+      } else {
+        // Nachtwelt mit dunklem Sternenhimmel & Sternen
+        scene.background = new THREE.Color(0x040714);
+        scene.fog = new THREE.FogExp2(0x070c22, 0.00055);
+        hemiLight.color.setHex(0x6366f1);
+        hemiLight.groundColor.setHex(0x090d1a);
+        hemiLight.intensity = 0.85;
+        sun.color.setHex(0x93c5fd);
+        sun.intensity = 1.25;
+        waterMesh.material.color.setHex(0x0369a1);
+        cloudsGroup.visible = false;
+        starsPoints.visible = true;
+      }
+
+      const segs = worldId === 1 ? 180 : 210;
+      const tGeo = new THREE.PlaneGeometry(half * 2, half * 2, segs, segs);
+      tGeo.rotateX(-Math.PI / 2);
+      const pAttr = tGeo.attributes.position;
+      const cols = new Float32Array(pAttr.count * 3);
+
+      const c1A = new THREE.Color(worldId === 1 ? 0x22c55e : 0x0f766e);
+      const c1B = new THREE.Color(worldId === 1 ? 0x86efac : 0x2dd4bf);
+      const c2A = new THREE.Color(worldId === 1 ? 0xf59e0b : 0x991b1b);
+      const c2B = new THREE.Color(worldId === 1 ? 0xfde68a : 0xf97316);
+      const c3A = new THREE.Color(worldId === 1 ? 0x94a3b8 : 0x3b0764);
+      const c3B = new THREE.Color(worldId === 1 ? 0xffffff : 0xc084fc);
+      const c4A = new THREE.Color(worldId === 1 ? 0x38bdf8 : 0x0c4a6e);
+      const c4B = new THREE.Color(worldId === 1 ? 0xfef08a : 0x38bdf8);
+      const c5A = new THREE.Color(worldId === 1 ? 0x475569 : 0x422006);
+      const c5B = new THREE.Color(worldId === 1 ? 0xf97316 : 0xfacc15);
+      const tmp = new THREE.Color();
+
+      for (let i = 0; i < pAttr.count; i++) {
+        const vx = pAttr.getX(i);
+        const vz = pAttr.getZ(i);
+        const vy = getTerrainHeight(vx, vz);
+        pAttr.setY(i, vy);
+
+        const w = getBiomeWeights(vx, vz);
+        const hn = THREE.MathUtils.clamp((vy + 5) / 34, 0, 1);
+
+        const k1 = c1A.clone().lerp(c1B, hn);
+        const k2 = c2A.clone().lerp(c2B, hn);
+        const k3 = c3A.clone().lerp(c3B, hn);
+        const k4 = c4A.clone().lerp(c4B, hn);
+        const k5 = c5A.clone().lerp(c5B, hn);
+
+        tmp.setRGB(
+          k1.r * w.b1 + k2.r * w.b2 + k3.r * w.b3 + k4.r * w.b4 + k5.r * w.b5,
+          k1.g * w.b1 + k2.g * w.b2 + k3.g * w.b3 + k4.g * w.b4 + k5.g * w.b5,
+          k1.b * w.b1 + k2.b * w.b2 + k3.b * w.b3 + k4.b * w.b4 + k5.b * w.b5
+        );
+        cols[i * 3] = tmp.r;
+        cols[i * 3 + 1] = tmp.g;
+        cols[i * 3 + 2] = tmp.b;
+      }
+
+      tGeo.setAttribute('color', new THREE.BufferAttribute(cols, 3));
+      tGeo.computeVertexNormals();
+
+      const tMesh = new THREE.Mesh(
+        tGeo,
+        new THREE.MeshStandardMaterial({ vertexColors: true, roughness: 0.84, metalness: 0.08 })
       );
-      island.scale.y = 0.3;
-      island.rotation.set(Math.random(), Math.random(), Math.random());
-      island.castShadow = true;
-      island.receiveShadow = true;
-      
-      // Kristall oben drauf
-      const crystal = new THREE.Mesh(
-        new THREE.OctahedronGeometry(size * 0.4, 0),
-        new THREE.MeshStandardMaterial({ color: 0xff00ea, emissive: 0xff00ea, emissiveIntensity: 1 })
-      );
-      crystal.position.y = size * 0.5;
-      island.add(crystal);
-      
-      island.userData.baseY = island.position.y;
-      island.userData.speed = 0.5 + Math.random();
-      island.userData.offset = Math.random() * Math.PI * 2;
-      floatIslands.add(island);
+      tMesh.receiveShadow = true;
+      worldGroup.add(tMesh);
+
+      for (const wc of [
+        { x: 0, z: -half, w: half * 2, d: 10 },
+        { x: 0, z: half, w: half * 2, d: 10 },
+        { x: -half, z: 0, w: 10, d: half * 2 },
+        { x: half, z: 0, w: 10, d: half * 2 }
+      ]) {
+        const wall = new THREE.Mesh(new THREE.BoxGeometry(wc.w, 34, wc.d), sharedMats.border);
+        wall.position.set(wc.x, Math.max(getTerrainHeight(wc.x, wc.z), WATER_LEVEL) + 14, wc.z);
+        worldGroup.add(wall);
+      }
+
+      const propCount = worldId === 1 ? 260 : 320;
+      for (let i = 0; i < propCount; i++) {
+        const rx = (Math.random() - 0.5) * (half * 1.88);
+        const rz = (Math.random() - 0.5) * (half * 1.88);
+        if (rx * rx + rz * rz < 784) continue;
+
+        const ry = Math.max(getTerrainHeight(rx, rz), WATER_LEVEL);
+        const w = getBiomeWeights(rx, rz);
+
+        if (worldId === 1) {
+          if (w.b5 > w.b1 && w.b5 > w.b2 && w.b5 > w.b3 && w.b5 > w.b4) {
+            const mag = new THREE.Mesh(sharedGeos.rock, Math.random() < 0.45 ? sharedMats.lavaGlow : sharedMats.obsidian);
+            mag.position.set(rx, ry + 0.8, rz);
+            mag.rotation.set(Math.random(), Math.random(), Math.random());
+            worldGroup.add(mag);
+          } else if (w.b3 > w.b1 && w.b3 > w.b2 && w.b3 > w.b4) {
+            const tree = new THREE.Group();
+            const trunk = new THREE.Mesh(sharedGeos.trunk, sharedMats.trunk);
+            trunk.position.y = 1.25;
+            const c1 = new THREE.Mesh(sharedGeos.coneBig, sharedMats.snowPine);
+            c1.position.y = 3.8;
+            const c2 = new THREE.Mesh(sharedGeos.coneSmall, sharedMats.snowCap);
+            c2.position.y = 6.0;
+            tree.add(trunk, c1, c2);
+            tree.position.set(rx, ry - 0.1, rz);
+            worldGroup.add(tree);
+          } else if (w.b2 > w.b1 && w.b2 > w.b4) {
+            if (Math.random() < 0.65) {
+              const cac = new THREE.Mesh(sharedGeos.cactusStem, sharedMats.cactus);
+              cac.position.set(rx, ry + 1.5, rz);
+              worldGroup.add(cac);
+            } else {
+              const rock = new THREE.Mesh(sharedGeos.rock, sharedMats.sandRock);
+              rock.position.set(rx, ry + 0.7, rz);
+              worldGroup.add(rock);
+            }
+          } else {
+            const tree = new THREE.Group();
+            const trunk = new THREE.Mesh(sharedGeos.trunk, sharedMats.trunk);
+            trunk.position.y = 1.2;
+            const crown = new THREE.Mesh(sharedGeos.crown, sharedMats.leafBright);
+            crown.position.y = 3.8;
+            tree.add(trunk, crown);
+            tree.position.set(rx, ry - 0.1, rz);
+            worldGroup.add(tree);
+          }
+        } else {
+          if (w.b2 > w.b1 && w.b2 > w.b3 && w.b2 > w.b4 && w.b2 > w.b5) {
+            const sp = new THREE.Mesh(sharedGeos.spire, sharedMats.lavaGlow);
+            sp.position.set(rx, ry + 2.8, rz);
+            worldGroup.add(sp);
+          } else if (w.b5 > w.b1 && w.b5 > w.b3 && w.b5 > w.b4) {
+            const ob = new THREE.Mesh(sharedGeos.rock, sharedMats.prism);
+            ob.position.set(rx, ry + 1.4, rz);
+            worldGroup.add(ob);
+          } else {
+            const cr = new THREE.Mesh(sharedGeos.crystal, sharedMats.crystal);
+            cr.position.set(rx, ry + 2.5, rz);
+            cr.rotation.z = (Math.random() - 0.5) * 0.25;
+            worldGroup.add(cr);
+          }
+        }
+      }
+
+      const padCoords = worldId === 1
+        ? [
+            { x: 0, z: -85 }, { x: 120, z: 45 }, { x: -130, z: 70 },
+            { x: 820, z: 140 }, { x: 960, z: 820 }, { x: -180, z: -860 },
+            { x: 300, z: -980 }, { x: -880, z: -240 }, { x: 140, z: 920 }, { x: 1050, z: 1050 }
+          ]
+        : [
+            { x: 0, z: -110 }, { x: 180, z: 70 }, { x: -190, z: 110 },
+            { x: 1150, z: 220 }, { x: 1300, z: 1200 }, { x: -240, z: -1250 },
+            { x: 420, z: -1380 }, { x: -1280, z: -320 }, { x: 220, z: 1320 }, { x: 1650, z: -450 }
+          ];
+
+      for (const bp of padCoords) {
+        const by = Math.max(getTerrainHeight(bp.x, bp.z), WATER_LEVEL);
+        const group = new THREE.Group();
+        group.position.set(bp.x, by + 0.18, bp.z);
+
+        const baseMesh = new THREE.Mesh(sharedGeos.padBase, sharedMats.padBase);
+        const ringMesh = new THREE.Mesh(sharedGeos.padRing, sharedMats.padRing);
+        ringMesh.rotation.x = Math.PI / 2;
+        ringMesh.position.y = 0.22;
+        const beamMesh = new THREE.Mesh(sharedGeos.padBeam, sharedMats.padBeam);
+        beamMesh.position.y = 1.9;
+
+        group.add(baseMesh, ringMesh, beamMesh);
+        worldGroup.add(group);
+        boostPads.push({ group, ringMesh, beamMesh, x: bp.x, z: bp.z, radius: 5.2, cooldown: 0 });
+      }
+
+      for (let i = 1; i <= 14; i++) {
+        spawnOrbAt(0, -i * 7.0, 1.45);
+      }
+      const orbTotal = worldId === 1 ? 420 : 540;
+      for (let i = 0; i < orbTotal; i++) {
+        spawnOrbAt((Math.random() - 0.5) * (half * 1.88), (Math.random() - 0.5) * (half * 1.88), 1.45);
+      }
     }
-    scene.add(floatIslands);
 
-    // ============================================================
-    // ORBS (Sammelobjekte)
-    // ============================================================
-    const orbs = [];
-    const ORB_COUNT = 150;
-    const orbGeo = new THREE.IcosahedronGeometry(0.6, 0);
-    const orbMat = new THREE.MeshStandardMaterial({
-      color: 0xffffff, emissive: 0xffd500, emissiveIntensity: 2,
-      roughness: 0.2, metalness: 0.8
-    });
+    buildWorld(1);
 
-    function spawnOrbAt(x, z) {
-      const y = terrainHeight(x, z) + 1.5;
-      const orb = new THREE.Mesh(orbGeo, orbMat);
-      orb.position.set(x, y, z);
-      orb.castShadow = true;
-      orb.userData.baseY = y;
-      orb.userData.phase = Math.random() * Math.PI * 2;
-      
-      // Orb-Halo
-      const halo = new THREE.Mesh(
-        new THREE.SphereGeometry(0.8, 16, 16),
-        new THREE.MeshBasicMaterial({ color: 0xffd500, transparent: true, opacity: 0.3, wireframe: true })
-      );
-      orb.add(halo);
+    // ---------- Charakter mit echten 3D-Skin-Ausrüstungen ----------
+    const SKINS = [
+      {
+        id: 'cyber',
+        name: 'Cyber Runner',
+        desc: 'Leuchtende Schulter-Klingen & Neon-Halo.',
+        cost: 0,
+        primary: 0x0284c7,
+        accent: 0x38bdf8,
+        helmet: 0xf8fafc,
+        visor: 0x38bdf8
+      },
+      {
+        id: 'inferno',
+        name: 'Inferno Knight',
+        desc: 'Ritter-Hörner & brennende Rückenflügel.',
+        cost: 50,
+        primary: 0xdc2626,
+        accent: 0xf97316,
+        helmet: 0xfff7ed,
+        visor: 0xfacc15
+      },
+      {
+        id: 'venom',
+        name: 'Venom Stalker',
+        desc: 'Scharfe Rückenstacheln & Panzer-Schultern.',
+        cost: 90,
+        primary: 0x059669,
+        accent: 0x4ade80,
+        helmet: 0xecfdf5,
+        visor: 0xa3e635
+      },
+      {
+        id: 'void',
+        name: 'Void Sovereign',
+        desc: 'Schwebende Kristall-Klingen & Astral-Krone.',
+        cost: 140,
+        primary: 0x7c3aed,
+        accent: 0xe879f9,
+        helmet: 0xfaf5ff,
+        visor: 0xf472b6
+      }
+    ];
 
-      scene.add(orb);
-      orbs.push(orb);
-    }
-
-    for (let i = 0; i < ORB_COUNT; i++) {
-      let x, z;
-      do {
-        x = (Math.random() - 0.5) * 2500;
-        z = (Math.random() - 0.5) * 2500;
-      } while (Math.abs(x) < 15 && Math.abs(z) < 15);
-      spawnOrbAt(x, z);
-    }
-
-    // ============================================================
-    // CHARACTER RIG (Spieler)
-    // ============================================================
-    const matSkin  = new THREE.MeshStandardMaterial({ color: 0xffccaa, roughness: 0.8 });
-    const matShirt = new THREE.MeshStandardMaterial({ color: 0x1a1a2e, roughness: 0.5, metalness: 0.5 });
-    const matPants = new THREE.MeshStandardMaterial({ color: 0x0f0f1a, roughness: 0.7 });
-    const matShoe  = new THREE.MeshStandardMaterial({ color: 0x00f3ff, emissive: 0x00f3ff, emissiveIntensity: 0.8 });
-    const matHair  = new THREE.MeshStandardMaterial({ color: 0x2e1d12, roughness: 0.9 });
-    const matVisor = new THREE.MeshStandardMaterial({ color: 0x000000, emissive: 0xff00ea, emissiveIntensity: 1.5 });
+    const unlockedSkins = new Set(['cyber']);
+    let activeSkinId = 'cyber';
 
     const player = new THREE.Group();
+    const characterRig = new THREE.Group();
+    player.add(characterRig);
+
+    const armorPrimaryMat = new THREE.MeshStandardMaterial({
+      color: 0x0284c7,
+      emissive: 0x0369a1,
+      emissiveIntensity: 0.45,
+      roughness: 0.28,
+      metalness: 0.5
+    });
+
+    const armorAccentMat = new THREE.MeshStandardMaterial({
+      color: 0x38bdf8,
+      emissive: 0x0284c7,
+      emissiveIntensity: 0.9,
+      roughness: 0.22,
+      metalness: 0.4
+    });
+
+    const jointDarkMat = new THREE.MeshStandardMaterial({
+      color: 0x1e293b,
+      roughness: 0.5,
+      metalness: 0.65
+    });
+
+    const skinHelmetMat = new THREE.MeshStandardMaterial({
+      color: 0xf8fafc,
+      roughness: 0.28,
+      metalness: 0.25
+    });
+
+    const visorGlowMat = new THREE.MeshStandardMaterial({
+      color: 0x082f49,
+      emissive: 0x38bdf8,
+      emissiveIntensity: 1.45,
+      roughness: 0.15
+    });
+
+    const bootMat = new THREE.MeshStandardMaterial({
+      color: 0x0f172a,
+      emissive: 0x0284c7,
+      emissiveIntensity: 0.35,
+      roughness: 0.38,
+      metalness: 0.55
+    });
+
+    const pelvis = new THREE.Mesh(new THREE.BoxGeometry(0.62, 0.24, 0.4), jointDarkMat);
+    pelvis.position.y = 0.94;
+    pelvis.castShadow = true;
+    characterRig.add(pelvis);
+
+    const belt = new THREE.Mesh(new THREE.BoxGeometry(0.66, 0.08, 0.44), armorAccentMat);
+    belt.position.y = 1.03;
+    characterRig.add(belt);
+
+    const chestPivot = new THREE.Group();
+    chestPivot.position.set(0, 1.06, 0);
+    characterRig.add(chestPivot);
+
+    const torso = new THREE.Mesh(new THREE.BoxGeometry(0.74, 0.74, 0.46), armorPrimaryMat);
+    torso.position.y = 0.37;
+    torso.castShadow = true;
+    chestPivot.add(torso);
+
+    const chestStripeL = new THREE.Mesh(new THREE.BoxGeometry(0.11, 0.58, 0.49), armorAccentMat);
+    chestStripeL.position.set(-0.2, 0.38, 0);
+    chestPivot.add(chestStripeL);
+
+    const chestStripeR = new THREE.Mesh(new THREE.BoxGeometry(0.11, 0.58, 0.49), armorAccentMat);
+    chestStripeR.position.set(0.2, 0.38, 0);
+    chestPivot.add(chestStripeR);
+
+    const core = new THREE.Mesh(new THREE.OctahedronGeometry(0.14, 1), new THREE.MeshBasicMaterial({ color: 0xffffff }));
+    core.position.set(0, 0.44, 0.24);
+    chestPivot.add(core);
+
+    const shoulderL = new THREE.Mesh(new THREE.BoxGeometry(0.28, 0.22, 0.48), armorAccentMat);
+    shoulderL.position.set(-0.49, 0.68, 0);
+    shoulderL.rotation.z = 0.22;
+    chestPivot.add(shoulderL);
+
+    const shoulderR = new THREE.Mesh(new THREE.BoxGeometry(0.28, 0.22, 0.48), armorAccentMat);
+    shoulderR.position.set(0.49, 0.68, 0);
+    shoulderR.rotation.z = -0.22;
+    chestPivot.add(shoulderR);
+
+    const jetpackBase = new THREE.Mesh(new THREE.BoxGeometry(0.46, 0.44, 0.22), jointDarkMat);
+    jetpackBase.position.set(0, 0.44, -0.32);
+    chestPivot.add(jetpackBase);
+
+    const thrusterL = new THREE.Mesh(new THREE.CylinderGeometry(0.08, 0.11, 0.2, 8), armorAccentMat);
+    thrusterL.position.set(-0.15, 0.24, -0.34);
+    chestPivot.add(thrusterL);
+
+    const thrusterR = new THREE.Mesh(new THREE.CylinderGeometry(0.08, 0.11, 0.2, 8), armorAccentMat);
+    thrusterR.position.set(0.15, 0.24, -0.34);
+    chestPivot.add(thrusterR);
+
+    const headPivot = new THREE.Group();
+    headPivot.position.set(0, 0.82, 0);
+    chestPivot.add(headPivot);
+
+    const neck = new THREE.Mesh(new THREE.CylinderGeometry(0.14, 0.16, 0.14, 10), jointDarkMat);
+    neck.position.y = 0.05;
+    headPivot.add(neck);
+
+    const head = new THREE.Mesh(new THREE.SphereGeometry(0.32, 20, 20), skinHelmetMat);
+    head.position.y = 0.28;
+    head.castShadow = true;
+    headPivot.add(head);
+
+    const crest = new THREE.Mesh(new THREE.BoxGeometry(0.1, 0.18, 0.46), armorAccentMat);
+    crest.position.set(0, 0.6, -0.02);
+    crest.rotation.x = -0.15;
+    headPivot.add(crest);
+
+    const visor = new THREE.Mesh(new THREE.BoxGeometry(0.48, 0.14, 0.16), visorGlowMat);
+    visor.position.set(0, 0.29, 0.25);
+    headPivot.add(visor);
+
+    // ---- Skin-spezifische 3D-Zusatzteile ----
+    const skinGearGroups = {
+      cyber: new THREE.Group(),
+      inferno: new THREE.Group(),
+      venom: new THREE.Group(),
+      void: new THREE.Group()
+    };
+
+    // Cyber: Neon-Klingen an den Schultern + Halo hinter dem Kopf
+    const cyberBladeL = new THREE.Mesh(new THREE.BoxGeometry(0.08, 0.62, 0.22), armorAccentMat);
+    cyberBladeL.position.set(-0.62, 0.78, -0.12);
+    cyberBladeL.rotation.z = 0.42;
+    const cyberBladeR = new THREE.Mesh(new THREE.BoxGeometry(0.08, 0.62, 0.22), armorAccentMat);
+    cyberBladeR.position.set(0.62, 0.78, -0.12);
+    cyberBladeR.rotation.z = -0.42;
+    const cyberHalo = new THREE.Mesh(new THREE.TorusGeometry(0.42, 0.04, 8, 24), armorAccentMat);
+    cyberHalo.position.set(0, 0.42, -0.28);
+    skinGearGroups.cyber.add(cyberBladeL, cyberBladeR, cyberHalo);
+
+    // Inferno: Ritter-Hörner + feurige Rückenflügel
+    const hornGeo = new THREE.ConeGeometry(0.11, 0.48, 8);
+    const hornL = new THREE.Mesh(hornGeo, armorAccentMat);
+    hornL.position.set(-0.28, 0.56, 0.05);
+    hornL.rotation.z = 0.55;
+    const hornR = new THREE.Mesh(hornGeo, armorAccentMat);
+    hornR.position.set(0.28, 0.56, 0.05);
+    hornR.rotation.z = -0.55;
+    const wingGeo = new THREE.ConeGeometry(0.24, 1.05, 5);
+    const wingL = new THREE.Mesh(wingGeo, armorAccentMat);
+    wingL.position.set(-0.55, 0.58, -0.42);
+    wingL.rotation.set(-0.35, 0, 0.82);
+    const wingR = new THREE.Mesh(wingGeo, armorAccentMat);
+    wingR.position.set(0.55, 0.58, -0.42);
+    wingR.rotation.set(-0.35, 0, -0.82);
+    skinGearGroups.inferno.add(hornL, hornR, wingL, wingR);
+
+    // Venom: Stacheln auf Rücken & Schultern
+    const spikeGeo = new THREE.ConeGeometry(0.12, 0.52, 6);
+    for (let s = 0; s < 3; s++) {
+      const sp = new THREE.Mesh(spikeGeo, armorAccentMat);
+      sp.position.set(0, 0.22 + s * 0.24, -0.45);
+      sp.rotation.x = -0.75;
+      skinGearGroups.venom.add(sp);
+    }
+    const venomPadL = new THREE.Mesh(new THREE.BoxGeometry(0.36, 0.28, 0.54), jointDarkMat);
+    venomPadL.position.set(-0.54, 0.72, 0);
+    const venomPadR = new THREE.Mesh(new THREE.BoxGeometry(0.36, 0.28, 0.54), jointDarkMat);
+    venomPadR.position.set(0.54, 0.72, 0);
+    skinGearGroups.venom.add(venomPadL, venomPadR);
+
+    // Void: Schwebende Kristalle + Krone
+    const crownSpikeGeo = new THREE.ConeGeometry(0.08, 0.34, 6);
+    for (let c = -1; c <= 1; c++) {
+      const cs = new THREE.Mesh(crownSpikeGeo, armorAccentMat);
+      cs.position.set(c * 0.16, 0.64, 0.05);
+      skinGearGroups.void.add(cs);
+    }
+    const voidShardL = new THREE.Mesh(new THREE.OctahedronGeometry(0.26, 0), armorAccentMat);
+    voidShardL.position.set(-0.78, 0.68, -0.15);
+    const voidShardR = new THREE.Mesh(new THREE.OctahedronGeometry(0.26, 0), armorAccentMat);
+    voidShardR.position.set(0.78, 0.68, -0.15);
+    skinGearGroups.void.add(voidShardL, voidShardR);
+
+    chestPivot.add(skinGearGroups.cyber, skinGearGroups.inferno, skinGearGroups.venom, skinGearGroups.void);
+
+    function applySkin(skinId) {
+      const sk = SKINS.find(s => s.id === skinId) || SKINS[0];
+      activeSkinId = sk.id;
+      armorPrimaryMat.color.setHex(sk.primary);
+      armorPrimaryMat.emissive.setHex(sk.primary);
+      armorAccentMat.color.setHex(sk.accent);
+      armorAccentMat.emissive.setHex(sk.accent);
+      skinHelmetMat.color.setHex(sk.helmet);
+      visorGlowMat.emissive.setHex(sk.visor);
+
+      for (const key of Object.keys(skinGearGroups)) {
+        skinGearGroups[key].visible = (key === sk.id);
+      }
+    }
+    applySkin('cyber');
+
+    function createDetailedLimb(x, y, z, upperLen, lowerLen, thickness, isLeg) {
+      const rootPivot = new THREE.Group();
+      rootPivot.position.set(x, y, z);
+
+      const upperMesh = new THREE.Mesh(
+        new THREE.BoxGeometry(thickness, upperLen, thickness),
+        isLeg ? armorPrimaryMat : armorAccentMat
+      );
+      upperMesh.position.y = -upperLen / 2;
+      rootPivot.add(upperMesh);
+
+      const midJoint = new THREE.Group();
+      midJoint.position.set(0, -upperLen, 0);
+      rootPivot.add(midJoint);
+
+      const jointSphere = new THREE.Mesh(new THREE.SphereGeometry(thickness * 0.56, 10, 10), jointDarkMat);
+      midJoint.add(jointSphere);
+
+      const lowerMesh = new THREE.Mesh(
+        new THREE.BoxGeometry(thickness * 0.86, lowerLen, thickness * 0.86),
+        isLeg ? jointDarkMat : skinHelmetMat
+      );
+      lowerMesh.position.y = -lowerLen / 2;
+      midJoint.add(lowerMesh);
+
+      if (isLeg) {
+        const boot = new THREE.Mesh(new THREE.BoxGeometry(thickness * 1.05, 0.18, thickness * 1.45), bootMat);
+        boot.position.set(0, -lowerLen + 0.04, 0.07);
+        midJoint.add(boot);
+      } else {
+        const glove = new THREE.Mesh(new THREE.BoxGeometry(thickness * 0.96, 0.16, thickness * 0.96), armorAccentMat);
+        glove.position.set(0, -lowerLen + 0.02, 0.02);
+        midJoint.add(glove);
+      }
+
+      return { root: rootPivot, mid: midJoint };
+    }
+
+    const leftLeg = createDetailedLimb(-0.2, 0.9, 0, 0.45, 0.45, 0.23, true);
+    const rightLeg = createDetailedLimb(0.2, 0.9, 0, 0.45, 0.45, 0.23, true);
+    characterRig.add(leftLeg.root, rightLeg.root);
+
+    const leftArm = createDetailedLimb(-0.48, 0.62, 0, 0.36, 0.34, 0.18, false);
+    const rightArm = createDetailedLimb(0.48, 0.62, 0, 0.36, 0.34, 0.18, false);
+    chestPivot.add(leftArm.root, rightArm.root);
+
+    const auraRing = new THREE.Mesh(
+      new THREE.RingGeometry(0.85, 1.55, 32),
+      new THREE.MeshBasicMaterial({ color: 0x38bdf8, side: THREE.DoubleSide, transparent: true, opacity: 0 })
+    );
+    auraRing.rotation.x = -Math.PI / 2;
+    auraRing.position.y = 0.08;
+    player.add(auraRing);
+
+    // Energie-Säule / Wirbel für die Weltwechsel-Szene
+    const warpBeam = new THREE.Mesh(
+      new THREE.CylinderGeometry(0.55, 2.2, 140, 20, 1, true),
+      new THREE.MeshBasicMaterial({ color: 0xc084fc, transparent: true, opacity: 0.0, side: THREE.DoubleSide })
+    );
+    warpBeam.position.y = 70;
+    player.add(warpBeam);
+
     scene.add(player);
 
-    const hips = new THREE.Group();
-    hips.position.y = 0.9;
-    player.add(hips);
+    // ---------- Partikel-Pool (null Lag) ----------
+    const PARTICLE_POOL_SIZE = 160;
+    const sharedParticleGeo = new THREE.BoxGeometry(0.28, 0.28, 0.28);
+    const particlePool = [];
 
-    function part(parent, geo, mat, x, y, z) {
-      const m = new THREE.Mesh(geo, mat);
-      m.position.set(x, y, z);
-      m.castShadow = true;
-      parent.add(m);
-      return m;
+    for (let i = 0; i < PARTICLE_POOL_SIZE; i++) {
+      const mat = new THREE.MeshBasicMaterial({ color: 0x38bdf8, transparent: true, opacity: 0 });
+      const mesh = new THREE.Mesh(sharedParticleGeo, mat);
+      mesh.visible = false;
+      scene.add(mesh);
+      particlePool.push({
+        mesh,
+        mat,
+        vel: new THREE.Vector3(),
+        life: 0,
+        maxLife: 0.4,
+        baseScale: 1
+      });
     }
 
-    // Torso
-    part(hips, new THREE.BoxGeometry(0.35, 0.2, 0.22), matPants, 0, -0.05, 0);
-    const chest = new THREE.Group();
-    chest.position.y = 0.1;
-    hips.add(chest);
-    part(chest, new THREE.CapsuleGeometry(0.2, 0.35, 8, 16), matShirt, 0, 0.2, 0);
-    
-    // Kopf
-    const headGroup = new THREE.Group();
-    headGroup.position.y = 0.55;
-    chest.add(headGroup);
-    part(headGroup, new THREE.SphereGeometry(0.16, 24, 24), matSkin, 0, 0, 0);
-    part(headGroup, new THREE.SphereGeometry(0.17, 20, 20, 0, Math.PI * 2, 0, Math.PI * 0.6), matHair, 0, 0.02, 0);
-    part(headGroup, new THREE.BoxGeometry(0.22, 0.08, 0.05), matVisor, 0, 0.02, -0.15);
-
-    // Arme & Beine (Limbs)
-    function limbGeo(r, len) { return new THREE.CapsuleGeometry(r, Math.max(0.001, len - 2 * r), 6, 10); }
-
-    function createArm(side) {
-      const shoulder = new THREE.Group();
-      shoulder.position.set(side * 0.24, 0.32, 0);
-      chest.add(shoulder);
-      part(shoulder, limbGeo(0.06, 0.3), matShirt, 0, -0.15, 0);
-      const elbow = new THREE.Group();
-      elbow.position.y = -0.3;
-      shoulder.add(elbow);
-      part(elbow, limbGeo(0.05, 0.28), matSkin, 0, -0.14, 0);
-      part(elbow, new THREE.SphereGeometry(0.06, 8, 8), matSkin, 0, -0.28, 0);
-      return { shoulder, elbow };
-    }
-    const leftArm = createArm(-1);
-    const rightArm = createArm(1);
-
-    function createLeg(side) {
-      const hip = new THREE.Group();
-      hip.position.set(side * 0.11, 0, 0);
-      hips.add(hip);
-      part(hip, limbGeo(0.09, 0.45), matPants, 0, -0.22, 0);
-      const knee = new THREE.Group();
-      knee.position.y = -0.45;
-      hip.add(knee);
-      part(knee, limbGeo(0.07, 0.42), matPants, 0, -0.21, 0);
-      part(knee, new THREE.BoxGeometry(0.15, 0.1, 0.3), matShoe, 0, -0.45, -0.06);
-      return { hip, knee };
-    }
-    const leftLeg = createLeg(-1);
-    const rightLeg = createLeg(1);
-
-    // ============================================================
-    // PARTIKEL SYSTEM (Staub & Trail)
-    // ============================================================
-    const particles = [];
-    const particleGeo = new THREE.PlaneGeometry(0.3, 0.3);
-    const particleMat = new THREE.MeshBasicMaterial({ 
-      color: 0x00f3ff, transparent: true, opacity: 0.8, 
-      blending: THREE.AdditiveBlending, side: THREE.DoubleSide, depthWrite: false 
-    });
-
-    function spawnDust(pos) {
-      if (particles.length > 50) return;
-      const p = new THREE.Mesh(particleGeo, particleMat.clone());
-      p.position.copy(pos);
-      p.position.y += 0.1;
-      p.position.x += (Math.random() - 0.5) * 0.5;
-      p.position.z += (Math.random() - 0.5) * 0.5;
-      p.rotation.set(Math.random() * Math.PI, Math.random() * Math.PI, Math.random() * Math.PI);
-      p.userData = { life: 1.0, velocity: new THREE.Vector3((Math.random()-0.5)*2, Math.random()*2+1, (Math.random()-0.5)*2) };
-      scene.add(p);
-      particles.push(p);
+    let poolCursor = 0;
+    function spawnParticle(x, y, z, colorHex, vx, vy, vz, life = 0.4, scale = 1) {
+      const p = particlePool[poolCursor];
+      poolCursor = (poolCursor + 1) % PARTICLE_POOL_SIZE;
+      p.mesh.visible = true;
+      p.mesh.position.set(x, y, z);
+      p.mesh.scale.setScalar(scale);
+      p.mat.color.setHex(colorHex);
+      p.mat.opacity = 0.95;
+      p.vel.set(vx, vy, vz);
+      p.life = life;
+      p.maxLife = life;
+      p.baseScale = scale;
     }
 
-    function updateParticles(dt) {
-      for (let i = particles.length - 1; i >= 0; i--) {
-        const p = particles[i];
-        p.userData.life -= dt * 2;
-        if (p.userData.life <= 0) {
-          scene.remove(p);
-          particles.splice(i, 1);
-          continue;
-        }
-        p.material.opacity = p.userData.life;
-        p.position.addScaledVector(p.userData.velocity, dt);
-        p.scale.setScalar(p.userData.life);
-        p.rotation.x += dt * 2;
-        p.rotation.y += dt * 2;
+    // Blitzlinien-Pool
+    const lightningBolts = [];
+    const sharedBoltMat = new THREE.LineBasicMaterial({ color: 0xe879f9, transparent: true, opacity: 1 });
+    function spawnLightningStrike() {
+      if (lightningBolts.length > 16) return;
+      const pts = [];
+      const angle = Math.random() * Math.PI * 2;
+      const radius = 0.5 + Math.random() * 1.7;
+      let cx = player.position.x + Math.cos(angle) * radius;
+      let cy = player.position.y + 0.1;
+      let cz = player.position.z + Math.sin(angle) * radius;
+      pts.push(new THREE.Vector3(cx, cy, cz));
+      for (let i = 1; i <= 7; i++) {
+        cx += (Math.random() - 0.5) * 1.5;
+        cy += 0.55;
+        cz += (Math.random() - 0.5) * 1.5;
+        pts.push(new THREE.Vector3(cx, cy, cz));
       }
+      const geo = new THREE.BufferGeometry().setFromPoints(pts);
+      const line = new THREE.Line(geo, sharedBoltMat);
+      scene.add(line);
+      lightningBolts.push({ line, geo, life: 0.13 });
     }
 
-    // ============================================================
-    // GAME STATE
-    // ============================================================
-    let gameMode = null;
-    let started = false;
+    // ---------- Spielzustand, Speed-Speicherung & Weltwechsel-Szene ----------
+    let controlMode = null;
+    let gameStarted = false;
+    let uiModalOpen = false;
 
-    const playerPos = new THREE.Vector3(0, terrainHeight(0, 0), 0);
-    let playerYaw = 0;
-    let currentSpeed = 0;
+    // Speed-Speicher:
+    // Wenn man Welt 1 verlässt, merken wir uns den alten Speed.
+    // In Welt 2 startet man mit wenig Speed (0), und bei Rückkehr zu Welt 1 bekommt man den gespeicherten Speed zurück!
+    let savedWorld1Speed = 0;
+    let savedWorld1Steps = 0;
+    let unlockedNewWorldAt800 = false;
+
+    let worldSceneActive = false;
+    let worldSceneTimer = 0;
+    const WORLD_SCENE_DURATION = 3.6;
+    let worldSceneTargetWorld = 2;
+    let worldSwitchedMidScene = false;
 
     let cameraYaw = 0;
-    let cameraPitch = 0.35;
-    const cameraDist = 9;
-
-    let walkPhase = 0;
-    let jumpOffset = 0;
-    let jumpVel = 0;
-    let onGround = true;
-    let jumpRequested = false;
-
-    let stepAccumulator = 0;
-    let steps = 0;
-    let orbCount = 0;
+    let cameraPitch = 0.34;
 
     const keys = {};
-    const joyVec = { x: 0, y: 0 };
-    let mobileSprint = false;
+    let touchMoveVec = { x: 0, y: 0 };
+    let touchSprintHeld = false;
+    let jumpHeld = false;
 
-    // ============================================================
-    // UI LOGIK
-    // ============================================================
+    const upgrades = {
+      maxSpeed: 0,
+      accel: 0,
+      stepPower: 0,
+      sprintPower: 0
+    };
+
+    let adminUnlocked = false;
+
+    const SPRINT_DURATION = 5.0;
+    const SPRINT_COOLDOWN = 10.0;
+    let sprintActiveTimer = 0;
+    let sprintCooldownTimer = 0;
+    let sprintExhaustedThisHold = false;
+
+    let steps = 0;
+    let orbsCollected = 0;
+    let distanceAccumulator = 0;
+    let currentSpeed = 0;
+    let velY = 0;
+    let isGrounded = true;
+    let airPushUsed = false;
+    let lastJumpTapTime = 0;
+    let padBoostTimer = 0;
+    let animCycle = 0;
+    let squashAmount = 0;
+
     const ui = {
-      menu: document.getElementById('menu'),
-      hud: document.getElementById('hud'),
-      hint: document.getElementById('hint'),
-      mobileControls: document.getElementById('mobileControls'),
-      steps: document.getElementById('hudSteps'),
-      orbs: document.getElementById('hudOrbs'),
-      speed: document.getElementById('hudSpeed'),
-      boostFill: document.getElementById('hudBoostFill'),
-      speedLines: document.getElementById('speedLines')
+      startMenu: document.getElementById('startMenu'),
+      pcHint: document.getElementById('pcHint'),
+      touchControls: document.getElementById('touchControls'),
+      steps: document.getElementById('steps'),
+      orbs: document.getElementById('orbs'),
+      speed: document.getElementById('speed'),
+      capSpeed: document.getElementById('capSpeed'),
+      coords: document.getElementById('coords'),
+      speedFill: document.getElementById('speedFill'),
+      worldBadge: document.getElementById('worldBadge'),
+      biomeBadge: document.getElementById('biomeBadge'),
+      sprintBadge: document.getElementById('sprintBadge'),
+      auraBadge: document.getElementById('auraBadge'),
+      sprintBtn: document.getElementById('sprintBtn'),
+      sprintBtnSub: document.getElementById('sprintBtnSub'),
+      shopModal: document.getElementById('shopModal'),
+      adminModal: document.getElementById('adminModal'),
+      newWorldBtn: document.getElementById('newWorldBtn'),
+      returnOldWorldBtn: document.getElementById('returnOldWorldBtn'),
+      shopSpeedDisplay: document.getElementById('shopSpeedDisplay'),
+      shopMaxSpeedDisplay: document.getElementById('shopMaxSpeedDisplay'),
+      lvlMaxSpeed: document.getElementById('lvlMaxSpeed'),
+      lvlAccel: document.getElementById('lvlAccel'),
+      lvlStepPower: document.getElementById('lvlStepPower'),
+      lvlSprintPower: document.getElementById('lvlSprintPower'),
+      buyMaxSpeedBtn: document.getElementById('buyMaxSpeedBtn'),
+      buyAccelBtn: document.getElementById('buyAccelBtn'),
+      buyStepPowerBtn: document.getElementById('buyStepPowerBtn'),
+      buySprintPowerBtn: document.getElementById('buySprintPowerBtn'),
+      skinShopGrid: document.getElementById('skinShopGrid'),
+      adminCodeInput: document.getElementById('adminCodeInput'),
+      adminStatusMsg: document.getElementById('adminStatusMsg'),
+      adminControls: document.getElementById('adminControls'),
+      worldSceneBanner: document.getElementById('worldSceneBanner'),
+      worldSceneTitle: document.getElementById('worldSceneTitle'),
+      worldSceneSub: document.getElementById('worldSceneSub')
     };
 
-    document.getElementById('btnDesktop').addEventListener('click', () => startGame('desktop'));
-    document.getElementById('btnMobile').addEventListener('click', () => startGame('mobile'));
-
-    function startGame(mode) {
-      gameMode = mode;
-      started = true;
-      ui.menu.style.opacity = '0';
-      setTimeout(() => ui.menu.style.display = 'none', 500);
-      ui.hud.style.display = 'flex';
-
-      if (mode === 'mobile') {
-        ui.mobileControls.classList.remove('hidden');
-        ui.hint.textContent = 'Links = Joystick · Rechts ziehen = Kamera · SPRINT = Schneller · ↑ = Springen';
-      } else {
-        ui.mobileControls.classList.add('hidden');
-        ui.hint.textContent = 'WASD = Bewegen · Shift = Sprinten · Maus ziehen = Kamera · Space = Springen';
-      }
-      setTimeout(() => { ui.hint.style.opacity = '0'; }, 6000);
+    function getWorldHardCap() {
+      return currentWorld === 1 ? 800 : 1500;
     }
 
-    // ============================================================
-    // INPUT (Desktop)
-    // ============================================================
-    window.addEventListener('keydown', e => {
-      keys[e.code] = true;
-      if (e.code === 'Space' && gameMode === 'desktop') {
-        jumpRequested = true;
+    function getStepBonusSpeed() {
+      const mult = 0.08 + upgrades.stepPower * 0.05;
+      return Math.min(steps * mult, getWorldHardCap() - 120);
+    }
+
+    function getMaxSpeed() {
+      const base = 120 + upgrades.maxSpeed * 95 + getStepBonusSpeed();
+      const sprintBonus = sprintActiveTimer > 0 ? (35 + upgrades.sprintPower * 25) : 0;
+      const padBonus = padBoostTimer > 0 ? 45 : 0;
+      return Math.min(base + sprintBonus + padBonus, getWorldHardCap());
+    }
+
+    function getUpgradeSpeedCost(baseCost, lvl) {
+      return Math.round(baseCost + lvl * 18);
+    }
+
+    function renderSkinShop() {
+      ui.skinShopGrid.innerHTML = '';
+      for (const sk of SKINS) {
+        const card = document.createElement('div');
+        card.className = 'upgrade-card';
+
+        const isOwned = unlockedSkins.has(sk.id);
+        const isEquipped = activeSkinId === sk.id;
+
+        const titleEl = document.createElement('div');
+        titleEl.className = 'upgrade-name';
+        titleEl.textContent = sk.name;
+
+        const descEl = document.createElement('div');
+        descEl.className = 'upgrade-desc';
+        descEl.textContent = sk.desc;
+
+        const btnEl = document.createElement('button');
+        btnEl.className = 'buy-btn' + (isEquipped ? ' skin-equipped' : '');
+
+        if (isEquipped) {
+          btnEl.textContent = '✓ Ausgerüstet';
+          btnEl.disabled = true;
+        } else if (isOwned) {
+          btnEl.textContent = 'Ausrüsten';
+          btnEl.addEventListener('click', () => {
+            applySkin(sk.id);
+            playSound('buy');
+            refreshShopUI();
+          });
+        } else {
+          btnEl.textContent = `Kaufen (-${sk.cost} Speed)`;
+          btnEl.disabled = currentSpeed < sk.cost;
+          btnEl.addEventListener('click', () => {
+            if (currentSpeed >= sk.cost) {
+              currentSpeed -= sk.cost;
+              unlockedSkins.add(sk.id);
+              applySkin(sk.id);
+              playSound('buy');
+              refreshShopUI();
+            }
+          });
+        }
+
+        card.appendChild(titleEl);
+        card.appendChild(descEl);
+        card.appendChild(btnEl);
+        ui.skinShopGrid.appendChild(card);
+      }
+    }
+
+    function refreshShopUI() {
+      ui.shopSpeedDisplay.textContent = currentSpeed.toFixed(1);
+      ui.shopMaxSpeedDisplay.textContent = getMaxSpeed().toFixed(0);
+      ui.lvlMaxSpeed.textContent = upgrades.maxSpeed;
+      ui.lvlAccel.textContent = upgrades.accel;
+      ui.lvlStepPower.textContent = upgrades.stepPower;
+      ui.lvlSprintPower.textContent = upgrades.sprintPower;
+
+      const c1 = getUpgradeSpeedCost(20, upgrades.maxSpeed);
+      const c2 = getUpgradeSpeedCost(15, upgrades.accel);
+      const c3 = getUpgradeSpeedCost(25, upgrades.stepPower);
+      const c4 = getUpgradeSpeedCost(30, upgrades.sprintPower);
+
+      ui.buyMaxSpeedBtn.textContent = `Kaufen (-${c1} Speed)`;
+      ui.buyAccelBtn.textContent = `Kaufen (-${c2} Speed)`;
+      ui.buyStepPowerBtn.textContent = `Kaufen (-${c3} Speed)`;
+      ui.buySprintPowerBtn.textContent = `Kaufen (-${c4} Speed)`;
+
+      ui.buyMaxSpeedBtn.disabled = currentSpeed < c1;
+      ui.buyAccelBtn.disabled = currentSpeed < c2;
+      ui.buyStepPowerBtn.disabled = currentSpeed < c3;
+      ui.buySprintPowerBtn.disabled = currentSpeed < c4;
+
+      renderSkinShop();
+    }
+
+    function openModal(modalEl) {
+      uiModalOpen = true;
+      ui.shopModal.classList.add('hidden');
+      ui.adminModal.classList.add('hidden');
+      modalEl.classList.remove('hidden');
+      refreshShopUI();
+    }
+
+    function closeModal(modalEl) {
+      modalEl.classList.add('hidden');
+      uiModalOpen = !ui.shopModal.classList.contains('hidden') || !ui.adminModal.classList.contains('hidden');
+    }
+
+    document.getElementById('openShopBtn').addEventListener('click', () => { initAudio(); openModal(ui.shopModal); });
+    document.getElementById('closeShopBtn').addEventListener('click', () => closeModal(ui.shopModal));
+    document.getElementById('openAdminBtn').addEventListener('click', () => { initAudio(); openModal(ui.adminModal); });
+    document.getElementById('closeAdminBtn').addEventListener('click', () => closeModal(ui.adminModal));
+
+    ui.buyMaxSpeedBtn.addEventListener('click', () => {
+      const cost = getUpgradeSpeedCost(20, upgrades.maxSpeed);
+      if (currentSpeed >= cost) {
+        currentSpeed -= cost;
+        upgrades.maxSpeed += 1;
+        playSound('buy');
+        refreshShopUI();
+      }
+    });
+
+    ui.buyAccelBtn.addEventListener('click', () => {
+      const cost = getUpgradeSpeedCost(15, upgrades.accel);
+      if (currentSpeed >= cost) {
+        currentSpeed -= cost;
+        upgrades.accel += 1;
+        playSound('buy');
+        refreshShopUI();
+      }
+    });
+
+    ui.buyStepPowerBtn.addEventListener('click', () => {
+      const cost = getUpgradeSpeedCost(25, upgrades.stepPower);
+      if (currentSpeed >= cost) {
+        currentSpeed -= cost;
+        upgrades.stepPower += 1;
+        playSound('buy');
+        refreshShopUI();
+      }
+    });
+
+    ui.buySprintPowerBtn.addEventListener('click', () => {
+      const cost = getUpgradeSpeedCost(30, upgrades.sprintPower);
+      if (currentSpeed >= cost) {
+        currentSpeed -= cost;
+        upgrades.sprintPower += 1;
+        playSound('buy');
+        refreshShopUI();
+      }
+    });
+
+    // Dramatische 3D-Weltwechsel-Szene
+    function startWorldTransitionScene(targetWorldId) {
+      if (targetWorldId === 2 && currentWorld === 1) {
+        savedWorld1Speed = currentSpeed;
+        savedWorld1Steps = steps;
+      }
+
+      worldSceneTargetWorld = targetWorldId;
+      worldSceneActive = true;
+      worldSceneTimer = 0;
+      worldSwitchedMidScene = false;
+      ui.shopModal.classList.add('hidden');
+      ui.adminModal.classList.add('hidden');
+      uiModalOpen = false;
+      ui.worldSceneBanner.classList.remove('hidden');
+      playSound('warp');
+
+      if (targetWorldId === 2) {
+        ui.worldSceneTitle.textContent = '🌌 FOKUS, HIMMELSKATAPULT & NACHT-WELT!';
+        ui.worldSceneSub.textContent = 'Kamera zoomt ran, Energie baut sich auf, Sprung hoch in den Himmel & Landung auf der Nacht-Insel!';
+      } else {
+        ui.worldSceneTitle.textContent = '☀️ RÜCKKEHR ZUR HELLEN TAGES-INSEL!';
+        ui.worldSceneSub.textContent = 'Sprung zurück in die Anfangswelt – dein alter Speed wird wiederhergestellt!';
+      }
+    }
+
+    ui.newWorldBtn.addEventListener('click', () => {
+      initAudio();
+      if (unlockedNewWorldAt800 && !worldSceneActive && currentWorld === 1) {
+        startWorldTransitionScene(2);
+      }
+    });
+
+    ui.returnOldWorldBtn.addEventListener('click', () => {
+      initAudio();
+      if (!worldSceneActive && currentWorld === 2) {
+        startWorldTransitionScene(1);
+      }
+    });
+
+    // Admin-Code & Aktionen
+    document.getElementById('submitAdminCodeBtn').addEventListener('click', () => {
+      const entered = ui.adminCodeInput.value.trim().toUpperCase();
+      if (entered === SECRET_ADMIN_CODE) {
+        adminUnlocked = true;
+        ui.adminStatusMsg.textContent = '✅ Admin-Rechte aktiv!';
+        ui.adminControls.style.opacity = '1';
+        ui.adminControls.style.pointerEvents = 'auto';
+        playSound('boost');
+      } else {
+        ui.adminStatusMsg.textContent = '❌ Falscher Code.';
+      }
+    });
+
+    document.getElementById('adminAddSpeedBtn').addEventListener('click', () => {
+      if (!adminUnlocked) return;
+      upgrades.maxSpeed = Math.max(upgrades.maxSpeed, 8);
+      currentSpeed = Math.min(currentSpeed + 250, getMaxSpeed());
+      playSound('boost');
+      ui.adminStatusMsg.textContent = '⚡ +250 Speed gegeben!';
+      refreshShopUI();
+    });
+
+    document.getElementById('adminUnlockSkinsBtn').addEventListener('click', () => {
+      if (!adminUnlocked) return;
+      for (const s of SKINS) unlockedSkins.add(s.id);
+      playSound('buy');
+      ui.adminStatusMsg.textContent = '🎭 Alle Skins freigeschaltet!';
+      refreshShopUI();
+    });
+
+    document.getElementById('adminSet800SpeedBtn').addEventListener('click', () => {
+      if (!adminUnlocked) return;
+      upgrades.maxSpeed = Math.max(upgrades.maxSpeed, 8);
+      currentSpeed = 800;
+      unlockedNewWorldAt800 = true;
+      ui.newWorldBtn.classList.add('visible');
+      playSound('boost');
+      ui.adminStatusMsg.textContent = '🚀 Speed auf 800 gesetzt – Knopf "Neue Welt" ist jetzt da!';
+      refreshShopUI();
+    });
+
+    document.getElementById('adminTriggerSceneBtn').addEventListener('click', () => {
+      if (!adminUnlocked) return;
+      startWorldTransitionScene(currentWorld === 1 ? 2 : 1);
+    });
+
+    // ---------- Steuerung Startmenü & Eingaben ----------
+    function selectControlMode(mode) {
+      initAudio();
+      controlMode = mode;
+      gameStarted = true;
+      ui.startMenu.classList.add('hidden');
+
+      if (mode === 'pc') {
+        ui.pcHint.classList.remove('hidden');
+        ui.touchControls.classList.add('hidden');
+      } else {
+        ui.pcHint.classList.add('hidden');
+        ui.touchControls.classList.remove('hidden');
+      }
+    }
+
+    document.getElementById('btnPC').addEventListener('click', () => selectControlMode('pc'));
+    document.getElementById('btnTouch').addEventListener('click', () => selectControlMode('touch'));
+    document.getElementById('menuSwitchBtn').addEventListener('click', () => {
+      ui.startMenu.classList.remove('hidden');
+    });
+
+    let isMouseDragging = false;
+    let lastMouseX = 0;
+    let lastMouseY = 0;
+
+    renderer.domElement.addEventListener('mousedown', (e) => {
+      if (controlMode !== 'pc' || !gameStarted || uiModalOpen || worldSceneActive) return;
+      isMouseDragging = true;
+      lastMouseX = e.clientX;
+      lastMouseY = e.clientY;
+    });
+
+    window.addEventListener('mouseup', () => { isMouseDragging = false; });
+
+    window.addEventListener('mousemove', (e) => {
+      if (controlMode !== 'pc' || !gameStarted || uiModalOpen || worldSceneActive) return;
+      if (isMouseDragging) {
+        const dx = e.clientX - lastMouseX;
+        const dy = e.clientY - lastMouseY;
+        lastMouseX = e.clientX;
+        lastMouseY = e.clientY;
+        cameraYaw -= dx * 0.0045;
+        cameraPitch = THREE.MathUtils.clamp(cameraPitch + dy * 0.0038, 0.08, 1.15);
+      }
+    });
+
+    window.addEventListener('keydown', (e) => {
+      if (uiModalOpen || worldSceneActive) return;
+      if (e.code === 'Space' && !keys['Space'] && gameStarted) {
         e.preventDefault();
+        jumpHeld = true;
+        tryJump();
       }
+      keys[e.code] = true;
     });
-    window.addEventListener('keyup', e => keys[e.code] = false);
 
-    let mouseDown = false, lastMX = 0, lastMY = 0;
-
-    renderer.domElement.addEventListener('pointerdown', e => {
-      if (gameMode === 'desktop' && e.pointerType === 'mouse') {
-        mouseDown = true; lastMX = e.clientX; lastMY = e.clientY;
+    window.addEventListener('keyup', (e) => {
+      if (e.code === 'ShiftLeft' || e.code === 'ShiftRight') {
+        sprintExhaustedThisHold = false;
       }
-    });
-    window.addEventListener('pointerup', e => { if (e.pointerType === 'mouse') mouseDown = false; });
-    window.addEventListener('pointermove', e => {
-      if (gameMode !== 'desktop' || !mouseDown || e.pointerType !== 'mouse') return;
-      const dx = e.clientX - lastMX, dy = e.clientY - lastMY;
-      lastMX = e.clientX; lastMY = e.clientY;
-      cameraYaw -= dx * 0.005;
-      cameraPitch = THREE.MathUtils.clamp(cameraPitch + dy * 0.005, -0.15, 1.1);
+      keys[e.code] = false;
+      if (e.code === 'Space') jumpHeld = false;
     });
 
-    // ============================================================
-    // INPUT (Mobile)
-    // ============================================================
-    const joyEl = document.getElementById('joystick');
-    const joyKnob = document.getElementById('joyKnob');
-    let joyActive = false;
-    let joyCenter = { x: 0, y: 0 };
-    const JOY_RADIUS = 55;
+    const joystickZone = document.getElementById('joystickZone');
+    const joystickKnob = document.getElementById('joystickKnob');
+    let joyTouchId = null;
 
-    function updateJoy(x, y) {
-      let dx = x - joyCenter.x, dy = y - joyCenter.y;
-      const d = Math.hypot(dx, dy);
-      if (d > JOY_RADIUS) { dx = dx / d * JOY_RADIUS; dy = dy / d * JOY_RADIUS; }
-      joyVec.x = dx / JOY_RADIUS;
-      joyVec.y = dy / JOY_RADIUS;
-      joyKnob.style.transform = `translate(calc(-50% + ${dx}px), calc(-50% + ${dy}px))`;
-    }
+    joystickZone.addEventListener('touchstart', (e) => {
+      e.preventDefault();
+      initAudio();
+      const t = e.changedTouches[0];
+      joyTouchId = t.identifier;
+      updateJoystick(t.clientX, t.clientY);
+    }, { passive: false });
 
-    joyEl.addEventListener('pointerdown', e => {
-      if (gameMode !== 'mobile') return;
-      joyActive = true;
-      const r = joyEl.getBoundingClientRect();
-      joyCenter.x = r.left + r.width / 2;
-      joyCenter.y = r.top + r.height / 2;
-      updateJoy(e.clientX, e.clientY);
-      joyEl.setPointerCapture(e.pointerId);
-      e.stopPropagation();
-    });
-    joyEl.addEventListener('pointermove', e => {
-      if (!joyActive) return;
-      updateJoy(e.clientX, e.clientY);
-      e.stopPropagation();
-    });
-    const endJoy = e => {
-      joyActive = false; joyVec.x = 0; joyVec.y = 0;
-      joyKnob.style.transform = 'translate(-50%, -50%)';
-      if (e) e.stopPropagation();
-    };
-    joyEl.addEventListener('pointerup', endJoy);
-    joyEl.addEventListener('pointercancel', endJoy);
-
-    let camTouch = null;
-    renderer.domElement.addEventListener('pointerdown', e => {
-      if (gameMode !== 'mobile') return;
-      if (e.pointerType === 'touch' && e.clientX > innerWidth * 0.4) {
-        camTouch = { x: e.clientX, y: e.clientY, id: e.pointerId };
-        renderer.domElement.setPointerCapture(e.pointerId);
+    joystickZone.addEventListener('touchmove', (e) => {
+      e.preventDefault();
+      for (const t of e.changedTouches) {
+        if (t.identifier === joyTouchId) updateJoystick(t.clientX, t.clientY);
       }
-    });
-    renderer.domElement.addEventListener('pointermove', e => {
-      if (!camTouch || e.pointerId !== camTouch.id) return;
-      const dx = e.clientX - camTouch.x, dy = e.clientY - camTouch.y;
-      camTouch.x = e.clientX; camTouch.y = e.clientY;
-      cameraYaw -= dx * 0.008;
-      cameraPitch = THREE.MathUtils.clamp(cameraPitch + dy * 0.008, -0.15, 1.1);
-    });
-    const endCam = e => { if (camTouch && e.pointerId === camTouch.id) camTouch = null; };
-    renderer.domElement.addEventListener('pointerup', endCam);
-    renderer.domElement.addEventListener('pointercancel', endCam);
+    }, { passive: false });
 
-    const btnSprint = document.getElementById('btnSprint');
-    const btnJump = document.getElementById('btnJump');
-
-    btnSprint.addEventListener('pointerdown', e => { mobileSprint = true; e.stopPropagation(); });
-    btnSprint.addEventListener('pointerup', e => { mobileSprint = false; e.stopPropagation(); });
-    btnSprint.addEventListener('pointercancel', () => mobileSprint = false);
-    btnJump.addEventListener('pointerdown', e => { jumpRequested = true; e.preventDefault(); e.stopPropagation(); });
-
-    // ============================================================
-    // UPDATE LOGIK (Game Loop)
-    // ============================================================
-    function update(dt) {
-      // 1. Input
-      let inputX = 0, inputZ = 0;
-      if (gameMode === 'desktop') {
-        if (keys.KeyW || keys.ArrowUp) inputZ -= 1;
-        if (keys.KeyS || keys.ArrowDown) inputZ += 1;
-        if (keys.KeyA || keys.ArrowLeft) inputX -= 1;
-        if (keys.KeyD || keys.ArrowRight) inputX += 1;
-      }
-      if (gameMode === 'mobile') {
-        inputX += joyVec.x;
-        inputZ += joyVec.y;
-      }
-
-      const inLen = Math.hypot(inputX, inputZ);
-      let nx = 0, nz = 0;
-      if (inLen > 0.05) { nx = inputX / inLen; nz = inputZ / inLen; }
-
-      // Kamera-relativ
-      const sin = Math.sin(cameraYaw), cos = Math.cos(cameraYaw);
-      const wx = nz * sin + nx * cos;
-      const wz = nz * cos - nx * sin;
-
-      const sprinting = gameMode === 'desktop'
-        ? (keys.ShiftLeft || keys.ShiftRight)
-        : mobileSprint;
-
-      // 2. Speed & Movement
-      const speedMult = 1 + (steps / 1000);
-      const runSpeed = 7 * speedMult;
-      const sprintSpeed = 14 * speedMult;
-
-      const moving = inLen > 0.1;
-      const targetSpeed = moving ? (sprinting ? sprintSpeed : runSpeed) : 0;
-      currentSpeed = THREE.MathUtils.lerp(currentSpeed, targetSpeed, Math.min(1, dt * 8));
-
-      if (currentSpeed > 0.05) {
-        playerPos.x += wx * currentSpeed * dt;
-        playerPos.z += wz * currentSpeed * dt;
-
-        // Charakter Drehung
-        const targetYaw = Math.atan2(-wx, -wz);
-        let diff = targetYaw - playerYaw;
-        while (diff > Math.PI) diff -= Math.PI * 2;
-        while (diff < -Math.PI) diff += Math.PI * 2;
-        playerYaw += diff * Math.min(1, dt * 10);
-
-        // Schritte zählen
-        stepAccumulator += currentSpeed * dt;
-        while (stepAccumulator > 0.8) {
-          stepAccumulator -= 0.8;
-          steps++;
+    function resetJoystick(e) {
+      for (const t of e.changedTouches) {
+        if (t.identifier === joyTouchId) {
+          joyTouchId = null;
+          touchMoveVec.x = 0;
+          touchMoveVec.y = 0;
+          joystickKnob.style.transform = 'translate(0px, 0px)';
         }
       }
+    }
 
-      // 3. Springen
-      const groundY = terrainHeight(playerPos.x, playerPos.z);
-      if (jumpRequested && onGround) { jumpVel = 8; onGround = false; }
-      jumpRequested = false;
+    joystickZone.addEventListener('touchend', resetJoystick);
+    joystickZone.addEventListener('touchcancel', resetJoystick);
 
-      if (!onGround) {
-        jumpVel -= 25 * dt;
-        jumpOffset += jumpVel * dt;
-        if (jumpOffset <= 0) { jumpOffset = 0; jumpVel = 0; onGround = true; }
+    function updateJoystick(clientX, clientY) {
+      const rect = joystickZone.getBoundingClientRect();
+      const cx = rect.left + rect.width / 2;
+      const cy = rect.top + rect.height / 2;
+      const maxR = rect.width * 0.36;
+      let dx = clientX - cx;
+      let dy = clientY - cy;
+      const dist = Math.sqrt(dx * dx + dy * dy);
+      if (dist > maxR) {
+        dx = (dx / dist) * maxR;
+        dy = (dy / dist) * maxR;
       }
+      joystickKnob.style.transform = `translate(${dx}px, ${dy}px)`;
+      touchMoveVec.x = dx / maxR;
+      touchMoveVec.y = dy / maxR;
+    }
 
-      playerPos.y = groundY + jumpOffset;
-      player.position.copy(playerPos);
-      player.rotation.y = playerYaw;
+    const touchLookZone = document.getElementById('touchLookZone');
+    let lookTouchId = null;
+    let lastLookX = 0;
+    let lastLookY = 0;
 
-      // 4. Animation & Effekte
-      animateCharacter(dt, sprinting, moving);
-      
-      // Dust Partikel bei Bewegung
-      if (currentSpeed > 3 && onGround && Math.random() < 0.5) {
-        const footPos = player.position.clone();
-        footPos.x += Math.sin(playerYaw) * 0.5;
-        footPos.z += Math.cos(playerYaw) * 0.5;
-        spawnDust(footPos);
-      }
-      updateParticles(dt);
+    touchLookZone.addEventListener('touchstart', (e) => {
+      initAudio();
+      const t = e.changedTouches[0];
+      lookTouchId = t.identifier;
+      lastLookX = t.clientX;
+      lastLookY = t.clientY;
+    }, { passive: true });
 
-      // Speed Lines UI
-      if (sprinting && currentSpeed > 10) {
-        ui.speedLines.style.opacity = '1';
-      } else {
-        ui.speedLines.style.opacity = '0';
-      }
-
-      // 5. Kamera
-      const focusY = playerPos.y + 1.8;
-      camera.position.set(
-        playerPos.x + Math.sin(cameraYaw) * Math.cos(cameraPitch) * cameraDist,
-        focusY + Math.sin(cameraPitch) * cameraDist,
-        playerPos.z + Math.cos(cameraYaw) * Math.cos(cameraPitch) * cameraDist
-      );
-      camera.lookAt(playerPos.x, focusY, playerPos.z);
-
-      // Sonne folgt Spieler (für Schatten)
-      sun.position.set(playerPos.x + 100, playerPos.y + 150, playerPos.z + 50);
-      sun.target.position.copy(playerPos);
-
-      // 6. Umgebung animieren
-      const time = performance.now() * 0.001;
-      
-      // Schwebende Inseln
-      floatIslands.children.forEach(island => {
-        island.position.y = island.userData.baseY + Math.sin(time * island.userData.speed + island.userData.offset) * 5;
-        island.rotation.y += dt * 0.1;
-      });
-
-      // Orbs
-      for (let i = orbs.length - 1; i >= 0; i--) {
-        const orb = orbs[i];
-        orb.rotation.y += dt * 3;
-        orb.rotation.x += dt * 2;
-        orb.position.y = orb.userData.baseY + Math.sin(time * 2 + orb.userData.phase) * 0.3;
-
-        const dx = orb.position.x - playerPos.x;
-        const dz = orb.position.z - playerPos.z;
-        const dy = orb.position.y - (playerPos.y + 1);
-        
-        if (dx * dx + dz * dz < 3.5 && Math.abs(dy) < 2.5) {
-          orbCount++;
-          steps += 50;
-          scene.remove(orb);
-          orbs.splice(i, 1);
-
-          // Spawn Partikel beim Einsammeln
-          for(let j=0; j<10; j++) {
-             const pPos = orb.position.clone();
-             const p = new THREE.Mesh(particleGeo, new THREE.MeshBasicMaterial({color: 0xffd500, transparent: true, blending: THREE.AdditiveBlending}));
-             p.position.copy(pPos);
-             p.userData = { life: 1.0, velocity: new THREE.Vector3((Math.random()-0.5)*10, (Math.random()-0.5)*10, (Math.random()-0.5)*10) };
-             scene.add(p);
-             particles.push(p);
-          }
-
-          let ox, oz;
-          do {
-            ox = playerPos.x + (Math.random() - 0.5) * 1000;
-            oz = playerPos.z + (Math.random() - 0.5) * 1000;
-          } while (Math.abs(ox) < 10 && Math.abs(oz) < 10);
-          spawnOrbAt(ox, oz);
+    touchLookZone.addEventListener('touchmove', (e) => {
+      for (const t of e.changedTouches) {
+        if (t.identifier === lookTouchId) {
+          const dx = t.clientX - lastLookX;
+          const dy = t.clientY - lastLookY;
+          lastLookX = t.clientX;
+          lastLookY = t.clientY;
+          cameraYaw -= dx * 0.0058;
+          cameraPitch = THREE.MathUtils.clamp(cameraPitch + dy * 0.0045, 0.08, 1.15);
         }
       }
+    }, { passive: true });
 
-      // 7. UI Update
-      ui.speed.textContent = currentSpeed.toFixed(1);
-      ui.steps.textContent = steps;
-      ui.orbs.textContent = orbCount;
-      
-      const boostPercent = Math.min((steps % 1000) / 1000 * 100, 100);
-      ui.boostFill.style.width = boostPercent + '%';
+    function endLook(e) {
+      for (const t of e.changedTouches) {
+        if (t.identifier === lookTouchId) lookTouchId = null;
+      }
     }
+    touchLookZone.addEventListener('touchend', endLook);
+    touchLookZone.addEventListener('touchcancel', endLook);
 
-    // ============================================================
-    // CHARAKTER ANIMATION
-    // ============================================================
-    function animateCharacter(dt, sprinting, moving) {
-      const gait = Math.min(currentSpeed / 15, 1);
-      const targetFreq = sprinting ? 15 : 8;
-      
-      if (moving && currentSpeed > 0.5) {
-        walkPhase += dt * targetFreq;
-        const swing = (0.4 + gait * 0.8) * Math.sin(walkPhase);
+    const sprintBtn = document.getElementById('sprintBtn');
+    sprintBtn.addEventListener('touchstart', (e) => {
+      e.preventDefault();
+      initAudio();
+      touchSprintHeld = true;
+      sprintBtn.classList.add('active');
+    }, { passive: false });
 
-        // Beine
-        leftLeg.hip.rotation.x = swing;
-        rightLeg.hip.rotation.x = -swing;
-        leftLeg.knee.rotation.x = Math.max(0, -Math.sin(walkPhase)) * (0.6 + gait * 1.2);
-        rightLeg.knee.rotation.x = Math.max(0, Math.sin(walkPhase)) * (0.6 + gait * 1.2);
+    function releaseTouchSprint(e) {
+      e.preventDefault();
+      touchSprintHeld = false;
+      sprintExhaustedThisHold = false;
+      sprintBtn.classList.remove('active');
+    }
+    sprintBtn.addEventListener('touchend', releaseTouchSprint, { passive: false });
+    sprintBtn.addEventListener('touchcancel', releaseTouchSprint, { passive: false });
 
-        // Arme
-        const armSwing = sprinting ? 1.2 : 0.8;
-        leftArm.shoulder.rotation.x = -swing * armSwing;
-        rightArm.shoulder.rotation.x = swing * armSwing;
-        leftArm.elbow.rotation.x = 0.2 + Math.max(0, swing) * 0.6;
-        rightArm.elbow.rotation.x = 0.2 + Math.max(0, -swing) * 0.6;
+    const jumpBtn = document.getElementById('jumpBtn');
+    jumpBtn.addEventListener('touchstart', (e) => {
+      e.preventDefault();
+      initAudio();
+      jumpHeld = true;
+      jumpBtn.classList.add('active');
+      tryJump();
+    }, { passive: false });
 
-        // Körper & Kopf
-        hips.position.y = 0.9 + Math.sin(walkPhase * 2) * (0.04 + gait * 0.03);
-        chest.rotation.x = gait * (sprinting ? 0.4 : 0.2); // Neigung nach vorne
-        chest.rotation.y = Math.sin(walkPhase) * 0.1 * gait;
-        headGroup.rotation.x = -chest.rotation.x * 0.8; // Kopf bleibt gerade
+    function releaseTouchJump(e) {
+      e.preventDefault();
+      jumpHeld = false;
+      jumpBtn.classList.remove('active');
+    }
+    jumpBtn.addEventListener('touchend', releaseTouchJump, { passive: false });
+    jumpBtn.addEventListener('touchcancel', releaseTouchJump, { passive: false });
 
-      } else {
-        // Idle
-        walkPhase += dt * 2;
-        hips.position.y = 0.9 + Math.sin(walkPhase) * 0.015;
-        
-        const decay = Math.pow(0.001, dt);
-        leftLeg.hip.rotation.x *= decay;
-        rightLeg.hip.rotation.x *= decay;
-        leftLeg.knee.rotation.x *= decay;
-        rightLeg.knee.rotation.x *= decay;
-        leftArm.shoulder.rotation.x *= decay;
-        rightArm.shoulder.rotation.x *= decay;
-        leftArm.elbow.rotation.x = THREE.MathUtils.lerp(leftArm.elbow.rotation.x, 0.1, dt * 5);
-        rightArm.elbow.rotation.x = THREE.MathUtils.lerp(rightArm.elbow.rotation.x, 0.1, dt * 5);
-        chest.rotation.x *= decay;
-        chest.rotation.y *= decay;
-        headGroup.rotation.x *= decay;
+    // ---------- Sprung & Air-Push ----------
+    function tryJump() {
+      const now = performance.now();
+      const isDoubleTap = (now - lastJumpTapTime) < 310;
+      lastJumpTapTime = now;
+
+      if (isGrounded) {
+        velY = 12.6;
+        isGrounded = false;
+        airPushUsed = false;
+        squashAmount = -0.25;
+        playSound('jump');
+
+        for (let i = 0; i < 7; i++) {
+          const a = (i / 7) * Math.PI * 2;
+          spawnParticle(
+            player.position.x, player.position.y + 0.15, player.position.z,
+            0x38bdf8,
+            Math.cos(a) * 3.8, 1.5 + Math.random() * 1.5, Math.sin(a) * 3.8,
+            0.35, 0.95
+          );
+        }
+      } else if (isDoubleTap && !airPushUsed) {
+        airPushUsed = true;
+        velY = Math.max(velY, 10.5);
+        currentSpeed = Math.min(currentSpeed + 12.0, getMaxSpeed());
+        squashAmount = 0.2;
+        playSound('airpush');
+
+        player.position.x += -Math.sin(cameraYaw) * 1.4;
+        player.position.z += -Math.cos(cameraYaw) * 1.4;
+
+        for (let i = 0; i < 11; i++) {
+          const a = (i / 11) * Math.PI * 2;
+          spawnParticle(
+            player.position.x, player.position.y + 0.9, player.position.z,
+            0x38bdf8,
+            Math.cos(a) * 5.8, (Math.random() - 0.3) * 3.2, Math.sin(a) * 5.8,
+            0.4, 1.15
+          );
+        }
       }
     }
 
-    // ============================================================
-    // MAIN LOOP
-    // ============================================================
+    player.position.set(0, Math.max(getTerrainHeight(0, 0), WATER_LEVEL), 0);
+
+    // ---------- Haupt-Loop ----------
     let lastTime = performance.now();
+    let hudTimer = 0;
+    let sceneGroundCache = getTerrainHeight(0, 0);
 
     function animate(now) {
       requestAnimationFrame(animate);
-      const dt = Math.min(Math.max((now - lastTime) / 1000, 0), 0.05);
+      const dt = Math.min((now - lastTime) / 1000, 0.05);
       lastTime = now;
-      
-      if (started) {
-        update(dt);
-      } else {
-        // Kamera-Idle im Menü (langsames Kreisen)
-        const t = now * 0.0005;
-        camera.position.set(Math.sin(t) * 30, 15, Math.cos(t) * 30);
-        camera.lookAt(0, 5, 0);
-        
-        // Inseln animieren im Hintergrund
-        floatIslands.children.forEach(island => {
-          island.rotation.y += 0.005;
-        });
+
+      // Wolken in Welt 1 sanft ziehen lassen
+      if (cloudsGroup.visible) {
+        for (const cl of clouds) {
+          cl.group.position.x += cl.speedX * dt;
+          if (cl.group.position.x > 1900) cl.group.position.x = -1900;
+        }
       }
-      
+
+      // Sterne in Welt 2 langsam drehen lassen
+      if (starsPoints.visible) {
+        starsPoints.rotation.y += dt * 0.012;
+      }
+
+      // Skin-Zusatzteile animieren
+      skinGearGroups.void.children.forEach((ch, idx) => {
+        if (idx >= 3) {
+          ch.position.y = 0.68 + Math.sin(now * 0.004 + idx) * 0.14;
+          ch.rotation.y += dt * 2.5;
+        }
+      });
+
+      // ---------- Dramatische 3D-Weltwechsel-Szene ----------
+      if (worldSceneActive) {
+        worldSceneTimer += dt;
+        const t = Math.min(1, worldSceneTimer / WORLD_SCENE_DURATION);
+        const baseGround = Math.max(getTerrainHeight(0, 0), WATER_LEVEL);
+
+        if (t < 0.32) {
+          // Phase 1: Kamera zoomt eng heran, Charakter hockt kurz ab und lädt Energie auf
+          const p1 = t / 0.32;
+          player.position.x = THREE.MathUtils.lerp(player.position.x, 0, 0.18);
+          player.position.z = THREE.MathUtils.lerp(player.position.z, 0, 0.18);
+          player.position.y = baseGround;
+          squashAmount = -0.26 * Math.sin(p1 * Math.PI);
+          player.rotation.y += dt * (2 + p1 * 12);
+          warpBeam.material.opacity = p1 * 0.55;
+          warpBeam.material.color.setHex(worldSceneTargetWorld === 2 ? 0xc084fc : 0x38bdf8);
+
+          if (Math.random() < 0.75) {
+            const ang = Math.random() * Math.PI * 2;
+            const rad = 2.6 - p1 * 1.8;
+            spawnParticle(
+              Math.cos(ang) * rad, baseGround + 0.3, Math.sin(ang) * rad,
+              worldSceneTargetWorld === 2 ? 0xe879f9 : 0x38bdf8,
+              -Math.cos(ang) * 4, 6 + p1 * 8, -Math.sin(ang) * 4,
+              0.35, 1.2
+            );
+          }
+        } else if (t < 0.72) {
+          // Phase 2: Charakter schießt steil hoch in den Himmel & wechselt in der Luft die Welt
+          const p2 = (t - 0.32) / 0.40;
+          const arcY = Math.sin(p2 * Math.PI) * 78;
+          player.position.set(0, baseGround + arcY, 0);
+          player.rotation.y += dt * 16;
+          squashAmount = 0.28;
+          warpBeam.material.opacity = (1 - Math.abs(p2 - 0.5) * 1.8) * 0.7;
+
+          if (!worldSwitchedMidScene && p2 >= 0.5) {
+            worldSwitchedMidScene = true;
+            buildWorld(worldSceneTargetWorld);
+
+            if (worldSceneTargetWorld === 2) {
+              // In der neuen Welt startet man wieder am Anfang mit wenig Speed (0)
+              currentSpeed = 0;
+              steps = 0;
+              padBoostTimer = 0;
+              sprintActiveTimer = 0;
+              ui.returnOldWorldBtn.classList.add('visible');
+            } else {
+              // Zurück in der alten Welt: Geschwindigkeit wiederherstellen!
+              currentSpeed = savedWorld1Speed;
+              steps = savedWorld1Steps;
+              ui.returnOldWorldBtn.classList.remove('visible');
+            }
+          }
+
+          for (let k = 0; k < 2; k++) {
+            spawnParticle(
+              (Math.random() - 0.5) * 1.8,
+              player.position.y + 0.2,
+              (Math.random() - 0.5) * 1.8,
+              worldSceneTargetWorld === 2 ? 0xc084fc : 0xfacc15,
+              (Math.random() - 0.5) * 10,
+              -8 - Math.random() * 8,
+              (Math.random() - 0.5) * 10,
+              0.38,
+              1.45
+            );
+          }
+        } else {
+          // Phase 3: Charakter stürzt/landet auf der neuen Insel mit Druckwelle
+          const p3 = (t - 0.72) / 0.28;
+          const landGround = Math.max(getTerrainHeight(0, 0), WATER_LEVEL);
+          const fallOffset = Math.pow(1 - p3, 2) * 26;
+          player.position.set(0, landGround + fallOffset, 0);
+          warpBeam.material.opacity = Math.max(0, (1 - p3) * 0.45);
+          squashAmount = p3 > 0.82 ? -0.32 : 0.14;
+
+          if (p3 > 0.8) {
+            for (let ring = 0; ring < 3; ring++) {
+              const ang = Math.random() * Math.PI * 2;
+              spawnParticle(
+                0, landGround + 0.25, 0,
+                worldSceneTargetWorld === 2 ? 0x38bdf8 : 0xfacc15,
+                Math.cos(ang) * (8 + Math.random() * 8),
+                2 + Math.random() * 4,
+                Math.sin(ang) * (8 + Math.random() * 8),
+                0.45,
+                1.35
+              );
+            }
+          }
+        }
+
+        if (worldSceneTimer >= WORLD_SCENE_DURATION) {
+          worldSceneActive = false;
+          warpBeam.material.opacity = 0;
+          ui.worldSceneBanner.classList.add('hidden');
+          velY = 0;
+          isGrounded = true;
+          player.position.set(0, Math.max(getTerrainHeight(0, 0), WATER_LEVEL), 0);
+        }
+      } else {
+        // ---------- Normales Gameplay ----------
+        warpBeam.material.opacity = 0;
+        const wantsSprint = Boolean(keys['ShiftLeft'] || keys['ShiftRight'] || touchSprintHeld);
+
+        if (sprintCooldownTimer > 0) {
+          sprintCooldownTimer = Math.max(0, sprintCooldownTimer - dt);
+        }
+
+        if (sprintActiveTimer > 0) {
+          sprintActiveTimer = Math.max(0, sprintActiveTimer - dt);
+          if (sprintActiveTimer === 0) {
+            sprintCooldownTimer = SPRINT_COOLDOWN;
+            sprintExhaustedThisHold = true;
+          }
+        } else if (wantsSprint && !sprintExhaustedThisHold && sprintCooldownTimer <= 0 && gameStarted && !uiModalOpen) {
+          sprintActiveTimer = SPRINT_DURATION;
+          squashAmount = 0.22;
+          playSound('sprint');
+          for (let i = 0; i < 12; i++) {
+            spawnParticle(
+              player.position.x, player.position.y + 1.0, player.position.z,
+              0xfacc15,
+              (Math.random() - 0.5) * 7.5, 1.5 + Math.random() * 3.5, (Math.random() - 0.5) * 7.5,
+              0.42, 1.15
+            );
+          }
+        }
+
+        if (padBoostTimer > 0) {
+          padBoostTimer = Math.max(0, padBoostTimer - dt);
+        }
+
+        let moveForward = 0;
+        let moveRight = 0;
+
+        if (gameStarted && !uiModalOpen) {
+          if (controlMode === 'pc') {
+            if (keys['KeyW'] || keys['ArrowUp']) moveForward += 1;
+            if (keys['KeyS'] || keys['ArrowDown']) moveForward -= 1;
+            if (keys['KeyD'] || keys['ArrowRight']) moveRight += 1;
+            if (keys['KeyA'] || keys['ArrowLeft']) moveRight -= 1;
+          } else if (controlMode === 'touch') {
+            moveForward = -touchMoveVec.y;
+            moveRight = touchMoveVec.x;
+          }
+        }
+
+        const inputMag = Math.min(Math.hypot(moveForward, moveRight), 1);
+        const isMoving = inputMag > 0.05;
+
+        const maxSpd = getMaxSpeed();
+        const targetSpd = isMoving ? maxSpd * inputMag : 0;
+        const accelRate = isMoving ? (9.5 + upgrades.accel * 2.5 + (sprintActiveTimer > 0 ? 7.5 : 0)) : 10.5;
+        currentSpeed = Math.min(
+          THREE.MathUtils.lerp(currentSpeed, targetSpd, 1 - Math.exp(-accelRate * dt)),
+          getWorldHardCap()
+        );
+
+        const prevX = player.position.x;
+        const prevZ = player.position.z;
+
+        if (isMoving) {
+          const fX = -Math.sin(cameraYaw);
+          const fZ = -Math.cos(cameraYaw);
+          const rX = Math.cos(cameraYaw);
+          const rZ = -Math.sin(cameraYaw);
+
+          let dX = fX * moveForward + rX * moveRight;
+          let dZ = fZ * moveForward + rZ * moveRight;
+          const len = Math.hypot(dX, dZ) || 1;
+          dX /= len;
+          dZ /= len;
+
+          const visualMoveSpeed = Math.min(currentSpeed, 130);
+          player.position.x += dX * visualMoveSpeed * dt;
+          player.position.z += dZ * visualMoveSpeed * dt;
+
+          const half = getWorldHalf();
+          player.position.x = THREE.MathUtils.clamp(player.position.x, -half + 6, half - 6);
+          player.position.z = THREE.MathUtils.clamp(player.position.z, -half + 6, half - 6);
+
+          const targetYaw = Math.atan2(dX, dZ);
+          let diff = targetYaw - player.rotation.y;
+          while (diff > Math.PI) diff -= Math.PI * 2;
+          while (diff < -Math.PI) diff += Math.PI * 2;
+          player.rotation.y += diff * Math.min(1, dt * 16);
+        }
+
+        const stepDist = Math.hypot(player.position.x - prevX, player.position.z - prevZ);
+        if (isGrounded && stepDist > 0.001) {
+          distanceAccumulator += stepDist;
+          const stepLength = 2.4;
+          if (distanceAccumulator >= stepLength) {
+            const earned = Math.floor(distanceAccumulator / stepLength) * (1 + Math.floor(upgrades.stepPower * 0.5));
+            distanceAccumulator = 0;
+            steps += earned;
+            currentSpeed = Math.min(currentSpeed + earned * (0.45 + upgrades.stepPower * 0.25), getMaxSpeed());
+          }
+        }
+
+        sceneGroundCache = Math.max(getTerrainHeight(player.position.x, player.position.z), WATER_LEVEL);
+        velY -= 29.0 * dt;
+        player.position.y += velY * dt;
+
+        if (player.position.y <= sceneGroundCache) {
+          if (!isGrounded && velY < -6) {
+            squashAmount = -0.24;
+          }
+          player.position.y = sceneGroundCache;
+          velY = 0;
+          isGrounded = true;
+          airPushUsed = false;
+        }
+
+        // Sobald 800 Speed erreicht ist, taucht der Knopf "Neue Welt" auf
+        if (currentWorld === 1 && currentSpeed >= 800 && !unlockedNewWorldAt800) {
+          unlockedNewWorldAt800 = true;
+          ui.newWorldBtn.classList.add('visible');
+          playSound('boost');
+        }
+      }
+
+      // ---------- Verbesserte Charakter-Animation (Gehen, Laufen, Sprint, Sprung, Idle) ----------
+      squashAmount = THREE.MathUtils.lerp(squashAmount, 0, 1 - Math.exp(-13 * dt));
+      const scaleY = 1 + squashAmount;
+      const scaleXZ = 1 - squashAmount * 0.55;
+      characterRig.scale.set(scaleXZ, scaleY, scaleXZ);
+
+      if (isGrounded && currentSpeed > 0.35 && !worldSceneActive) {
+        const speedNorm = Math.min(currentSpeed / 140, 1.5);
+        const strideFreq = 7.0 + speedNorm * 13.5;
+        animCycle += dt * strideFreq;
+
+        const swing = Math.sin(animCycle);
+        const swingOpp = Math.sin(animCycle + Math.PI);
+        const kneeBendL = Math.max(0, -Math.cos(animCycle)) * (0.85 + speedNorm * 0.45);
+        const kneeBendR = Math.max(0, -Math.cos(animCycle + Math.PI)) * (0.85 + speedNorm * 0.45);
+        const elbowBendL = -0.45 - Math.max(0, Math.sin(animCycle)) * (0.55 + speedNorm * 0.35);
+        const elbowBendR = -0.45 - Math.max(0, Math.sin(animCycle + Math.PI)) * (0.55 + speedNorm * 0.35);
+
+        const forwardLean = (sprintActiveTimer > 0 ? 0.38 : 0.1 + speedNorm * 0.18);
+        chestPivot.rotation.x = forwardLean + Math.abs(Math.sin(animCycle)) * 0.06;
+        chestPivot.rotation.y = Math.sin(animCycle) * (0.14 + speedNorm * 0.08);
+        pelvis.rotation.y = -Math.sin(animCycle) * 0.08;
+        chestPivot.position.y = 1.05 + Math.abs(Math.cos(animCycle)) * (0.06 + speedNorm * 0.04);
+
+        headPivot.rotation.x = -forwardLean * 0.6 + Math.sin(animCycle * 2) * 0.03;
+        headPivot.rotation.y = -Math.sin(animCycle) * 0.12;
+
+        leftLeg.root.rotation.x = swing * (0.75 + speedNorm * 0.32);
+        leftLeg.mid.rotation.x = -kneeBendL;
+
+        rightLeg.root.rotation.x = swingOpp * (0.75 + speedNorm * 0.32);
+        rightLeg.mid.rotation.x = -kneeBendR;
+
+        leftArm.root.rotation.x = swingOpp * (0.8 + speedNorm * 0.35);
+        leftArm.mid.rotation.x = elbowBendL;
+
+        rightArm.root.rotation.x = swing * (0.8 + speedNorm * 0.35);
+        rightArm.mid.rotation.x = elbowBendR;
+      } else if (!isGrounded || worldSceneActive) {
+        const upPose = velY > 0.5 || worldSceneActive;
+        chestPivot.rotation.x = upPose ? -0.18 : 0.25;
+        chestPivot.rotation.y = worldSceneActive ? Math.sin(now * 0.02) * 0.2 : 0;
+        pelvis.rotation.y = 0;
+        chestPivot.position.y = 1.08;
+
+        headPivot.rotation.x = upPose ? -0.22 : 0.14;
+        headPivot.rotation.y = 0;
+
+        leftLeg.root.rotation.x = upPose ? 0.65 : -0.45;
+        leftLeg.mid.rotation.x = upPose ? -0.95 : -0.4;
+        rightLeg.root.rotation.x = upPose ? -0.4 : 0.55;
+        rightLeg.mid.rotation.x = upPose ? -0.55 : -0.75;
+
+        leftArm.root.rotation.x = upPose ? -1.05 : -0.55;
+        leftArm.mid.rotation.x = -0.35;
+        rightArm.root.rotation.x = upPose ? -1.05 : -0.55;
+        rightArm.mid.rotation.x = -0.35;
+      } else {
+        const idleT = now * 0.0028;
+        chestPivot.rotation.x = THREE.MathUtils.lerp(chestPivot.rotation.x, Math.sin(idleT) * 0.035, 0.12);
+        chestPivot.rotation.y = THREE.MathUtils.lerp(chestPivot.rotation.y, Math.sin(idleT * 0.75) * 0.07, 0.12);
+        pelvis.rotation.y = THREE.MathUtils.lerp(pelvis.rotation.y, 0, 0.12);
+        chestPivot.position.y = 1.06 + Math.sin(idleT * 2.2) * 0.025;
+
+        headPivot.rotation.x = Math.sin(idleT * 1.3) * 0.05;
+        headPivot.rotation.y = Math.cos(idleT * 0.9) * 0.16;
+
+        leftLeg.root.rotation.x = THREE.MathUtils.lerp(leftLeg.root.rotation.x, 0, 0.15);
+        leftLeg.mid.rotation.x = THREE.MathUtils.lerp(leftLeg.mid.rotation.x, 0, 0.15);
+        rightLeg.root.rotation.x = THREE.MathUtils.lerp(rightLeg.root.rotation.x, 0, 0.15);
+        rightLeg.mid.rotation.x = THREE.MathUtils.lerp(rightLeg.mid.rotation.x, 0, 0.15);
+
+        leftArm.root.rotation.x = THREE.MathUtils.lerp(leftArm.root.rotation.x, Math.sin(idleT * 1.4) * 0.07, 0.15);
+        leftArm.mid.rotation.x = THREE.MathUtils.lerp(leftArm.mid.rotation.x, -0.25, 0.15);
+        rightArm.root.rotation.x = THREE.MathUtils.lerp(rightArm.root.rotation.x, -Math.sin(idleT * 1.4) * 0.07, 0.15);
+        rightArm.mid.rotation.x = THREE.MathUtils.lerp(rightArm.mid.rotation.x, -0.25, 0.15);
+      }
+
+      // ---------- Noch stärkere Speed-Effekte: Feuer 100+, Frost 250+, Blitz 500+ ----------
+      const hasFire = currentSpeed >= 100;
+      const hasFrost = currentSpeed >= 250;
+      const hasLightning = currentSpeed >= 500;
+
+      if (!worldSceneActive) {
+        if (hasLightning) {
+          if (Math.random() < 0.65) spawnLightningStrike();
+          for (let k = 0; k < 2; k++) {
+            spawnParticle(
+              player.position.x + (Math.random() - 0.5) * 1.8,
+              player.position.y + 0.5 + Math.random() * 2.2,
+              player.position.z + (Math.random() - 0.5) * 1.8,
+              Math.random() < 0.5 ? 0xe879f9 : 0xfef08a,
+              (Math.random() - 0.5) * 12, 3.0 + Math.random() * 5, (Math.random() - 0.5) * 12,
+              0.38, 1.45
+            );
+          }
+        }
+
+        if (hasFrost) {
+          for (let k = 0; k < 2; k++) {
+            spawnParticle(
+              player.position.x + (Math.random() - 0.5) * 1.7,
+              player.position.y + 0.4 + Math.random() * 1.7,
+              player.position.z + (Math.random() - 0.5) * 1.7,
+              Math.random() < 0.55 ? 0x22d3ee : 0xe0f2fe,
+              (Math.random() - 0.5) * 7, 1.8 + Math.random() * 4.0, (Math.random() - 0.5) * 7,
+              0.42, 1.35
+            );
+          }
+        }
+
+        if (hasFire) {
+          for (let k = 0; k < 2; k++) {
+            spawnParticle(
+              player.position.x + (Math.random() - 0.5) * 1.4,
+              player.position.y + 0.3 + Math.random() * 1.5,
+              player.position.z + (Math.random() - 0.5) * 1.4,
+              Math.random() < 0.55 ? 0xf97316 : 0xfacc15,
+              (Math.random() - 0.5) * 5.5, 2.8 + Math.random() * 4.8, (Math.random() - 0.5) * 5.5,
+              0.42, 1.5
+            );
+          }
+        }
+      }
+
+      for (let i = lightningBolts.length - 1; i >= 0; i--) {
+        const lb = lightningBolts[i];
+        lb.life -= dt;
+        if (lb.life <= 0) {
+          scene.remove(lb.line);
+          lb.geo.dispose();
+          lightningBolts.splice(i, 1);
+        }
+      }
+
+      core.rotation.y += dt * 4.8;
+      core.rotation.x += dt * 2.8;
+
+      const auraPulse = 1 + Math.sin(now * 0.012) * 0.14;
+      auraRing.scale.setScalar(auraPulse);
+      auraRing.rotation.z += dt * (hasLightning ? 13 : hasFrost ? 8 : hasFire ? 5.5 : 2.8);
+
+      if (hasLightning) {
+        auraRing.material.opacity = 0.9;
+        auraRing.material.color.setHex(0xe879f9);
+        playerLight.intensity = 3.8;
+        playerLight.color.setHex(0xe879f9);
+      } else if (hasFrost) {
+        auraRing.material.opacity = 0.82;
+        auraRing.material.color.setHex(0x22d3ee);
+        playerLight.intensity = 3.1;
+        playerLight.color.setHex(0x22d3ee);
+      } else if (hasFire) {
+        auraRing.material.opacity = 0.78;
+        auraRing.material.color.setHex(0xf97316);
+        playerLight.intensity = 2.8;
+        playerLight.color.setHex(0xf97316);
+      } else {
+        auraRing.material.opacity = Math.min(0.45, currentSpeed / 80);
+        auraRing.material.color.setHex(0x38bdf8);
+        playerLight.intensity = Math.min(1.8, currentSpeed / 45);
+        playerLight.color.setHex(0x38bdf8);
+      }
+      playerLight.position.set(player.position.x, player.position.y + 2.2, player.position.z);
+
+      sun.position.set(player.position.x + 150, player.position.y + 230, player.position.z + 110);
+      sun.target.position.copy(player.position);
+      sun.target.updateMatrixWorld();
+
+      // ---------- Speed-Boost-Punkte & Orbs ----------
+      if (!worldSceneActive) {
+        for (const bp of boostPads) {
+          if (bp.cooldown > 0) bp.cooldown = Math.max(0, bp.cooldown - dt);
+          bp.ringMesh.rotation.z += dt * 2.5;
+          bp.beamMesh.position.y = 1.9 + Math.sin(now * 0.004 + bp.x) * 0.25;
+
+          const dx = player.position.x - bp.x;
+          const dz = player.position.z - bp.z;
+          if (dx * dx + dz * dz < bp.radius * bp.radius && Math.abs(player.position.y - bp.group.position.y) < 4.2 && bp.cooldown <= 0) {
+            bp.cooldown = 1.6;
+            padBoostTimer = 3.5;
+            steps += 6 * (1 + Math.floor(upgrades.stepPower * 0.5));
+            currentSpeed = Math.min(currentSpeed + 35.0, getMaxSpeed());
+            if (isGrounded) velY = 8.0;
+            playSound('boost');
+
+            for (let i = 0; i < 14; i++) {
+              const a = (i / 14) * Math.PI * 2;
+              spawnParticle(
+                bp.x, bp.group.position.y + 1.0, bp.z,
+                0xfacc15,
+                Math.cos(a) * 9.0, 2.5 + Math.random() * 4.2, Math.sin(a) * 9.0,
+                0.5, 1.3
+              );
+            }
+          }
+        }
+
+        const pX = player.position.x;
+        const pY = player.position.y + 1.1;
+        const pZ = player.position.z;
+
+        for (let i = orbs.length - 1; i >= 0; i--) {
+          const orb = orbs[i];
+          const dx = pX - orb.x;
+          const dz = pZ - orb.z;
+          if (dx * dx + dz * dz > 1600) continue;
+
+          orb.mesh.rotation.y += dt * 3.0;
+          const dy = pY - orb.mesh.position.y;
+          if (dx * dx + dy * dy + dz * dz < 2.6) {
+            worldGroup.remove(orb.mesh);
+            orbs.splice(i, 1);
+
+            orbsCollected += 1;
+            const gainedSteps = 4 * (1 + Math.floor(upgrades.stepPower * 0.5));
+            steps += gainedSteps;
+            currentSpeed = Math.min(currentSpeed + 4.5 + upgrades.stepPower * 1.4, getMaxSpeed());
+            playSound('orb', steps);
+
+            for (let p = 0; p < 5; p++) {
+              spawnParticle(
+                orb.mesh.position.x, orb.mesh.position.y, orb.mesh.position.z,
+                0xfacc15,
+                (Math.random() - 0.5) * 5.5, 1.5 + Math.random() * 3.5, (Math.random() - 0.5) * 5.5,
+                0.35, 0.95
+              );
+            }
+
+            const half = getWorldHalf();
+            spawnOrbAt((Math.random() - 0.5) * (half * 1.88), (Math.random() - 0.5) * (half * 1.88), 1.45);
+          }
+        }
+      }
+
+      // ---------- Partikel-Pool aktualisieren ----------
+      for (let i = 0; i < PARTICLE_POOL_SIZE; i++) {
+        const pt = particlePool[i];
+        if (!pt.mesh.visible) continue;
+        pt.life -= dt;
+        if (pt.life <= 0) {
+          pt.mesh.visible = false;
+          continue;
+        }
+        pt.vel.y -= 11.0 * dt;
+        pt.mesh.position.x += pt.vel.x * dt;
+        pt.mesh.position.y += pt.vel.y * dt;
+        pt.mesh.position.z += pt.vel.z * dt;
+        const ratio = pt.life / pt.maxLife;
+        pt.mesh.scale.setScalar(Math.max(0.01, ratio * pt.baseScale));
+        pt.mat.opacity = ratio;
+      }
+
+      // ---------- Kamera (inkl. dramatischer Zoom- & Himmelssprung-Szene) ----------
+      let distBack = 7.8 + Math.min(currentSpeed * 0.012, 7.0);
+      let pitchNow = cameraPitch;
+      let lookTargetY = player.position.y + 1.55;
+
+      if (worldSceneActive) {
+        const t = Math.min(1, worldSceneTimer / WORLD_SCENE_DURATION);
+        if (t < 0.32) {
+          // Enger Zoom an den Charakter
+          distBack = THREE.MathUtils.lerp(7.8, 2.7, t / 0.32);
+          pitchNow = 0.18;
+          lookTargetY = player.position.y + 1.35;
+        } else if (t < 0.72) {
+          // Hohe Verfolgungs-Perspektive während des Flugs in den Himmel
+          distBack = 13.5;
+          pitchNow = 0.12;
+          lookTargetY = player.position.y + 1.2;
+        } else {
+          // Zoom zurück auf Normalansicht bei der Landung
+          distBack = THREE.MathUtils.lerp(13.5, 7.8, (t - 0.72) / 0.28);
+          pitchNow = cameraPitch;
+        }
+      }
+
+      const horizDist = Math.cos(pitchNow) * distBack;
+      const vertDist = Math.sin(pitchNow) * distBack;
+
+      const targetCamPos = new THREE.Vector3(
+        player.position.x + Math.sin(cameraYaw) * horizDist,
+        player.position.y + 1.85 + vertDist,
+        player.position.z + Math.cos(cameraYaw) * horizDist
+      );
+
+      camera.position.lerp(targetCamPos, 1 - Math.exp(-14 * dt));
+      if (!worldSceneActive && camera.position.y < sceneGroundCache + 0.9) {
+        camera.position.y = sceneGroundCache + 0.9;
+      }
+
+      camera.lookAt(player.position.x, lookTargetY, player.position.z);
+
+      const targetFov = worldSceneActive ? 82 : (70 + Math.min(currentSpeed * 0.025, 24));
+      camera.fov = THREE.MathUtils.lerp(camera.fov, targetFov, 1 - Math.exp(-8 * dt));
+      camera.updateProjectionMatrix();
+
+      // ---------- HUD aktualisieren ----------
+      hudTimer += dt;
+      if (hudTimer >= 0.08) {
+        hudTimer = 0;
+        ui.steps.textContent = steps;
+        ui.orbs.textContent = orbsCollected;
+        ui.speed.textContent = currentSpeed.toFixed(1);
+        ui.capSpeed.textContent = getMaxSpeed().toFixed(0);
+        ui.coords.textContent = `${Math.round(player.position.x)}, ${Math.round(player.position.z)}`;
+
+        const pct = Math.min(100, (currentSpeed / Math.max(getMaxSpeed(), 1)) * 100);
+        ui.speedFill.style.width = `${pct}%`;
+
+        ui.worldBadge.textContent = currentWorld === 1
+          ? '☀️ Welt 1: Helle Insel (Max 800)'
+          : '🌙 Welt 2: Sternennacht (Max 1500)';
+
+        const bInfo = getBiomeInfo(player.position.x, player.position.z);
+        ui.biomeBadge.textContent = bInfo.label;
+        ui.biomeBadge.style.color = bInfo.color;
+
+        if (sprintActiveTimer > 0) {
+          ui.sprintBadge.textContent = `⚡ SPRINT AKTIV: ${sprintActiveTimer.toFixed(1)}s`;
+          ui.sprintBadge.className = 'badge active';
+          ui.sprintBtn.classList.add('sprinting');
+          ui.sprintBtn.classList.remove('cooldown');
+          ui.sprintBtnSub.textContent = `${sprintActiveTimer.toFixed(1)}s`;
+        } else if (sprintCooldownTimer > 0) {
+          ui.sprintBadge.textContent = `⏳ Sprint Cooldown: ${sprintCooldownTimer.toFixed(1)}s`;
+          ui.sprintBadge.className = 'badge cooldown';
+          ui.sprintBtn.classList.remove('sprinting');
+          ui.sprintBtn.classList.add('cooldown');
+          ui.sprintBtnSub.textContent = `${sprintCooldownTimer.toFixed(1)}s`;
+        } else {
+          ui.sprintBadge.textContent = `⚡ Sprint bereit (5.0s Boost / 10s CD)`;
+          ui.sprintBadge.className = 'badge';
+          ui.sprintBtn.classList.remove('sprinting', 'cooldown');
+          ui.sprintBtnSub.textContent = '5.0s';
+        }
+
+        if (hasLightning) {
+          ui.auraBadge.textContent = '⚡❄️🔥 Effekt: Blitz & Frost & Feuer (500+)';
+          ui.auraBadge.className = 'badge lightning';
+        } else if (hasFrost) {
+          ui.auraBadge.textContent = '❄️🔥 Effekt: Frost & Feuer (250+)';
+          ui.auraBadge.className = 'badge frost';
+        } else if (hasFire) {
+          ui.auraBadge.textContent = '🔥 Effekt: Feuer (100+)';
+          ui.auraBadge.className = 'badge fire';
+        } else {
+          ui.auraBadge.textContent = '✨ Effekt: Basis (Feuer 100 · Frost 250 · Blitz 500)';
+          ui.auraBadge.className = 'badge';
+        }
+      }
+
       renderer.render(scene, camera);
     }
 
-    // Initialer State
-    playerPos.y = terrainHeight(0, 0);
-    player.position.copy(playerPos);
     requestAnimationFrame(animate);
 
-    // ============================================================
-    // RESIZE
-    // ============================================================
     window.addEventListener('resize', () => {
       camera.aspect = innerWidth / innerHeight;
       camera.updateProjectionMatrix();
