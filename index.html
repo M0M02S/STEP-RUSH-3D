@@ -24,7 +24,7 @@
       inset: 0;
       display: grid;
       place-items: center;
-      background: radial-gradient(circle at 50% 15%, rgba(56, 189, 248, 0.32), rgba(4, 9, 20, 0.94));
+      background: radial-gradient(circle at 50% 15%, rgba(56, 189, 248, 0.34), rgba(4, 9, 20, 0.95));
       backdrop-filter: blur(16px);
       z-index: 80;
       padding: 20px;
@@ -241,28 +241,28 @@
     }
 
     #fxBadge.fire {
-      background: rgba(153, 27, 27, 0.84);
+      background: rgba(153, 27, 27, 0.86);
       border-color: #fb923c;
       color: #ffedd5;
       box-shadow: 0 0 22px rgba(249, 115, 22, 0.55);
     }
 
     #fxBadge.frost {
-      background: rgba(21, 94, 117, 0.84);
+      background: rgba(21, 94, 117, 0.86);
       border-color: #22d3ee;
       color: #cffafe;
       box-shadow: 0 0 22px rgba(34, 211, 238, 0.55);
     }
 
     #fxBadge.lightning {
-      background: rgba(107, 33, 168, 0.86);
+      background: rgba(107, 33, 168, 0.88);
       border-color: #e879f9;
       color: #fae8ff;
       box-shadow: 0 0 24px rgba(217, 70, 239, 0.68);
     }
 
     #fxBadge.plasma {
-      background: linear-gradient(90deg, rgba(131, 24, 67, 0.9), rgba(30, 58, 138, 0.9));
+      background: linear-gradient(90deg, rgba(131, 24, 67, 0.92), rgba(30, 58, 138, 0.92));
       border-color: #38bdf8;
       color: #ffffff;
       box-shadow: 0 0 28px rgba(56, 189, 248, 0.78);
@@ -652,7 +652,7 @@
     <div class="menu-card">
       <h1 class="menu-title">STEP RUSH 3D</h1>
       <p class="menu-subtitle">
-        Helle Tages-Insel mit blauem Himmel &amp; Wolken, düstere Sternennacht-Insel ab 800 Speed, einzigartige Skins mit eigener 3D-Ausrüstung, flüssige Animationen und starke Speed-Effekte (Feuer, Frost, Blitz &amp; Plasma)!
+        Helle Tages-Insel mit blauem Himmel &amp; Wolken, düstere Sternennacht-Insel ab 800 Speed, einzigartige Skins mit eigener 3D-Ausrüstung, flüssige Animationen und eigenständige Speed-Effekte (Feuer, Frost, Blitz &amp; Astral-Plasma)!
       </p>
       <div class="device-grid">
         <button class="device-btn" id="btnPC">
@@ -717,7 +717,7 @@
       <div class="shop-grid">
         <div class="upgrade-card">
           <div class="upgrade-name">🚀 Max-Geschwindigkeit</div>
-          <div class="upgrade-desc">Erhöht dein Max-Speed-Limit (+110 Speed pro Stufe) und gibt dir direkt +15 Speed-Power.</div>
+          <div class="upgrade-desc">Erhöht dein Max-Speed-Limit (+150 Speed pro Stufe) und gibt dir direkt +20 Speed-Power.</div>
           <div class="upgrade-lvl">Stufe: <span id="lvlMaxSpeed">0</span></div>
           <button class="buy-btn" id="buyMaxSpeedBtn">Kaufen (-15 Speed)</button>
         </div>
@@ -879,7 +879,7 @@
     scene.background = new THREE.Color(0x5ec2ff);
     scene.fog = new THREE.FogExp2(0x87cefa, 0.0005);
 
-    const camera = new THREE.PerspectiveCamera(70, innerWidth / innerHeight, 0.1, 3600);
+    const camera = new THREE.PerspectiveCamera(70, innerWidth / innerHeight, 0.1, 3800);
 
     const renderer = new THREE.WebGLRenderer({ antialias: true, powerPreference: 'high-performance' });
     renderer.setSize(innerWidth, innerHeight);
@@ -906,7 +906,7 @@
     sun.shadow.camera.bottom = -sd;
     scene.add(sun);
 
-    const playerLight = new THREE.PointLight(0x38bdf8, 0, 36);
+    const playerLight = new THREE.PointLight(0x38bdf8, 0, 38);
     scene.add(playerLight);
 
     // ---------- Wolken für Welt 1 (blauer Taghimmel) ----------
@@ -920,7 +920,7 @@
     const puffGeo = new THREE.IcosahedronGeometry(1, 1);
     const clouds = [];
 
-    for (let i = 0; i < 48; i++) {
+    for (let i = 0; i < 52; i++) {
       const cGroup = new THREE.Group();
       const puffCount = 4 + Math.floor(Math.random() * 4);
       for (let p = 0; p < puffCount; p++) {
@@ -942,16 +942,26 @@
       clouds.push({ group: cGroup, speedX: 2.2 + Math.random() * 3.5 });
     }
 
-    // ---------- Sterne & Kosmos-Ring für Welt 2 (Sternennacht-Insel) ----------
-    const starCount = 2000;
+    // ---------- Welt 2: Sternenhimmel, Mond, Kosmos-Bogen & Sternschnuppen ----------
+    const cosmosGroup = new THREE.Group();
+    cosmosGroup.visible = false;
+    scene.add(cosmosGroup);
+
+    const starCount = 2400;
     const starPositions = new Float32Array(starCount * 3);
     const starColors = new Float32Array(starCount * 3);
-    const paletteStar = [new THREE.Color(0xffffff), new THREE.Color(0xbae6fd), new THREE.Color(0xe9d5ff), new THREE.Color(0xfef08a)];
+    const paletteStar = [
+      new THREE.Color(0xffffff),
+      new THREE.Color(0xbae6fd),
+      new THREE.Color(0xe9d5ff),
+      new THREE.Color(0xfef08a),
+      new THREE.Color(0x5eead4)
+    ];
 
     for (let i = 0; i < starCount; i++) {
       const theta = Math.random() * Math.PI * 2;
       const phi = Math.acos(Math.random() * 0.94 + 0.06);
-      const r = 1400 + Math.random() * 550;
+      const r = 1450 + Math.random() * 600;
       starPositions[i * 3] = r * Math.sin(phi) * Math.cos(theta);
       starPositions[i * 3 + 1] = Math.abs(r * Math.cos(phi)) + 30;
       starPositions[i * 3 + 2] = r * Math.sin(phi) * Math.sin(theta);
@@ -964,18 +974,24 @@
     const starGeo = new THREE.BufferGeometry();
     starGeo.setAttribute('position', new THREE.BufferAttribute(starPositions, 3));
     starGeo.setAttribute('color', new THREE.BufferAttribute(starColors, 3));
-    const starMat = new THREE.PointsMaterial({ vertexColors: true, size: 5.2, transparent: true, opacity: 0.96 });
+    const starMat = new THREE.PointsMaterial({ vertexColors: true, size: 5.8, transparent: true, opacity: 0.98 });
     const starsPoints = new THREE.Points(starGeo, starMat);
-    starsPoints.visible = false;
-    scene.add(starsPoints);
+    cosmosGroup.add(starsPoints);
 
     const nightMoon = new THREE.Mesh(
-      new THREE.SphereGeometry(75, 24, 24),
-      new THREE.MeshStandardMaterial({ color: 0xe0e7ff, emissive: 0x6366f1, emissiveIntensity: 0.85, roughness: 0.6 })
+      new THREE.SphereGeometry(82, 28, 28),
+      new THREE.MeshStandardMaterial({ color: 0xe0e7ff, emissive: 0x6366f1, emissiveIntensity: 0.95, roughness: 0.55 })
     );
-    nightMoon.position.set(-780, 520, -1100);
-    nightMoon.visible = false;
-    scene.add(nightMoon);
+    nightMoon.position.set(-760, 540, -1120);
+    cosmosGroup.add(nightMoon);
+
+    const cosmosArc = new THREE.Mesh(
+      new THREE.TorusGeometry(980, 12, 12, 96),
+      new THREE.MeshBasicMaterial({ color: 0x818cf8, transparent: true, opacity: 0.28 })
+    );
+    cosmosArc.position.set(0, 260, -900);
+    cosmosArc.rotation.set(0.35, 0.2, 0.15);
+    cosmosGroup.add(cosmosArc);
 
     // ---------- Multi-Biom Open World (Welt 1: Helle Insel | Welt 2: Sternennacht) ----------
     let currentWorld = 1;
@@ -1042,7 +1058,6 @@
       }
     }
 
-    // Saubere Insel-Oberfläche ohne tiefe Unterwasser-Löcher
     function getTerrainHeight(x, z) {
       const dist0 = Math.sqrt(x * x + z * z);
       const flatBlend = THREE.MathUtils.smoothstep(dist0, 28, 120);
@@ -1074,7 +1089,6 @@
     const worldGroup = new THREE.Group();
     scene.add(worldGroup);
 
-    // Äußerer Ozean/Weltraum-Horizont unterhalb der Insel
     const horizonSea = new THREE.Mesh(
       new THREE.PlaneGeometry(16000, 16000),
       new THREE.MeshStandardMaterial({
@@ -1094,14 +1108,15 @@
       snowCap: new THREE.MeshStandardMaterial({ color: 0xffffff, roughness: 0.55 }),
       cactus: new THREE.MeshStandardMaterial({ color: 0x16a34a, roughness: 0.75 }),
       sandRock: new THREE.MeshStandardMaterial({ color: 0xd97706, roughness: 0.85 }),
-      lavaGlow: new THREE.MeshStandardMaterial({ color: 0xf97316, emissive: 0xea580c, emissiveIntensity: 1.75, roughness: 0.25 }),
+      lavaGlow: new THREE.MeshStandardMaterial({ color: 0xf97316, emissive: 0xea580c, emissiveIntensity: 1.85, roughness: 0.22 }),
       obsidian: new THREE.MeshStandardMaterial({ color: 0x1e293b, roughness: 0.75, metalness: 0.45 }),
-      crystal: new THREE.MeshStandardMaterial({ color: 0x2dd4bf, emissive: 0x14b8a6, emissiveIntensity: 1.45, roughness: 0.15, metalness: 0.55 }),
-      prism: new THREE.MeshStandardMaterial({ color: 0xfacc15, emissive: 0xeab308, emissiveIntensity: 1.15, roughness: 0.22, metalness: 0.65 }),
-      padBase: new THREE.MeshStandardMaterial({ color: 0x0f172a, emissive: 0xf97316, emissiveIntensity: 0.85, roughness: 0.25, metalness: 0.65 }),
+      crystal: new THREE.MeshStandardMaterial({ color: 0x2dd4bf, emissive: 0x14b8a6, emissiveIntensity: 1.55, roughness: 0.14, metalness: 0.6 }),
+      prism: new THREE.MeshStandardMaterial({ color: 0xfacc15, emissive: 0xeab308, emissiveIntensity: 1.25, roughness: 0.2, metalness: 0.7 }),
+      nebulaStone: new THREE.MeshStandardMaterial({ color: 0xa855f7, emissive: 0x7e22ce, emissiveIntensity: 1.35, roughness: 0.2, metalness: 0.55 }),
+      padBase: new THREE.MeshStandardMaterial({ color: 0x0f172a, emissive: 0xf97316, emissiveIntensity: 0.9, roughness: 0.25, metalness: 0.65 }),
       padRing: new THREE.MeshBasicMaterial({ color: 0xfacc15 }),
-      padBeam: new THREE.MeshBasicMaterial({ color: 0x38bdf8, transparent: true, opacity: 0.48 }),
-      orb: new THREE.MeshStandardMaterial({ color: 0xfacc15, emissive: 0xf59e0b, emissiveIntensity: 1.35, roughness: 0.18, metalness: 0.55 }),
+      padBeam: new THREE.MeshBasicMaterial({ color: 0x38bdf8, transparent: true, opacity: 0.5 }),
+      orb: new THREE.MeshStandardMaterial({ color: 0xfacc15, emissive: 0xf59e0b, emissiveIntensity: 1.4, roughness: 0.18, metalness: 0.55 }),
       border: new THREE.MeshBasicMaterial({ color: 0xffffff, transparent: true, opacity: 0.14 })
     };
 
@@ -1122,6 +1137,7 @@
 
     let boostPads = [];
     let orbs = [];
+    let floatingCosmosProps = [];
 
     function spawnOrbAt(x, z, yOffset = 1.45) {
       const groundY = getTerrainHeight(x, z);
@@ -1140,6 +1156,7 @@
       }
       boostPads = [];
       orbs = [];
+      floatingCosmosProps = [];
 
       const half = getWorldHalf();
 
@@ -1153,20 +1170,18 @@
         sun.intensity = 1.9;
         horizonSea.material.color.setHex(0x0284c7);
         cloudsGroup.visible = true;
-        starsPoints.visible = false;
-        nightMoon.visible = false;
+        cosmosGroup.visible = false;
       } else {
         scene.background = new THREE.Color(0x050919);
-        scene.fog = new THREE.FogExp2(0x0a1128, 0.00048);
+        scene.fog = new THREE.FogExp2(0x0a1128, 0.00046);
         hemiLight.color.setHex(0x818cf8);
         hemiLight.groundColor.setHex(0x0f172a);
-        hemiLight.intensity = 1.05;
+        hemiLight.intensity = 1.1;
         sun.color.setHex(0xc4b5fd);
-        sun.intensity = 1.45;
+        sun.intensity = 1.5;
         horizonSea.material.color.setHex(0x090d24);
         cloudsGroup.visible = false;
-        starsPoints.visible = true;
-        nightMoon.visible = true;
+        cosmosGroup.visible = true;
       }
 
       const segs = worldId === 1 ? 180 : 210;
@@ -1233,7 +1248,7 @@
         worldGroup.add(wall);
       }
 
-      const propCount = worldId === 1 ? 260 : 320;
+      const propCount = worldId === 1 ? 260 : 340;
       for (let i = 0; i < propCount; i++) {
         const rx = (Math.random() - 0.5) * (half * 1.88);
         const rz = (Math.random() - 0.5) * (half * 1.88);
@@ -1289,10 +1304,12 @@
             ob.position.set(rx, ry + 1.4, rz);
             worldGroup.add(ob);
           } else {
-            const cr = new THREE.Mesh(sharedGeos.crystal, sharedMats.crystal);
-            cr.position.set(rx, ry + 2.5, rz);
+            const cr = new THREE.Mesh(sharedGeos.crystal, Math.random() < 0.28 ? sharedMats.nebulaStone : sharedMats.crystal);
+            const baseFloatY = ry + 2.5 + (Math.random() < 0.35 ? 2.2 : 0);
+            cr.position.set(rx, baseFloatY, rz);
             cr.rotation.z = (Math.random() - 0.5) * 0.25;
             worldGroup.add(cr);
+            floatingCosmosProps.push({ mesh: cr, baseY: baseFloatY, phase: Math.random() * Math.PI * 2 });
           }
         }
       }
@@ -1304,9 +1321,9 @@
             { x: 300, z: -980 }, { x: -880, z: -240 }, { x: 140, z: 920 }, { x: 1050, z: 1050 }
           ]
         : [
-            { x: 0, z: -110 }, { x: 180, z: 70 }, { x: -190, z: 110 },
-            { x: 1150, z: 220 }, { x: 1300, z: 1200 }, { x: -240, z: -1250 },
-            { x: 420, z: -1380 }, { x: -1280, z: -320 }, { x: 220, z: 1320 }, { x: 1650, z: -450 }
+            { x: 0, z: -90 }, { x: 140, z: 60 }, { x: -150, z: 95 },
+            { x: 880, z: 180 }, { x: 1100, z: 950 }, { x: -240, z: -1050 },
+            { x: 420, z: -1250 }, { x: -1150, z: -320 }, { x: 220, z: 1200 }, { x: 1500, z: -420 }
           ];
 
       for (const bp of padCoords) {
@@ -1323,13 +1340,13 @@
 
         group.add(baseMesh, ringMesh, beamMesh);
         worldGroup.add(group);
-        boostPads.push({ group, ringMesh, beamMesh, x: bp.x, z: bp.z, radius: 5.2, cooldown: 0 });
+        boostPads.push({ group, ringMesh, beamMesh, x: bp.x, z: bp.z, radius: 5.4, cooldown: 0 });
       }
 
-      for (let i = 1; i <= 14; i++) {
-        spawnOrbAt(0, -i * 7.0, 1.45);
+      for (let i = 1; i <= 16; i++) {
+        spawnOrbAt(0, -i * 6.5, 1.45);
       }
-      const orbTotal = worldId === 1 ? 420 : 540;
+      const orbTotal = worldId === 1 ? 420 : 580;
       for (let i = 0; i < orbTotal; i++) {
         spawnOrbAt((Math.random() - 0.5) * (half * 1.88), (Math.random() - 0.5) * (half * 1.88), 1.45);
       }
@@ -1505,7 +1522,7 @@
     visor.position.set(0, 0.29, 0.25);
     headPivot.add(visor);
 
-    // ---- Skin-spezifische 3D-Zusatzteile (ohne störenden Kreis-Ring!) ----
+    // ---- Skin-spezifische 3D-Zusatzteile (ohne Ring-Aura!) ----
     const skinGearGroups = {
       cyber: new THREE.Group(),
       inferno: new THREE.Group(),
@@ -1628,9 +1645,9 @@
 
     scene.add(player);
 
-    // ---------- Partikel-Pool & Effekte (Feuer, Frost, Blitz, Plasma & Funken) ----------
-    const PARTICLE_POOL_SIZE = 300;
-    const sharedParticleGeo = new THREE.OctahedronGeometry(0.28, 0);
+    // ---------- Partikel-Pool & Effekte (getrennte, qualitativ abgestimmte Stufen) ----------
+    const PARTICLE_POOL_SIZE = 320;
+    const sharedParticleGeo = new THREE.OctahedronGeometry(0.26, 0);
     const particlePool = [];
 
     for (let i = 0; i < PARTICLE_POOL_SIZE; i++) {
@@ -1665,15 +1682,15 @@
       p.baseScale = scale;
     }
 
-    // Verzweigte Blitzstrahlen-Pool für Blitz-Effekt (500+)
+    // Verzweigte Blitzstrahlen-Pool für Blitz-Stufe (500–749 Speed)
     const lightningBolts = [];
     const boltMatMain = new THREE.LineBasicMaterial({ color: 0xf0abfc, transparent: true, opacity: 1 });
     const boltMatCore = new THREE.LineBasicMaterial({ color: 0xfef08a, transparent: true, opacity: 1 });
 
     function spawnLightningStrike() {
-      if (lightningBolts.length > 28) return;
+      if (lightningBolts.length > 26) return;
       const angle = Math.random() * Math.PI * 2;
-      const radius = 0.35 + Math.random() * 2.2;
+      const radius = 0.3 + Math.random() * 1.9;
       let cx = player.position.x + Math.cos(angle) * radius;
       let cy = player.position.y + 0.15;
       let cz = player.position.z + Math.sin(angle) * radius;
@@ -1708,6 +1725,33 @@
         scene.add(bLine);
         lightningBolts.push({ line: bLine, geo: bGeo, life: 0.12 });
       }
+    }
+
+    // Sternschnuppen-Linien für Welt 2 (Sternennacht)
+    const shootingStars = [];
+    const shootingStarMat = new THREE.LineBasicMaterial({ color: 0xe0f2fe, transparent: true, opacity: 0.9 });
+
+    function spawnShootingStarInWorld2() {
+      if (currentWorld !== 2 || shootingStars.length > 8) return;
+      const sx = player.position.x + (Math.random() - 0.5) * 480;
+      const sy = 140 + Math.random() * 140;
+      const sz = player.position.z - 160 - Math.random() * 240;
+      const dx = (Math.random() < 0.5 ? 1 : -1) * (45 + Math.random() * 35);
+      const dy = -18 - Math.random() * 14;
+      const dz = 25 + Math.random() * 25;
+
+      const geo = new THREE.BufferGeometry().setFromPoints([
+        new THREE.Vector3(sx, sy, sz),
+        new THREE.Vector3(sx + dx * 0.35, sy + dy * 0.35, sz + dz * 0.35)
+      ]);
+      const line = new THREE.Line(geo, shootingStarMat);
+      scene.add(line);
+      shootingStars.push({
+        line,
+        geo,
+        vel: new THREE.Vector3(dx, dy, dz),
+        life: 0.85
+      });
     }
 
     // ---------- Spielzustand, Speed-Speicherung & Weltwechsel-Szene ----------
@@ -1804,14 +1848,14 @@
     }
 
     function getStepBonusSpeed() {
-      const mult = 0.1 + upgrades.stepPower * 0.06;
+      const mult = 0.12 + upgrades.stepPower * 0.08;
       return Math.min(steps * mult, getWorldHardCap() - 120);
     }
 
     function getMaxSpeed() {
-      const base = 140 + upgrades.maxSpeed * 110 + getStepBonusSpeed();
-      const sprintBonus = sprintActiveTimer > 0 ? (45 + upgrades.sprintPower * 30) : 0;
-      const padBonus = padBoostTimer > 0 ? 55 : 0;
+      const base = 160 + upgrades.maxSpeed * 150 + getStepBonusSpeed();
+      const sprintBonus = sprintActiveTimer > 0 ? (60 + upgrades.sprintPower * 40) : 0;
+      const padBonus = padBoostTimer > 0 ? 75 : 0;
       return Math.min(base + sprintBonus + padBonus, getWorldHardCap());
     }
 
@@ -1929,6 +1973,7 @@
       if (currentSpeed >= cost) {
         currentSpeed = Math.max(0, currentSpeed - cost);
         upgrades.maxSpeed += 1;
+        currentSpeed = Math.min(currentSpeed + 20, getMaxSpeed());
         playSound('buy');
         refreshShopUI();
       }
@@ -1982,7 +2027,7 @@
 
       if (targetWorldId === 2) {
         ui.worldSceneTitle.textContent = '🌌 FOKUS, HIMMELSKATAPULT & STERNENNACHT-INSEL!';
-        ui.worldSceneSub.textContent = 'Kamera zoomt ran, Sprung hoch in den Himmel & Landung auf der Nacht-Insel!';
+        ui.worldSceneSub.textContent = 'Kamera zoomt ran, Sprung hoch in den Himmel & Landung auf der Sternennacht-Insel!';
       } else {
         ui.worldSceneTitle.textContent = '☀️ RÜCKKEHR ZUR HELLEN TAGES-INSEL!';
         ui.worldSceneSub.textContent = 'Sprung zurück in Welt 1 – dein gespeicherter Speed wird wiederhergestellt!';
@@ -2023,7 +2068,7 @@
       currentSpeed = Math.min(currentSpeed + 250, getMaxSpeed());
       check800Unlock();
       playSound('boost');
-      ui.adminStatusMsg.textContent = '⚡ +250 Speed gegeben!';
+      ui.adminStatusMsg.textContent = `⚡ +250 Speed gegeben! (Aktuell: ${currentSpeed.toFixed(0)})`;
       refreshShopUI();
     });
 
@@ -2262,7 +2307,7 @@
       } else if (isDoubleTap && !airPushUsed) {
         airPushUsed = true;
         velY = Math.max(velY, 10.5);
-        currentSpeed = Math.min(currentSpeed + 12.0, getMaxSpeed());
+        currentSpeed = Math.min(currentSpeed + 14.0, getMaxSpeed());
         check800Unlock();
         squashAmount = 0.2;
         playSound('airpush');
@@ -2301,8 +2346,26 @@
         }
       }
 
-      if (starsPoints.visible) {
+      if (cosmosGroup.visible) {
         starsPoints.rotation.y += dt * 0.014;
+        cosmosArc.rotation.z += dt * 0.04;
+        if (Math.random() < 0.06) spawnShootingStarInWorld2();
+
+        for (const prop of floatingCosmosProps) {
+          prop.mesh.position.y = prop.baseY + Math.sin(now * 0.0022 + prop.phase) * 0.85;
+          prop.mesh.rotation.y += dt * 0.9;
+        }
+      }
+
+      for (let i = shootingStars.length - 1; i >= 0; i--) {
+        const st = shootingStars[i];
+        st.life -= dt;
+        st.line.position.addScaledVector(st.vel, dt);
+        if (st.life <= 0) {
+          scene.remove(st.line);
+          st.geo.dispose();
+          shootingStars.splice(i, 1);
+        }
       }
 
       skinGearGroups.void.children.forEach((ch, idx) => {
@@ -2348,7 +2411,8 @@
             buildWorld(worldSceneTargetWorld);
 
             if (worldSceneTargetWorld === 2) {
-              currentSpeed = 45;
+              upgrades.maxSpeed = Math.max(upgrades.maxSpeed, 4);
+              currentSpeed = Math.max(currentSpeed, 260);
               steps = 0;
               padBoostTimer = 0;
               sprintActiveTimer = 0;
@@ -2421,7 +2485,7 @@
           }
         } else if (wantsSprint && !sprintExhaustedThisHold && sprintCooldownTimer <= 0 && gameStarted && !uiModalOpen) {
           sprintActiveTimer = SPRINT_DURATION;
-          currentSpeed = Math.min(currentSpeed + (24 + upgrades.sprintPower * 10), getMaxSpeed());
+          currentSpeed = Math.min(currentSpeed + (30 + upgrades.sprintPower * 14), getMaxSpeed());
           check800Unlock();
           squashAmount = 0.22;
           playSound('sprint');
@@ -2475,7 +2539,7 @@
           dX /= len;
           dZ /= len;
 
-          const accelGain = (14 + upgrades.accel * 5 + (sprintActiveTimer > 0 ? 18 : 0)) * inputMag;
+          const accelGain = (18 + upgrades.accel * 7 + (sprintActiveTimer > 0 ? 24 : 0)) * inputMag;
           currentSpeed = Math.min(currentSpeed + accelGain * dt, maxSpd);
 
           const visualMoveSpeed = Math.min(18 + currentSpeed * 0.22, 145);
@@ -2501,7 +2565,7 @@
             const earned = Math.floor(distanceAccumulator / stepLength) * (1 + Math.floor(upgrades.stepPower * 0.5));
             distanceAccumulator = 0;
             steps += earned;
-            currentSpeed = Math.min(currentSpeed + earned * (1.2 + upgrades.stepPower * 0.6), getMaxSpeed());
+            currentSpeed = Math.min(currentSpeed + earned * (1.6 + upgrades.stepPower * 0.8), getMaxSpeed());
           }
         }
 
@@ -2603,81 +2667,87 @@
         rightArm.mid.rotation.x = THREE.MathUtils.lerp(rightArm.mid.rotation.x, -0.25, 0.15);
       }
 
-      // ---------- Detaillierte Speed-Effekte (OHNE Aura-Ring!): Feuer 100+, Frost 250+, Blitz 500+, Plasma 750+ ----------
-      const hasFire = currentSpeed >= 100;
-      const hasFrost = currentSpeed >= 250;
-      const hasLightning = currentSpeed >= 500;
-      const hasPlasma = currentSpeed >= 750;
+      // ---------- Eigenständige, hochwertige Speed-Stufen (ohne Ring-Aura & ohne Überladung) ----------
+      const effectMode = currentSpeed >= 750
+        ? 'plasma'
+        : currentSpeed >= 500
+          ? 'lightning'
+          : currentSpeed >= 250
+            ? 'frost'
+            : currentSpeed >= 100
+              ? 'fire'
+              : 'base';
 
-      if (!worldSceneActive && (hasMoveInput || !isGrounded)) {
-        // Plasma-Effekt (750+): hoch-energetische Magenta/Cyan-Funken & Druckwellen-Partikel
-        if (hasPlasma) {
-          for (let k = 0; k < 4; k++) {
-            const ang = Math.random() * Math.PI * 2;
-            const rad = 0.6 + Math.random() * 1.8;
-            const col = Math.random() < 0.5 ? 0x38bdf8 : 0xf472b6;
-            spawnParticle(
-              player.position.x + Math.cos(ang) * rad,
-              player.position.y + 0.3 + Math.random() * 2.3,
-              player.position.z + Math.sin(ang) * rad,
-              col,
-              Math.cos(ang) * 11, 5.0 + Math.random() * 6.0, Math.sin(ang) * 11,
-              0.42, 1.75, 4.0
-            );
-          }
-        }
-
-        // Blitz-Effekt (500+): verzweigte Blitze + hochgeladene Funken
-        if (hasLightning) {
-          if (Math.random() < 0.88) spawnLightningStrike();
+      if (!worldSceneActive && (hasMoveInput || !isGrounded || currentSpeed >= 250)) {
+        if (effectMode === 'fire') {
+          // Stufe 1 (100–249): Aufsteigende Flammen & Glut-Funken um die Füße/Körper
           for (let k = 0; k < 3; k++) {
             const ang = Math.random() * Math.PI * 2;
-            const rad = 0.5 + Math.random() * 1.4;
+            const rad = 0.25 + Math.random() * 0.75;
+            const col = Math.random() < 0.5 ? 0xff4500 : (Math.random() < 0.8 ? 0xf97316 : 0xfacc15);
             spawnParticle(
               player.position.x + Math.cos(ang) * rad,
-              player.position.y + 0.3 + Math.random() * 2.1,
-              player.position.z + Math.sin(ang) * rad,
-              Math.random() < 0.5 ? 0xe879f9 : 0xfef08a,
-              (Math.random() - 0.5) * 14, 4.5 + Math.random() * 6.5, (Math.random() - 0.5) * 14,
-              0.35, 1.5, 6.0
-            );
-          }
-        }
-
-        // Frost-Effekt (250+): aufsteigende Eiskristalle & glitzernde Schneefunken
-        if (hasFrost) {
-          for (let k = 0; k < 3; k++) {
-            const ang = Math.random() * Math.PI * 2;
-            const rad = 0.4 + Math.random() * 1.2;
-            spawnParticle(
-              player.position.x + Math.cos(ang) * rad,
-              player.position.y + 0.25 + Math.random() * 1.8,
-              player.position.z + Math.sin(ang) * rad,
-              Math.random() < 0.6 ? 0x22d3ee : 0xe0f2fe,
-              Math.cos(ang) * 4.5 + (Math.random() - 0.5) * 3,
-              2.5 + Math.random() * 4.5,
-              Math.sin(ang) * 4.5 + (Math.random() - 0.5) * 3,
-              0.48, 1.4, -3.5
-            );
-          }
-        }
-
-        // Feuer-Effekt (100+): aufsteigende Flammen & Glut-Funken
-        if (hasFire) {
-          for (let k = 0; k < 4; k++) {
-            const ang = Math.random() * Math.PI * 2;
-            const rad = 0.3 + Math.random() * 0.9;
-            const col = Math.random() < 0.45 ? 0xff4500 : (Math.random() < 0.75 ? 0xf97316 : 0xfacc15);
-            spawnParticle(
-              player.position.x + Math.cos(ang) * rad,
-              player.position.y + 0.2 + Math.random() * 1.3,
+              player.position.y + 0.15 + Math.random() * 1.1,
               player.position.z + Math.sin(ang) * rad,
               col,
-              (Math.random() - 0.5) * 4.2,
-              4.2 + Math.random() * 5.2,
-              (Math.random() - 0.5) * 4.2,
-              0.46, 1.7, -9.5
+              (Math.random() - 0.5) * 3.5,
+              4.6 + Math.random() * 4.8,
+              (Math.random() - 0.5) * 3.5,
+              0.44, 1.65, -9.5
             );
+          }
+        } else if (effectMode === 'frost') {
+          // Stufe 2 (250–499): Kristalline Frost-Splitter & schwebende Eis-Partikel
+          for (let k = 0; k < 4; k++) {
+            const ang = Math.random() * Math.PI * 2;
+            const rad = 0.45 + Math.random() * 1.35;
+            const col = Math.random() < 0.65 ? 0x22d3ee : 0xe0f2fe;
+            spawnParticle(
+              player.position.x + Math.cos(ang) * rad,
+              player.position.y + 0.2 + Math.random() * 1.9,
+              player.position.z + Math.sin(ang) * rad,
+              col,
+              Math.cos(ang) * 5.2 + (Math.random() - 0.5) * 2.5,
+              2.2 + Math.random() * 3.8,
+              Math.sin(ang) * 5.2 + (Math.random() - 0.5) * 2.5,
+              0.52, 1.55, -2.2
+            );
+          }
+        } else if (effectMode === 'lightning') {
+          // Stufe 3 (500–749): Verzweigte Blitzbögen & elektrische Funken
+          if (Math.random() < 0.85) spawnLightningStrike();
+          for (let k = 0; k < 3; k++) {
+            const ang = Math.random() * Math.PI * 2;
+            const rad = 0.4 + Math.random() * 1.3;
+            spawnParticle(
+              player.position.x + Math.cos(ang) * rad,
+              player.position.y + 0.35 + Math.random() * 2.0,
+              player.position.z + Math.sin(ang) * rad,
+              Math.random() < 0.55 ? 0xe879f9 : 0xfef08a,
+              (Math.random() - 0.5) * 13.5, 4.0 + Math.random() * 6.0, (Math.random() - 0.5) * 13.5,
+              0.32, 1.45, 7.0
+            );
+          }
+        } else if (effectMode === 'plasma') {
+          // Stufe 4 (750+): Astral-Plasma-Wirbel & kosmische Lichtfunken (in Welt 2 besonders kräftig)
+          const burstCount = currentWorld === 2 ? 6 : 4;
+          for (let k = 0; k < burstCount; k++) {
+            const ang = now * 0.009 + (k / burstCount) * Math.PI * 2;
+            const rad = 0.75 + Math.random() * 1.4;
+            const col = currentWorld === 2
+              ? (k % 2 === 0 ? 0xc084fc : 0x2dd4bf)
+              : (k % 2 === 0 ? 0x38bdf8 : 0xf472b6);
+            spawnParticle(
+              player.position.x + Math.cos(ang) * rad,
+              player.position.y + 0.4 + Math.random() * 2.1,
+              player.position.z + Math.sin(ang) * rad,
+              col,
+              Math.cos(ang) * 9.5, 3.5 + Math.random() * 5.0, Math.sin(ang) * 9.5,
+              0.45, 1.75, 2.0
+            );
+          }
+          if (currentWorld === 2 && Math.random() < 0.35) {
+            spawnLightningStrike();
           }
         }
       }
@@ -2695,20 +2765,20 @@
       core.rotation.y += dt * 4.8;
       core.rotation.x += dt * 2.8;
 
-      if (hasPlasma) {
-        playerLight.intensity = 4.8;
-        playerLight.color.setHex(0x38bdf8);
-      } else if (hasLightning) {
-        playerLight.intensity = 4.2;
+      if (effectMode === 'plasma') {
+        playerLight.intensity = currentWorld === 2 ? 5.2 : 4.4;
+        playerLight.color.setHex(currentWorld === 2 ? 0xc084fc : 0x38bdf8);
+      } else if (effectMode === 'lightning') {
+        playerLight.intensity = 3.8 + Math.random() * 1.2;
         playerLight.color.setHex(0xe879f9);
-      } else if (hasFrost) {
+      } else if (effectMode === 'frost') {
         playerLight.intensity = 3.2;
         playerLight.color.setHex(0x22d3ee);
-      } else if (hasFire) {
-        playerLight.intensity = 3.0;
+      } else if (effectMode === 'fire') {
+        playerLight.intensity = 2.9;
         playerLight.color.setHex(0xf97316);
       } else {
-        playerLight.intensity = Math.min(1.6, currentSpeed / 50);
+        playerLight.intensity = Math.min(1.5, currentSpeed / 60);
         playerLight.color.setHex(0x38bdf8);
       }
       playerLight.position.set(player.position.x, player.position.y + 2.2, player.position.z);
@@ -2730,7 +2800,8 @@
             bp.cooldown = 1.6;
             padBoostTimer = 3.5;
             steps += 6 * (1 + Math.floor(upgrades.stepPower * 0.5));
-            currentSpeed = Math.min(currentSpeed + 45.0, getMaxSpeed());
+            const padGain = currentWorld === 2 ? 75.0 : 50.0;
+            currentSpeed = Math.min(currentSpeed + padGain, getMaxSpeed());
             check800Unlock();
             if (isGrounded) velY = 8.0;
             playSound('boost');
@@ -2739,7 +2810,7 @@
               const a = (i / 16) * Math.PI * 2;
               spawnParticle(
                 bp.x, bp.group.position.y + 1.0, bp.z,
-                0xfacc15,
+                currentWorld === 2 ? 0xc084fc : 0xfacc15,
                 Math.cos(a) * 9.5, 3.0 + Math.random() * 4.5, Math.sin(a) * 9.5,
                 0.5, 1.35, 10.0
               );
@@ -2766,14 +2837,15 @@
             orbsCollected += 1;
             const gainedSteps = 4 * (1 + Math.floor(upgrades.stepPower * 0.5));
             steps += gainedSteps;
-            currentSpeed = Math.min(currentSpeed + 7.5 + upgrades.stepPower * 2.0, getMaxSpeed());
+            const orbGain = (currentWorld === 2 ? 12.0 : 8.5) + upgrades.stepPower * 2.5;
+            currentSpeed = Math.min(currentSpeed + orbGain, getMaxSpeed());
             check800Unlock();
             playSound('orb', steps);
 
             for (let p = 0; p < 6; p++) {
               spawnParticle(
                 orb.mesh.position.x, orb.mesh.position.y, orb.mesh.position.z,
-                0xfacc15,
+                currentWorld === 2 ? 0x2dd4bf : 0xfacc15,
                 (Math.random() - 0.5) * 6.0, 2.0 + Math.random() * 3.8, (Math.random() - 0.5) * 6.0,
                 0.36, 1.0, 9.0
               );
@@ -2886,20 +2958,22 @@
           ui.sprintBtnSub.textContent = '5.0s';
         }
 
-        if (hasPlasma) {
-          ui.fxBadge.textContent = '🌌⚡❄️🔥 Effekt: Plasma & Blitz & Frost & Feuer (750+)';
+        if (effectMode === 'plasma') {
+          ui.fxBadge.textContent = currentWorld === 2
+            ? '🌌 Effekt: Kosmos-Plasma (750+ · Nacht)'
+            : '✨ Effekt: Astral-Plasma (750+)';
           ui.fxBadge.className = 'badge plasma';
-        } else if (hasLightning) {
-          ui.fxBadge.textContent = '⚡❄️🔥 Effekt: Blitz & Frost & Feuer (500+)';
+        } else if (effectMode === 'lightning') {
+          ui.fxBadge.textContent = '⚡ Effekt: Blitz-Entladung (500–749)';
           ui.fxBadge.className = 'badge lightning';
-        } else if (hasFrost) {
-          ui.fxBadge.textContent = '❄️🔥 Effekt: Frost & Feuer (250+)';
+        } else if (effectMode === 'frost') {
+          ui.fxBadge.textContent = '❄️ Effekt: Kristall-Frost (250–499)';
           ui.fxBadge.className = 'badge frost';
-        } else if (hasFire) {
-          ui.fxBadge.textContent = '🔥 Effekt: Feuer (100+)';
+        } else if (effectMode === 'fire') {
+          ui.fxBadge.textContent = '🔥 Effekt: Flammen & Glut (100–249)';
           ui.fxBadge.className = 'badge fire';
         } else {
-          ui.fxBadge.textContent = '✨ Effekt: Basis (Feuer 100 · Frost 250 · Blitz 500 · Plasma 750)';
+          ui.fxBadge.textContent = '✨ Effekt: Basis (<100)';
           ui.fxBadge.className = 'badge';
         }
       }
