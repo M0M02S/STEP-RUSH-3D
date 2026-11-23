@@ -246,21 +246,21 @@
       color: #94a3b8;
     }
 
-    #auraBadge.fire {
+    #fxBadge.fire {
       background: rgba(153, 27, 27, 0.78);
       border-color: #fb923c;
       color: #ffedd5;
       box-shadow: 0 0 20px rgba(249, 115, 22, 0.5);
     }
 
-    #auraBadge.frost {
+    #fxBadge.frost {
       background: rgba(21, 94, 117, 0.78);
       border-color: #22d3ee;
       color: #cffafe;
       box-shadow: 0 0 20px rgba(34, 211, 238, 0.5);
     }
 
-    #auraBadge.lightning {
+    #fxBadge.lightning {
       background: rgba(107, 33, 168, 0.82);
       border-color: #e879f9;
       color: #fae8ff;
@@ -664,7 +664,7 @@
     <div class="badge" id="worldBadge">☀️ Welt 1: Helle Insel (Max 800)</div>
     <div class="badge" id="biomeBadge">🌿 Saftiges Gras</div>
     <div class="badge" id="sprintBadge">⚡ Sprint bereit (5.0s)</div>
-    <div class="badge" id="auraBadge">✨ Effekt: Basis</div>
+    <div class="badge" id="fxBadge">✨ Effekt: Basis</div>
   </div>
 
   <div id="speedBar"><div id="speedFill"></div></div>
@@ -771,7 +771,7 @@
   <script type="module">
     import * as THREE from 'three';
 
-    const SECRET_ADMIN_CODE = 'SAMI-MAX-999';
+    const SECRET_ADMIN_CODE = 'KHARMASH';
 
     // ---------- Audio Synthesizer ----------
     let audioCtx = null;
@@ -850,7 +850,6 @@
 
     // ---------- Szene, Himmel, Wolken, Sterne & Licht ----------
     const scene = new THREE.Scene();
-    // Welt 1 startet HELL mit blauem Himmel!
     scene.background = new THREE.Color(0x5ec2ff);
     scene.fog = new THREE.FogExp2(0x87cefa, 0.00055);
 
@@ -881,7 +880,7 @@
     sun.shadow.camera.bottom = -sd;
     scene.add(sun);
 
-    const playerLight = new THREE.PointLight(0x38bdf8, 0, 28);
+    const playerLight = new THREE.PointLight(0x38bdf8, 0, 32);
     scene.add(playerLight);
 
     // ---------- Wolken für Welt 1 (blauer Taghimmel) ----------
@@ -1102,7 +1101,6 @@
       const half = getWorldHalf();
 
       if (worldId === 1) {
-        // Helle Tageswelt mit blauem Himmel & Wolken
         scene.background = new THREE.Color(0x5ec2ff);
         scene.fog = new THREE.FogExp2(0x87cefa, 0.00055);
         hemiLight.color.setHex(0xe0f2fe);
@@ -1114,7 +1112,6 @@
         cloudsGroup.visible = true;
         starsPoints.visible = false;
       } else {
-        // Nachtwelt mit dunklem Sternenhimmel & Sternen
         scene.background = new THREE.Color(0x040714);
         scene.fog = new THREE.FogExp2(0x070c22, 0.00055);
         hemiLight.color.setHex(0x6366f1);
@@ -1295,7 +1292,7 @@
 
     buildWorld(1);
 
-    // ---------- Charakter mit echten 3D-Skin-Ausrüstungen ----------
+    // ---------- Charakter mit echten 3D-Skin-Ausrüstungen (OHNE Aura-Ring!) ----------
     const SKINS = [
       {
         id: 'cyber',
@@ -1471,7 +1468,6 @@
       void: new THREE.Group()
     };
 
-    // Cyber: Neon-Klingen an den Schultern + Halo hinter dem Kopf
     const cyberBladeL = new THREE.Mesh(new THREE.BoxGeometry(0.08, 0.62, 0.22), armorAccentMat);
     cyberBladeL.position.set(-0.62, 0.78, -0.12);
     cyberBladeL.rotation.z = 0.42;
@@ -1482,7 +1478,6 @@
     cyberHalo.position.set(0, 0.42, -0.28);
     skinGearGroups.cyber.add(cyberBladeL, cyberBladeR, cyberHalo);
 
-    // Inferno: Ritter-Hörner + feurige Rückenflügel
     const hornGeo = new THREE.ConeGeometry(0.11, 0.48, 8);
     const hornL = new THREE.Mesh(hornGeo, armorAccentMat);
     hornL.position.set(-0.28, 0.56, 0.05);
@@ -1499,7 +1494,6 @@
     wingR.rotation.set(-0.35, 0, -0.82);
     skinGearGroups.inferno.add(hornL, hornR, wingL, wingR);
 
-    // Venom: Stacheln auf Rücken & Schultern
     const spikeGeo = new THREE.ConeGeometry(0.12, 0.52, 6);
     for (let s = 0; s < 3; s++) {
       const sp = new THREE.Mesh(spikeGeo, armorAccentMat);
@@ -1513,7 +1507,6 @@
     venomPadR.position.set(0.54, 0.72, 0);
     skinGearGroups.venom.add(venomPadL, venomPadR);
 
-    // Void: Schwebende Kristalle + Krone
     const crownSpikeGeo = new THREE.ConeGeometry(0.08, 0.34, 6);
     for (let c = -1; c <= 1; c++) {
       const cs = new THREE.Mesh(crownSpikeGeo, armorAccentMat);
@@ -1590,14 +1583,6 @@
     const rightArm = createDetailedLimb(0.48, 0.62, 0, 0.36, 0.34, 0.18, false);
     chestPivot.add(leftArm.root, rightArm.root);
 
-    const auraRing = new THREE.Mesh(
-      new THREE.RingGeometry(0.85, 1.55, 32),
-      new THREE.MeshBasicMaterial({ color: 0x38bdf8, side: THREE.DoubleSide, transparent: true, opacity: 0 })
-    );
-    auraRing.rotation.x = -Math.PI / 2;
-    auraRing.position.y = 0.08;
-    player.add(auraRing);
-
     // Energie-Säule / Wirbel für die Weltwechsel-Szene
     const warpBeam = new THREE.Mesh(
       new THREE.CylinderGeometry(0.55, 2.2, 140, 20, 1, true),
@@ -1608,9 +1593,9 @@
 
     scene.add(player);
 
-    // ---------- Partikel-Pool (null Lag) ----------
-    const PARTICLE_POOL_SIZE = 160;
-    const sharedParticleGeo = new THREE.BoxGeometry(0.28, 0.28, 0.28);
+    // ---------- Partikel-Pool & Effekte (Feuer, Frost, Blitz, Funken & Schweife) ----------
+    const PARTICLE_POOL_SIZE = 240;
+    const sharedParticleGeo = new THREE.OctahedronGeometry(0.26, 0);
     const particlePool = [];
 
     for (let i = 0; i < PARTICLE_POOL_SIZE; i++) {
@@ -1622,6 +1607,7 @@
         mesh,
         mat,
         vel: new THREE.Vector3(),
+        grav: 10.0,
         life: 0,
         maxLife: 0.4,
         baseScale: 1
@@ -1629,42 +1615,65 @@
     }
 
     let poolCursor = 0;
-    function spawnParticle(x, y, z, colorHex, vx, vy, vz, life = 0.4, scale = 1) {
+    function spawnParticle(x, y, z, colorHex, vx, vy, vz, life = 0.45, scale = 1, grav = 10.0) {
       const p = particlePool[poolCursor];
       poolCursor = (poolCursor + 1) % PARTICLE_POOL_SIZE;
       p.mesh.visible = true;
       p.mesh.position.set(x, y, z);
       p.mesh.scale.setScalar(scale);
       p.mat.color.setHex(colorHex);
-      p.mat.opacity = 0.95;
+      p.mat.opacity = 0.98;
       p.vel.set(vx, vy, vz);
+      p.grav = grav;
       p.life = life;
       p.maxLife = life;
       p.baseScale = scale;
     }
 
-    // Blitzlinien-Pool
+    // Verzweigte Blitzstrahlen-Pool für Blitz-Effekt (500+)
     const lightningBolts = [];
-    const sharedBoltMat = new THREE.LineBasicMaterial({ color: 0xe879f9, transparent: true, opacity: 1 });
+    const boltMatMain = new THREE.LineBasicMaterial({ color: 0xf0abfc, transparent: true, opacity: 1 });
+    const boltMatCore = new THREE.LineBasicMaterial({ color: 0xfef08a, transparent: true, opacity: 1 });
+
     function spawnLightningStrike() {
-      if (lightningBolts.length > 16) return;
-      const pts = [];
+      if (lightningBolts.length > 24) return;
       const angle = Math.random() * Math.PI * 2;
-      const radius = 0.5 + Math.random() * 1.7;
+      const radius = 0.4 + Math.random() * 2.1;
       let cx = player.position.x + Math.cos(angle) * radius;
-      let cy = player.position.y + 0.1;
+      let cy = player.position.y + 0.15;
       let cz = player.position.z + Math.sin(angle) * radius;
-      pts.push(new THREE.Vector3(cx, cy, cz));
-      for (let i = 1; i <= 7; i++) {
-        cx += (Math.random() - 0.5) * 1.5;
-        cy += 0.55;
-        cz += (Math.random() - 0.5) * 1.5;
+
+      const pts = [new THREE.Vector3(cx, cy, cz)];
+      for (let i = 1; i <= 8; i++) {
+        cx += (Math.random() - 0.5) * 1.9;
+        cy += 0.62;
+        cz += (Math.random() - 0.5) * 1.9;
         pts.push(new THREE.Vector3(cx, cy, cz));
       }
+
       const geo = new THREE.BufferGeometry().setFromPoints(pts);
-      const line = new THREE.Line(geo, sharedBoltMat);
+      const line = new THREE.Line(geo, Math.random() < 0.5 ? boltMatMain : boltMatCore);
       scene.add(line);
-      lightningBolts.push({ line, geo, life: 0.13 });
+      lightningBolts.push({ line, geo, life: 0.14 });
+
+      // Seitlicher Blitz-Abzweig
+      if (pts.length > 4) {
+        const startPt = pts[3];
+        const branchPts = [startPt.clone()];
+        let bx = startPt.x;
+        let by = startPt.y;
+        let bz = startPt.z;
+        for (let b = 0; b < 4; b++) {
+          bx += (Math.random() - 0.5) * 2.2;
+          by += 0.35 + Math.random() * 0.45;
+          bz += (Math.random() - 0.5) * 2.2;
+          branchPts.push(new THREE.Vector3(bx, by, bz));
+        }
+        const bGeo = new THREE.BufferGeometry().setFromPoints(branchPts);
+        const bLine = new THREE.Line(bGeo, boltMatCore);
+        scene.add(bLine);
+        lightningBolts.push({ line: bLine, geo: bGeo, life: 0.11 });
+      }
     }
 
     // ---------- Spielzustand, Speed-Speicherung & Weltwechsel-Szene ----------
@@ -1730,7 +1739,7 @@
       worldBadge: document.getElementById('worldBadge'),
       biomeBadge: document.getElementById('biomeBadge'),
       sprintBadge: document.getElementById('sprintBadge'),
-      auraBadge: document.getElementById('auraBadge'),
+      fxBadge: document.getElementById('fxBadge'),
       sprintBtn: document.getElementById('sprintBtn'),
       sprintBtnSub: document.getElementById('sprintBtnSub'),
       shopModal: document.getElementById('shopModal'),
@@ -1911,7 +1920,6 @@
       }
     });
 
-    // Dramatische 3D-Weltwechsel-Szene
     function startWorldTransitionScene(targetWorldId) {
       if (targetWorldId === 2 && currentWorld === 1) {
         savedWorld1Speed = currentSpeed;
@@ -1951,7 +1959,7 @@
       }
     });
 
-    // Admin-Code & Aktionen
+    // Admin-Code (KHARMASH) & Aktionen
     document.getElementById('submitAdminCodeBtn').addEventListener('click', () => {
       const entered = ui.adminCodeInput.value.trim().toUpperCase();
       if (entered === SECRET_ADMIN_CODE) {
@@ -2194,13 +2202,13 @@
         squashAmount = -0.25;
         playSound('jump');
 
-        for (let i = 0; i < 7; i++) {
-          const a = (i / 7) * Math.PI * 2;
+        for (let i = 0; i < 8; i++) {
+          const a = (i / 8) * Math.PI * 2;
           spawnParticle(
             player.position.x, player.position.y + 0.15, player.position.z,
             0x38bdf8,
-            Math.cos(a) * 3.8, 1.5 + Math.random() * 1.5, Math.sin(a) * 3.8,
-            0.35, 0.95
+            Math.cos(a) * 4.2, 2.0 + Math.random() * 1.8, Math.sin(a) * 4.2,
+            0.38, 1.0, 12.0
           );
         }
       } else if (isDoubleTap && !airPushUsed) {
@@ -2213,13 +2221,13 @@
         player.position.x += -Math.sin(cameraYaw) * 1.4;
         player.position.z += -Math.cos(cameraYaw) * 1.4;
 
-        for (let i = 0; i < 11; i++) {
-          const a = (i / 11) * Math.PI * 2;
+        for (let i = 0; i < 12; i++) {
+          const a = (i / 12) * Math.PI * 2;
           spawnParticle(
             player.position.x, player.position.y + 0.9, player.position.z,
             0x38bdf8,
-            Math.cos(a) * 5.8, (Math.random() - 0.3) * 3.2, Math.sin(a) * 5.8,
-            0.4, 1.15
+            Math.cos(a) * 6.5, (Math.random() - 0.3) * 3.5, Math.sin(a) * 6.5,
+            0.42, 1.2, 8.0
           );
         }
       }
@@ -2237,7 +2245,6 @@
       const dt = Math.min((now - lastTime) / 1000, 0.05);
       lastTime = now;
 
-      // Wolken in Welt 1 sanft ziehen lassen
       if (cloudsGroup.visible) {
         for (const cl of clouds) {
           cl.group.position.x += cl.speedX * dt;
@@ -2245,12 +2252,10 @@
         }
       }
 
-      // Sterne in Welt 2 langsam drehen lassen
       if (starsPoints.visible) {
         starsPoints.rotation.y += dt * 0.012;
       }
 
-      // Skin-Zusatzteile animieren
       skinGearGroups.void.children.forEach((ch, idx) => {
         if (idx >= 3) {
           ch.position.y = 0.68 + Math.sin(now * 0.004 + idx) * 0.14;
@@ -2274,14 +2279,14 @@
           warpBeam.material.opacity = p1 * 0.55;
           warpBeam.material.color.setHex(worldSceneTargetWorld === 2 ? 0xc084fc : 0x38bdf8);
 
-          if (Math.random() < 0.75) {
+          if (Math.random() < 0.8) {
             const ang = Math.random() * Math.PI * 2;
             const rad = 2.6 - p1 * 1.8;
             spawnParticle(
               Math.cos(ang) * rad, baseGround + 0.3, Math.sin(ang) * rad,
               worldSceneTargetWorld === 2 ? 0xe879f9 : 0x38bdf8,
               -Math.cos(ang) * 4, 6 + p1 * 8, -Math.sin(ang) * 4,
-              0.35, 1.2
+              0.35, 1.25, -2.0
             );
           }
         } else if (t < 0.72) {
@@ -2319,7 +2324,8 @@
               -8 - Math.random() * 8,
               (Math.random() - 0.5) * 10,
               0.38,
-              1.45
+              1.45,
+              4.0
             );
           }
         } else {
@@ -2340,7 +2346,8 @@
                 2 + Math.random() * 4,
                 Math.sin(ang) * (8 + Math.random() * 8),
                 0.45,
-                1.35
+                1.35,
+                10.0
               );
             }
           }
@@ -2373,12 +2380,12 @@
           sprintActiveTimer = SPRINT_DURATION;
           squashAmount = 0.22;
           playSound('sprint');
-          for (let i = 0; i < 12; i++) {
+          for (let i = 0; i < 14; i++) {
             spawnParticle(
               player.position.x, player.position.y + 1.0, player.position.z,
               0xfacc15,
-              (Math.random() - 0.5) * 7.5, 1.5 + Math.random() * 3.5, (Math.random() - 0.5) * 7.5,
-              0.42, 1.15
+              (Math.random() - 0.5) * 8.0, 2.0 + Math.random() * 4.0, (Math.random() - 0.5) * 8.0,
+              0.45, 1.25, 9.0
             );
           }
         }
@@ -2476,7 +2483,7 @@
         }
       }
 
-      // ---------- Verbesserte Charakter-Animation (Gehen, Laufen, Sprint, Sprung, Idle) ----------
+      // ---------- Charakter-Animation ----------
       squashAmount = THREE.MathUtils.lerp(squashAmount, 0, 1 - Math.exp(-13 * dt));
       const scaleY = 1 + squashAmount;
       const scaleXZ = 1 - squashAmount * 0.55;
@@ -2554,48 +2561,62 @@
         rightArm.mid.rotation.x = THREE.MathUtils.lerp(rightArm.mid.rotation.x, -0.25, 0.15);
       }
 
-      // ---------- Noch stärkere Speed-Effekte: Feuer 100+, Frost 250+, Blitz 500+ ----------
+      // ---------- Coole Speed-Effekte (OHNE Aura-Ring!): Feuer 100+, Frost 250+, Blitz 500+ ----------
       const hasFire = currentSpeed >= 100;
       const hasFrost = currentSpeed >= 250;
       const hasLightning = currentSpeed >= 500;
 
       if (!worldSceneActive) {
+        // Blitz-Effekt (500+): verzweigte Blitze + hochgeladene Funken
         if (hasLightning) {
-          if (Math.random() < 0.65) spawnLightningStrike();
-          for (let k = 0; k < 2; k++) {
+          if (Math.random() < 0.85) spawnLightningStrike();
+          for (let k = 0; k < 3; k++) {
+            const ang = Math.random() * Math.PI * 2;
+            const rad = 0.5 + Math.random() * 1.4;
             spawnParticle(
-              player.position.x + (Math.random() - 0.5) * 1.8,
-              player.position.y + 0.5 + Math.random() * 2.2,
-              player.position.z + (Math.random() - 0.5) * 1.8,
+              player.position.x + Math.cos(ang) * rad,
+              player.position.y + 0.3 + Math.random() * 2.1,
+              player.position.z + Math.sin(ang) * rad,
               Math.random() < 0.5 ? 0xe879f9 : 0xfef08a,
-              (Math.random() - 0.5) * 12, 3.0 + Math.random() * 5, (Math.random() - 0.5) * 12,
-              0.38, 1.45
+              (Math.random() - 0.5) * 14, 4.5 + Math.random() * 6.5, (Math.random() - 0.5) * 14,
+              0.35, 1.5, 6.0
             );
           }
         }
 
+        // Frost-Effekt (250+): aufsteigende Eiskristalle & glitzernde Schneefunken
         if (hasFrost) {
-          for (let k = 0; k < 2; k++) {
+          for (let k = 0; k < 3; k++) {
+            const ang = Math.random() * Math.PI * 2;
+            const rad = 0.4 + Math.random() * 1.2;
             spawnParticle(
-              player.position.x + (Math.random() - 0.5) * 1.7,
-              player.position.y + 0.4 + Math.random() * 1.7,
-              player.position.z + (Math.random() - 0.5) * 1.7,
-              Math.random() < 0.55 ? 0x22d3ee : 0xe0f2fe,
-              (Math.random() - 0.5) * 7, 1.8 + Math.random() * 4.0, (Math.random() - 0.5) * 7,
-              0.42, 1.35
+              player.position.x + Math.cos(ang) * rad,
+              player.position.y + 0.25 + Math.random() * 1.8,
+              player.position.z + Math.sin(ang) * rad,
+              Math.random() < 0.6 ? 0x22d3ee : 0xe0f2fe,
+              Math.cos(ang) * 4.5 + (Math.random() - 0.5) * 3,
+              2.5 + Math.random() * 4.5,
+              Math.sin(ang) * 4.5 + (Math.random() - 0.5) * 3,
+              0.48, 1.4, -3.5
             );
           }
         }
 
+        // Feuer-Effekt (100+): aufsteigende Flammen & Glut-Funken (grav < 0 lässt Flammen nach oben steigen!)
         if (hasFire) {
-          for (let k = 0; k < 2; k++) {
+          for (let k = 0; k < 3; k++) {
+            const ang = Math.random() * Math.PI * 2;
+            const rad = 0.3 + Math.random() * 0.9;
+            const col = Math.random() < 0.45 ? 0xff4500 : (Math.random() < 0.75 ? 0xf97316 : 0xfacc15);
             spawnParticle(
-              player.position.x + (Math.random() - 0.5) * 1.4,
-              player.position.y + 0.3 + Math.random() * 1.5,
-              player.position.z + (Math.random() - 0.5) * 1.4,
-              Math.random() < 0.55 ? 0xf97316 : 0xfacc15,
-              (Math.random() - 0.5) * 5.5, 2.8 + Math.random() * 4.8, (Math.random() - 0.5) * 5.5,
-              0.42, 1.5
+              player.position.x + Math.cos(ang) * rad,
+              player.position.y + 0.2 + Math.random() * 1.3,
+              player.position.z + Math.sin(ang) * rad,
+              col,
+              (Math.random() - 0.5) * 4.2,
+              4.2 + Math.random() * 5.2,
+              (Math.random() - 0.5) * 4.2,
+              0.46, 1.65, -9.5
             );
           }
         }
@@ -2614,29 +2635,17 @@
       core.rotation.y += dt * 4.8;
       core.rotation.x += dt * 2.8;
 
-      const auraPulse = 1 + Math.sin(now * 0.012) * 0.14;
-      auraRing.scale.setScalar(auraPulse);
-      auraRing.rotation.z += dt * (hasLightning ? 13 : hasFrost ? 8 : hasFire ? 5.5 : 2.8);
-
       if (hasLightning) {
-        auraRing.material.opacity = 0.9;
-        auraRing.material.color.setHex(0xe879f9);
-        playerLight.intensity = 3.8;
+        playerLight.intensity = 4.2;
         playerLight.color.setHex(0xe879f9);
       } else if (hasFrost) {
-        auraRing.material.opacity = 0.82;
-        auraRing.material.color.setHex(0x22d3ee);
-        playerLight.intensity = 3.1;
+        playerLight.intensity = 3.2;
         playerLight.color.setHex(0x22d3ee);
       } else if (hasFire) {
-        auraRing.material.opacity = 0.78;
-        auraRing.material.color.setHex(0xf97316);
-        playerLight.intensity = 2.8;
+        playerLight.intensity = 3.0;
         playerLight.color.setHex(0xf97316);
       } else {
-        auraRing.material.opacity = Math.min(0.45, currentSpeed / 80);
-        auraRing.material.color.setHex(0x38bdf8);
-        playerLight.intensity = Math.min(1.8, currentSpeed / 45);
+        playerLight.intensity = Math.min(1.6, currentSpeed / 50);
         playerLight.color.setHex(0x38bdf8);
       }
       playerLight.position.set(player.position.x, player.position.y + 2.2, player.position.z);
@@ -2662,13 +2671,13 @@
             if (isGrounded) velY = 8.0;
             playSound('boost');
 
-            for (let i = 0; i < 14; i++) {
-              const a = (i / 14) * Math.PI * 2;
+            for (let i = 0; i < 16; i++) {
+              const a = (i / 16) * Math.PI * 2;
               spawnParticle(
                 bp.x, bp.group.position.y + 1.0, bp.z,
                 0xfacc15,
-                Math.cos(a) * 9.0, 2.5 + Math.random() * 4.2, Math.sin(a) * 9.0,
-                0.5, 1.3
+                Math.cos(a) * 9.5, 3.0 + Math.random() * 4.5, Math.sin(a) * 9.5,
+                0.5, 1.35, 10.0
               );
             }
           }
@@ -2696,12 +2705,12 @@
             currentSpeed = Math.min(currentSpeed + 4.5 + upgrades.stepPower * 1.4, getMaxSpeed());
             playSound('orb', steps);
 
-            for (let p = 0; p < 5; p++) {
+            for (let p = 0; p < 6; p++) {
               spawnParticle(
                 orb.mesh.position.x, orb.mesh.position.y, orb.mesh.position.z,
                 0xfacc15,
-                (Math.random() - 0.5) * 5.5, 1.5 + Math.random() * 3.5, (Math.random() - 0.5) * 5.5,
-                0.35, 0.95
+                (Math.random() - 0.5) * 6.0, 2.0 + Math.random() * 3.8, (Math.random() - 0.5) * 6.0,
+                0.36, 1.0, 9.0
               );
             }
 
@@ -2720,10 +2729,12 @@
           pt.mesh.visible = false;
           continue;
         }
-        pt.vel.y -= 11.0 * dt;
+        pt.vel.y -= pt.grav * dt;
         pt.mesh.position.x += pt.vel.x * dt;
         pt.mesh.position.y += pt.vel.y * dt;
         pt.mesh.position.z += pt.vel.z * dt;
+        pt.mesh.rotation.x += dt * 6;
+        pt.mesh.rotation.y += dt * 6;
         const ratio = pt.life / pt.maxLife;
         pt.mesh.scale.setScalar(Math.max(0.01, ratio * pt.baseScale));
         pt.mat.opacity = ratio;
@@ -2811,17 +2822,17 @@
         }
 
         if (hasLightning) {
-          ui.auraBadge.textContent = '⚡❄️🔥 Effekt: Blitz & Frost & Feuer (500+)';
-          ui.auraBadge.className = 'badge lightning';
+          ui.fxBadge.textContent = '⚡❄️🔥 Effekt: Blitz & Frost & Feuer (500+)';
+          ui.fxBadge.className = 'badge lightning';
         } else if (hasFrost) {
-          ui.auraBadge.textContent = '❄️🔥 Effekt: Frost & Feuer (250+)';
-          ui.auraBadge.className = 'badge frost';
+          ui.fxBadge.textContent = '❄️🔥 Effekt: Frost & Feuer (250+)';
+          ui.fxBadge.className = 'badge frost';
         } else if (hasFire) {
-          ui.auraBadge.textContent = '🔥 Effekt: Feuer (100+)';
-          ui.auraBadge.className = 'badge fire';
+          ui.fxBadge.textContent = '🔥 Effekt: Feuer (100+)';
+          ui.fxBadge.className = 'badge fire';
         } else {
-          ui.auraBadge.textContent = '✨ Effekt: Basis (Feuer 100 · Frost 250 · Blitz 500)';
-          ui.auraBadge.className = 'badge';
+          ui.fxBadge.textContent = '✨ Effekt: Basis (Feuer 100 · Frost 250 · Blitz 500)';
+          ui.fxBadge.className = 'badge';
         }
       }
 
