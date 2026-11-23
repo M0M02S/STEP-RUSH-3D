@@ -1672,9 +1672,6 @@
     let gameStarted = false;
     let uiModalOpen = false;
 
-    // Speed-Speicher:
-    // Wenn man Welt 1 verlässt, merken wir uns den alten Speed.
-    // In Welt 2 startet man mit wenig Speed (0), und bei Rückkehr zu Welt 1 bekommt man den gespeicherten Speed zurück!
     let savedWorld1Speed = 0;
     let savedWorld1Steps = 0;
     let unlockedNewWorldAt800 = false;
@@ -2268,7 +2265,6 @@
         const baseGround = Math.max(getTerrainHeight(0, 0), WATER_LEVEL);
 
         if (t < 0.32) {
-          // Phase 1: Kamera zoomt eng heran, Charakter hockt kurz ab und lädt Energie auf
           const p1 = t / 0.32;
           player.position.x = THREE.MathUtils.lerp(player.position.x, 0, 0.18);
           player.position.z = THREE.MathUtils.lerp(player.position.z, 0, 0.18);
@@ -2289,7 +2285,6 @@
             );
           }
         } else if (t < 0.72) {
-          // Phase 2: Charakter schießt steil hoch in den Himmel & wechselt in der Luft die Welt
           const p2 = (t - 0.32) / 0.40;
           const arcY = Math.sin(p2 * Math.PI) * 78;
           player.position.set(0, baseGround + arcY, 0);
@@ -2302,14 +2297,12 @@
             buildWorld(worldSceneTargetWorld);
 
             if (worldSceneTargetWorld === 2) {
-              // In der neuen Welt startet man wieder am Anfang mit wenig Speed (0)
               currentSpeed = 0;
               steps = 0;
               padBoostTimer = 0;
               sprintActiveTimer = 0;
               ui.returnOldWorldBtn.classList.add('visible');
             } else {
-              // Zurück in der alten Welt: Geschwindigkeit wiederherstellen!
               currentSpeed = savedWorld1Speed;
               steps = savedWorld1Steps;
               ui.returnOldWorldBtn.classList.remove('visible');
@@ -2330,7 +2323,6 @@
             );
           }
         } else {
-          // Phase 3: Charakter stürzt/landet auf der neuen Insel mit Druckwelle
           const p3 = (t - 0.72) / 0.28;
           const landGround = Math.max(getTerrainHeight(0, 0), WATER_LEVEL);
           const fallOffset = Math.pow(1 - p3, 2) * 26;
@@ -2477,7 +2469,6 @@
           airPushUsed = false;
         }
 
-        // Sobald 800 Speed erreicht ist, taucht der Knopf "Neue Welt" auf
         if (currentWorld === 1 && currentSpeed >= 800 && !unlockedNewWorldAt800) {
           unlockedNewWorldAt800 = true;
           ui.newWorldBtn.classList.add('visible');
@@ -2746,17 +2737,14 @@
       if (worldSceneActive) {
         const t = Math.min(1, worldSceneTimer / WORLD_SCENE_DURATION);
         if (t < 0.32) {
-          // Enger Zoom an den Charakter
           distBack = THREE.MathUtils.lerp(7.8, 2.7, t / 0.32);
           pitchNow = 0.18;
           lookTargetY = player.position.y + 1.35;
         } else if (t < 0.72) {
-          // Hohe Verfolgungs-Perspektive während des Flugs in den Himmel
           distBack = 13.5;
           pitchNow = 0.12;
           lookTargetY = player.position.y + 1.2;
         } else {
-          // Zoom zurück auf Normalansicht bei der Landung
           distBack = THREE.MathUtils.lerp(13.5, 7.8, (t - 0.72) / 0.28);
           pitchNow = cameraPitch;
         }
