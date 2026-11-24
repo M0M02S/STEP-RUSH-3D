@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no" />
-  <title>Step Rush 3D — Multi-World & Rebirth Edition</title>
+  <title>Step Rush 3D — 10 Unique Skins & Rebirth Edition</title>
   <style>
     * { box-sizing: border-box; }
     html, body {
@@ -396,7 +396,7 @@
       color: #ddd6fe;
     }
 
-    /* ---------- Modals: Shop, Rebirth & Admin Panel ---------- */
+    /* ---------- Modals: Skin-Shop & Admin Panel ---------- */
     .modal-backdrop {
       position: fixed;
       inset: 0;
@@ -410,7 +410,7 @@
     .modal-backdrop.hidden { display: none; }
 
     .modal-box {
-      width: min(95vw, 700px);
+      width: min(95vw, 720px);
       max-height: 88vh;
       overflow-y: auto;
       background: linear-gradient(165deg, rgba(15, 23, 42, 0.98), rgba(7, 11, 22, 0.99));
@@ -514,12 +514,6 @@
       line-height: 1.42;
     }
 
-    .upgrade-lvl {
-      font-size: 11px;
-      color: #38bdf8;
-      font-weight: 800;
-    }
-
     .buy-btn {
       margin-top: auto;
       background: linear-gradient(90deg, #0284c7, #2563eb);
@@ -612,6 +606,19 @@
     .admin-btn:hover {
       transform: translateY(-1px);
       background: linear-gradient(135deg, rgba(126, 34, 206, 0.96), rgba(88, 28, 135, 0.98));
+    }
+
+    .admin-skin-box {
+      margin-top: 16px;
+      padding: 14px;
+      border-radius: 18px;
+      background: linear-gradient(135deg, rgba(190, 24, 93, 0.2), rgba(109, 40, 217, 0.22));
+      border: 1px solid rgba(244, 114, 182, 0.55);
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      align-items: center;
+      justify-content: space-between;
     }
 
     .admin-status {
@@ -732,17 +739,17 @@
   <!-- Startmenü -->
   <div id="startMenu">
     <div class="menu-card">
-      <span class="menu-pill">Multi-World &amp; Rebirth Edition</span>
+      <span class="menu-pill">10 Unique 3D Skins · Multi-World · Rebirth</span>
       <h1 class="menu-title">STEP RUSH 3D</h1>
       <p class="menu-subtitle">
-        Welt 1 bis <strong>5.000 Speed</strong> · Welt 2 bis <strong>10.000 Speed</strong> · Nach <strong>Rebirth</strong> zurück in Welt 1 und in Welt 2 <strong>unendlich schnell</strong>!
+        Welt 1 bis <strong>5.000 Speed</strong> · Welt 2 bis <strong>10.000 Speed</strong> · <strong>9 Shop-Skins + 1 Admin-Only-Skin</strong> mit eigenen 3D-Modellen &amp; unendlichem Speed nach <strong>Rebirth</strong>!
       </p>
       <div class="stage-strip">
-        <span class="stage-chip">🌪️ 100 Wind-Spur</span>
-        <span class="stage-chip">🔥 1.000 Feuer-Spur</span>
-        <span class="stage-chip">⚡ 2.500 Blitz-Spur</span>
+        <span class="stage-chip">🌪️ 100 Wind</span>
+        <span class="stage-chip">🔥 1.000 Feuer</span>
+        <span class="stage-chip">⚡ 2.500 Blitz</span>
         <span class="stage-chip">🌌 5.000 Plasma + Welt 2</span>
-        <span class="stage-chip">☀️ 7.500 Licht-Spur</span>
+        <span class="stage-chip">☀️ 7.500 Licht</span>
         <span class="stage-chip">👑 10.000 Alle Effekte</span>
       </div>
       <div class="device-grid">
@@ -768,7 +775,7 @@
     <div class="card"><span class="label">Max-Speed</span><span class="value" id="capSpeed">5000</span></div>
     <div class="card"><span class="label">Rebirth</span><span class="value" id="rebirthHud">0 (1.0x)</span></div>
     <div class="hud-actions">
-      <button class="hud-btn" id="openShopBtn">🛒 Shop &amp; Rebirth</button>
+      <button class="hud-btn" id="openShopBtn">🎭 Skin-Shop</button>
       <button class="hud-btn" id="openAdminBtn">🛡️ Admin</button>
       <button class="hud-btn" id="newWorldBtn">🌌 Neue Welt</button>
       <button class="hud-btn" id="returnOldWorldBtn">☀️ Alte Welt</button>
@@ -779,7 +786,7 @@
 
   <div id="statusRow">
     <div class="badge" id="worldBadge">☀️ Welt 1 (Max 5.000)</div>
-    <div class="badge" id="biomeBadge">🌿 Saftiges Gras</div>
+    <div class="badge" id="biomeBadge">🌿 Sonnen-Wiese</div>
     <div class="badge" id="sprintBadge">⚡ Sprint bereit (5.0s)</div>
     <div class="badge" id="fxBadge">✨ Spur: Basis (&lt;100)</div>
   </div>
@@ -793,11 +800,11 @@
     <div id="worldSceneSub">Der Charakter katapultiert sich hoch in die Luft und landet auf der Insel!</div>
   </div>
 
-  <!-- Shop & Rebirth Modal -->
+  <!-- Skin-Shop & Rebirth Modal (keine Upgrades!) -->
   <div class="modal-backdrop hidden" id="shopModal">
     <div class="modal-box">
       <div class="modal-header">
-        <h2 class="modal-title">🛒 Speed-Shop, Rebirth &amp; Skins</h2>
+        <h2 class="modal-title">🎭 Skin-Shop &amp; Rebirth</h2>
         <button class="close-btn" id="closeShopBtn">✕</button>
       </div>
       <div class="shop-wallet-bar">
@@ -816,38 +823,7 @@
         <button class="rebirth-action-btn" id="modalRebirthBtn" disabled>Rebirth (10.000 Speed)</button>
       </div>
 
-      <div class="section-heading">⚡ Tempo &amp; Fähigkeit-Upgrades (kostet Speed)</div>
-      <div class="shop-grid">
-        <div class="upgrade-card">
-          <div class="upgrade-name">🚀 Max-Geschwindigkeit</div>
-          <div class="upgrade-desc">Erhöht dein aktuelles Speed-Limit (+350 pro Stufe) und gibt dir sofort +45 Speed.</div>
-          <div class="upgrade-lvl">Stufe: <span id="lvlMaxSpeed">0</span></div>
-          <button class="buy-btn" id="buyMaxSpeedBtn">Kaufen (-40 Speed)</button>
-        </div>
-
-        <div class="upgrade-card">
-          <div class="upgrade-name">⚡ Beschleunigung</div>
-          <div class="upgrade-desc">Erhöht dein Tempo spürbar beim aktiven Laufen.</div>
-          <div class="upgrade-lvl">Stufe: <span id="lvlAccel">0</span></div>
-          <button class="buy-btn" id="buyAccelBtn">Kaufen (-35 Speed)</button>
-        </div>
-
-        <div class="upgrade-card">
-          <div class="upgrade-name">👟 Schritt-Power</div>
-          <div class="upgrade-desc">Verstärkt den Speed-Gewinn pro Schritt und Orb.</div>
-          <div class="upgrade-lvl">Stufe: <span id="lvlStepPower">0</span></div>
-          <button class="buy-btn" id="buyStepPowerBtn">Kaufen (-50 Speed)</button>
-        </div>
-
-        <div class="upgrade-card">
-          <div class="upgrade-name">🔥 Sprint-Superkraft</div>
-          <div class="upgrade-desc">Verstärkt den Speed-Schub während deiner 5 Sekunden Sprint.</div>
-          <div class="upgrade-lvl">Stufe: <span id="lvlSprintPower">0</span></div>
-          <button class="buy-btn" id="buySprintPowerBtn">Kaufen (-55 Speed)</button>
-        </div>
-      </div>
-
-      <div class="section-heading">🎭 Charakter-Skins (kostet Speed)</div>
+      <div class="section-heading">🎭 9 Shop-Skins (der 10. Skin ist exklusiv im Admin-Panel)</div>
       <div class="shop-grid" id="skinShopGrid"></div>
     </div>
   </div>
@@ -870,9 +846,19 @@
 
       <div class="admin-action-grid" id="adminControls" style="opacity:0.45; pointer-events:none;">
         <button class="admin-btn" id="adminAdd250Btn">⚡ +250 Speed geben</button>
-        <button class="admin-btn" id="adminUnlockSkinsBtn">🎭 Alle Skins freischalten</button>
+        <button class="admin-btn" id="adminUnlockAllShopSkinsBtn">🎭 Alle 9 Shop-Skins freischalten</button>
         <button class="admin-btn" id="adminSet5000Btn">🌌 Auf 5.000 Speed setzen</button>
         <button class="admin-btn" id="adminSet10000Btn">👑 Auf 10.000 Speed setzen</button>
+      </div>
+
+      <div class="admin-skin-box" id="adminExclusiveSkinBox" style="opacity:0.45; pointer-events:none;">
+        <div>
+          <div style="font-weight:900; font-size:15px; color:#f9a8d4;">👑 Skin #10: Admin Overlord (Admin-Only)</div>
+          <div style="font-size:12px; color:#e2e8f0; margin-top:2px;">
+            Exklusiver Admin-Skin mit Doppel-Halo, Schulter-Türmen &amp; Astral-Krone.
+          </div>
+        </div>
+        <button class="buy-btn" id="adminEquipOverlordBtn">Admin-Skin ausrüsten</button>
       </div>
     </div>
   </div>
@@ -1117,7 +1103,7 @@
     cosmosArc.rotation.set(0.35, 0.2, 0.15);
     cosmosGroup.add(cosmosArc);
 
-    // ---------- Multi-Biom Open World (Welt 1 & Welt 2 gleichwertig detailreich) ----------
+    // ---------- Multi-Biom Open World (Welt 1 & Welt 2) ----------
     let currentWorld = 1;
     const WORLD1_HALF = 1900;
     const WORLD2_HALF = 2500;
@@ -1489,12 +1475,18 @@
 
     buildWorld(1);
 
-    // ---------- Charakter mit echten 3D-Skin-Ausrüstungen ----------
+    // ---------- 10 Skins mit stark unterschiedlichen 3D-Silhouetten & Bauteilen ----------
     const SKINS = [
-      { id: 'cyber', name: 'Cyber Runner', desc: 'Schulter-Klingen & Neon-Rüstung.', cost: 0, primary: 0x0284c7, accent: 0x38bdf8, helmet: 0xf8fafc, visor: 0x38bdf8 },
-      { id: 'inferno', name: 'Inferno Knight', desc: 'Ritter-Hörner & Rückenflügel.', cost: 180, primary: 0xdc2626, accent: 0xf97316, helmet: 0xfff7ed, visor: 0xfacc15 },
-      { id: 'venom', name: 'Venom Stalker', desc: 'Rückenstacheln & Panzer-Schultern.', cost: 420, primary: 0x059669, accent: 0x4ade80, helmet: 0xecfdf5, visor: 0xa3e635 },
-      { id: 'void', name: 'Void Sovereign', desc: 'Astral-Krone & schwebende Klingen.', cost: 900, primary: 0x7c3aed, accent: 0xe879f9, helmet: 0xfaf5ff, visor: 0xf472b6 }
+      { id: 'cyber', name: '1. Cyber Runner', desc: 'Schulter-Klingen & Visier-Kamm.', cost: 0, adminOnly: false, primary: 0x0284c7, accent: 0x38bdf8, helmet: 0xf8fafc, visor: 0x38bdf8 },
+      { id: 'inferno', name: '2. Inferno Knight', desc: 'Ritter-Hörner & Rückenflügel.', cost: 120, adminOnly: false, primary: 0xdc2626, accent: 0xf97316, helmet: 0xfff7ed, visor: 0xfacc15 },
+      { id: 'venom', name: '3. Venom Stalker', desc: 'Rückenstacheln & breite Schultern.', cost: 260, adminOnly: false, primary: 0x059669, accent: 0x4ade80, helmet: 0xecfdf5, visor: 0xa3e635 },
+      { id: 'void', name: '4. Void Sovereign', desc: 'Astral-Krone & schwebende Klingen.', cost: 480, adminOnly: false, primary: 0x7c3aed, accent: 0xe879f9, helmet: 0xfaf5ff, visor: 0xf472b6 },
+      { id: 'samurai', name: '5. Samurai Ronin', desc: 'Breiter Kabuto-Hut & Rücken-Katana.', cost: 750, adminOnly: false, primary: 0x991b1b, accent: 0xfacc15, helmet: 0xfef2f2, visor: 0xfef08a },
+      { id: 'mecha', name: '6. Mecha Titan', desc: 'Kasten-Panzerkopf, Antennen & Blöcke.', cost: 1150, adminOnly: false, primary: 0x475569, accent: 0x38bdf8, helmet: 0xcbd5e1, visor: 0x22d3ee },
+      { id: 'valkyrie', name: '7. Frost Valkyrie', desc: 'Flügel-Ohren & Eiskristall-Rücken.', cost: 1650, adminOnly: false, primary: 0x0369a1, accent: 0x67e8f9, helmet: 0xf0f9ff, visor: 0x7dd3fc },
+      { id: 'pharaoh', name: '8. Solar Pharaoh', desc: 'Pharaonen-Kopfkrone & Brust-Kragen.', cost: 2300, adminOnly: false, primary: 0xb45309, accent: 0xfacc15, helmet: 0x1e3a8a, visor: 0xfef08a },
+      { id: 'assassin', name: '9. Shadow Assassin', desc: 'Spitze Kapuze, Schal & Doppel-Dolche.', cost: 3200, adminOnly: false, primary: 0x18181b, accent: 0xf43f5e, helmet: 0x27272a, visor: 0xfb7185 },
+      { id: 'overlord', name: '10. Admin Overlord', desc: 'Exklusiver Admin-Only-Skin mit Halo & Türmen.', cost: 0, adminOnly: true, primary: 0xbe185d, accent: 0xfacc15, helmet: 0xffffff, visor: 0x38bdf8 }
     ];
 
     const unlockedSkins = new Set(['cyber']);
@@ -1585,13 +1577,21 @@
     visor.position.set(0, 0.29, 0.25);
     headPivot.add(visor);
 
+    // ---- 10 verschiedene 3D-Skin-Ausrüstungen ----
     const skinGearGroups = {
       cyber: new THREE.Group(),
       inferno: new THREE.Group(),
       venom: new THREE.Group(),
-      void: new THREE.Group()
+      void: new THREE.Group(),
+      samurai: new THREE.Group(),
+      mecha: new THREE.Group(),
+      valkyrie: new THREE.Group(),
+      pharaoh: new THREE.Group(),
+      assassin: new THREE.Group(),
+      overlord: new THREE.Group()
     };
 
+    // 1. Cyber Runner
     const cyberBladeL = new THREE.Mesh(new THREE.BoxGeometry(0.08, 0.68, 0.24), armorAccentMat);
     cyberBladeL.position.set(-0.62, 0.78, -0.12);
     cyberBladeL.rotation.z = 0.42;
@@ -1600,6 +1600,7 @@
     cyberBladeR.rotation.z = -0.42;
     skinGearGroups.cyber.add(cyberBladeL, cyberBladeR);
 
+    // 2. Inferno Knight
     const hornGeo = new THREE.ConeGeometry(0.11, 0.48, 8);
     const hornL = new THREE.Mesh(hornGeo, armorAccentMat);
     hornL.position.set(-0.28, 0.56, 0.05);
@@ -1616,6 +1617,7 @@
     wingR.rotation.set(-0.35, 0, -0.82);
     skinGearGroups.inferno.add(hornL, hornR, wingL, wingR);
 
+    // 3. Venom Stalker
     const spikeGeo = new THREE.ConeGeometry(0.12, 0.52, 6);
     for (let s = 0; s < 3; s++) {
       const sp = new THREE.Mesh(spikeGeo, armorAccentMat);
@@ -1623,12 +1625,13 @@
       sp.rotation.x = -0.75;
       skinGearGroups.venom.add(sp);
     }
-    const venomPadL = new THREE.Mesh(new THREE.BoxGeometry(0.36, 0.28, 0.54), jointDarkMat);
-    venomPadL.position.set(-0.54, 0.72, 0);
-    const venomPadR = new THREE.Mesh(new THREE.BoxGeometry(0.36, 0.28, 0.54), jointDarkMat);
-    venomPadR.position.set(0.54, 0.72, 0);
+    const venomPadL = new THREE.Mesh(new THREE.BoxGeometry(0.38, 0.3, 0.56), jointDarkMat);
+    venomPadL.position.set(-0.56, 0.72, 0);
+    const venomPadR = new THREE.Mesh(new THREE.BoxGeometry(0.38, 0.3, 0.56), jointDarkMat);
+    venomPadR.position.set(0.56, 0.72, 0);
     skinGearGroups.venom.add(venomPadL, venomPadR);
 
+    // 4. Void Sovereign
     const crownSpikeGeo = new THREE.ConeGeometry(0.08, 0.34, 6);
     for (let c = -1; c <= 1; c++) {
       const cs = new THREE.Mesh(crownSpikeGeo, armorAccentMat);
@@ -1641,7 +1644,82 @@
     voidShardR.position.set(0.78, 0.68, -0.15);
     skinGearGroups.void.add(voidShardL, voidShardR);
 
-    chestPivot.add(skinGearGroups.cyber, skinGearGroups.inferno, skinGearGroups.venom, skinGearGroups.void);
+    // 5. Samurai Ronin (breiter Kabuto-Kegel + Rücken-Katana)
+    const samuraiHat = new THREE.Mesh(new THREE.ConeGeometry(0.76, 0.36, 16), armorAccentMat);
+    samuraiHat.position.set(0, 0.62, 0);
+    const katanaBlade = new THREE.Mesh(new THREE.BoxGeometry(0.06, 1.35, 0.12), skinHelmetMat);
+    katanaBlade.position.set(0, 0.45, -0.46);
+    katanaBlade.rotation.z = -0.58;
+    skinGearGroups.samurai.add(samuraiHat, katanaBlade);
+
+    // 6. Mecha Titan (Kastenkopf + Antennen + schwere Schulterblöcke)
+    const mechaBoxHead = new THREE.Mesh(new THREE.BoxGeometry(0.66, 0.56, 0.62), jointDarkMat);
+    mechaBoxHead.position.set(0, 0.3, 0);
+    const antL = new THREE.Mesh(new THREE.CylinderGeometry(0.03, 0.04, 0.55, 6), armorAccentMat);
+    antL.position.set(-0.26, 0.76, 0);
+    const antR = new THREE.Mesh(new THREE.CylinderGeometry(0.03, 0.04, 0.55, 6), armorAccentMat);
+    antR.position.set(0.26, 0.76, 0);
+    const mechaBlockL = new THREE.Mesh(new THREE.BoxGeometry(0.36, 0.44, 0.52), armorPrimaryMat);
+    mechaBlockL.position.set(-0.62, 0.66, 0);
+    const mechaBlockR = new THREE.Mesh(new THREE.BoxGeometry(0.36, 0.44, 0.52), armorPrimaryMat);
+    mechaBlockR.position.set(0.62, 0.66, 0);
+    skinGearGroups.mecha.add(mechaBoxHead, antL, antR, mechaBlockL, mechaBlockR);
+
+    // 7. Frost Valkyrie (Flügel-Ohren + Eissplitter)
+    const valkWingL = new THREE.Mesh(new THREE.BoxGeometry(0.55, 0.14, 0.08), skinHelmetMat);
+    valkWingL.position.set(-0.52, 0.42, -0.05);
+    valkWingL.rotation.z = 0.45;
+    const valkWingR = new THREE.Mesh(new THREE.BoxGeometry(0.55, 0.14, 0.08), skinHelmetMat);
+    valkWingR.position.set(0.52, 0.42, -0.05);
+    valkWingR.rotation.z = -0.45;
+    const iceShardBack = new THREE.Mesh(new THREE.OctahedronGeometry(0.34, 0), armorAccentMat);
+    iceShardBack.position.set(0, 0.45, -0.48);
+    skinGearGroups.valkyrie.add(valkWingL, valkWingR, iceShardBack);
+
+    // 8. Solar Pharaoh (Kopfkrone mit Seitenschutz + goldener Brust-Kragen)
+    const pharaohHood = new THREE.Mesh(new THREE.BoxGeometry(0.76, 0.48, 0.42), armorAccentMat);
+    pharaohHood.position.set(0, 0.24, -0.06);
+    const solarCollar = new THREE.Mesh(new THREE.TorusGeometry(0.46, 0.08, 8, 20), armorAccentMat);
+    solarCollar.rotation.x = Math.PI / 2;
+    solarCollar.position.set(0, 0.72, 0.05);
+    skinGearGroups.pharaoh.add(pharaohHood, solarCollar);
+
+    // 9. Shadow Assassin (Spitze Kapuze, Nacken-Schal & Doppel-Dolche)
+    const assassinHood = new THREE.Mesh(new THREE.ConeGeometry(0.42, 0.58, 8), jointDarkMat);
+    assassinHood.position.set(0, 0.62, -0.08);
+    assassinHood.rotation.x = -0.35;
+    const daggerL = new THREE.Mesh(new THREE.ConeGeometry(0.08, 0.62, 4), armorAccentMat);
+    daggerL.position.set(-0.56, 0.35, -0.34);
+    daggerL.rotation.x = -2.4;
+    const daggerR = new THREE.Mesh(new THREE.ConeGeometry(0.08, 0.62, 4), armorAccentMat);
+    daggerR.position.set(0.56, 0.35, -0.34);
+    daggerR.rotation.x = -2.4;
+    skinGearGroups.assassin.add(assassinHood, daggerL, daggerR);
+
+    // 10. Admin Overlord (Admin-Only: Doppel-Halo, Schulter-Türme & Krone)
+    const overlordHalo1 = new THREE.Mesh(new THREE.TorusGeometry(0.54, 0.045, 10, 32), armorAccentMat);
+    overlordHalo1.position.set(0, 0.55, -0.18);
+    const overlordHalo2 = new THREE.Mesh(new THREE.TorusGeometry(0.72, 0.035, 10, 32), visorGlowMat);
+    overlordHalo2.position.set(0, 0.55, -0.22);
+    overlordHalo2.rotation.y = 0.4;
+    const towerL = new THREE.Mesh(new THREE.CylinderGeometry(0.11, 0.16, 0.78, 8), armorAccentMat);
+    towerL.position.set(-0.62, 0.92, -0.05);
+    const towerR = new THREE.Mesh(new THREE.CylinderGeometry(0.11, 0.16, 0.78, 8), armorAccentMat);
+    towerR.position.set(0.62, 0.92, -0.05);
+    skinGearGroups.overlord.add(overlordHalo1, overlordHalo2, towerL, towerR);
+
+    chestPivot.add(
+      skinGearGroups.cyber,
+      skinGearGroups.inferno,
+      skinGearGroups.venom,
+      skinGearGroups.void,
+      skinGearGroups.samurai,
+      skinGearGroups.mecha,
+      skinGearGroups.valkyrie,
+      skinGearGroups.pharaoh,
+      skinGearGroups.assassin,
+      skinGearGroups.overlord
+    );
 
     function applySkin(skinId) {
       const sk = SKINS.find(s => s.id === skinId) || SKINS[0];
@@ -1704,8 +1782,7 @@
     const rightArm = createDetailedLimb(0.48, 0.62, 0, 0.36, 0.34, 0.18, false);
     chestPivot.add(leftArm.root, rightArm.root);
 
-    // ---------- Sauber getrennte 3D-Spur-Rigs (ohne Vermischung bis 10.000) ----------
-    // 1) Wind-Spur (100 - 999): Wirbelnde Luft-Bänder & Strömungs-Ringe
+    // ---------- Sauber getrennte 3D-Spur-Rigs ----------
     const windRig = new THREE.Group();
     windRig.visible = false;
     const windRingGeo = new THREE.TorusGeometry(0.95, 0.055, 10, 32);
@@ -1720,7 +1797,6 @@
     windRig.add(windRing1, windRing2);
     player.add(windRig);
 
-    // 2) Feuer-Spur (1000 - 2499): Glühende Flammenkegel um den Körper
     const fireRig = new THREE.Group();
     fireRig.visible = false;
     const flameConeGeo = new THREE.ConeGeometry(0.28, 1.05, 6);
@@ -1736,7 +1812,6 @@
     }
     player.add(fireRig);
 
-    // 3) Plasma-Spur (5000 - 7499): Schwebende Plasma-Kerne & leuchtender Orbit-Ring
     const plasmaRig = new THREE.Group();
     plasmaRig.visible = false;
     const plasmaOrbitRing = new THREE.Mesh(
@@ -1758,7 +1833,6 @@
     }
     player.add(plasmaRig);
 
-    // 4) Licht-Spur (7500 - 9999): Strahlender Licht-Halo & Prismen-Strahlen
     const lightRig = new THREE.Group();
     lightRig.visible = false;
     const lightHaloGeo = new THREE.TorusGeometry(1.35, 0.085, 14, 42);
@@ -1811,7 +1885,6 @@
       p.baseScale = scale;
     }
 
-    // Leuchtende Spur-Bänder (Ribbons) hinter dem Läufer
     const trailSegments = [];
     const trailSegmentGeo = new THREE.BoxGeometry(0.32, 0.14, 1.8);
     function spawnTrailSegment(x, y, z, yaw, colorHex, life = 0.34, scaleX = 1, scaleY = 1) {
@@ -1896,13 +1969,6 @@
     let touchSprintHeld = false;
     let jumpHeld = false;
 
-    const upgrades = {
-      maxSpeed: 0,
-      accel: 0,
-      stepPower: 0,
-      sprintPower: 0
-    };
-
     let adminUnlocked = false;
 
     const SPRINT_DURATION = 5.0;
@@ -1949,18 +2015,12 @@
       shopMaxSpeedDisplay: document.getElementById('shopMaxSpeedDisplay'),
       shopRebirthDisplay: document.getElementById('shopRebirthDisplay'),
       shopMultDisplay: document.getElementById('shopMultDisplay'),
-      lvlMaxSpeed: document.getElementById('lvlMaxSpeed'),
-      lvlAccel: document.getElementById('lvlAccel'),
-      lvlStepPower: document.getElementById('lvlStepPower'),
-      lvlSprintPower: document.getElementById('lvlSprintPower'),
-      buyMaxSpeedBtn: document.getElementById('buyMaxSpeedBtn'),
-      buyAccelBtn: document.getElementById('buyAccelBtn'),
-      buyStepPowerBtn: document.getElementById('buyStepPowerBtn'),
-      buySprintPowerBtn: document.getElementById('buySprintPowerBtn'),
       skinShopGrid: document.getElementById('skinShopGrid'),
       adminCodeInput: document.getElementById('adminCodeInput'),
       adminStatusMsg: document.getElementById('adminStatusMsg'),
       adminControls: document.getElementById('adminControls'),
+      adminExclusiveSkinBox: document.getElementById('adminExclusiveSkinBox'),
+      adminEquipOverlordBtn: document.getElementById('adminEquipOverlordBtn'),
       worldSceneBanner: document.getElementById('worldSceneBanner'),
       worldSceneTitle: document.getElementById('worldSceneTitle'),
       worldSceneSub: document.getElementById('worldSceneSub')
@@ -1979,21 +2039,8 @@
       return rebirthCount > 0 ? Infinity : 10000;
     }
 
-    function getMaxSpeed() {
-      if (isWorld2Infinite()) return Infinity;
-      const cap = getWorldCap();
-      const base = 120 + upgrades.maxSpeed * 380 + steps * (0.25 + upgrades.stepPower * 0.15) * getRebirthMultiplier();
-      const sprintBonus = sprintActiveTimer > 0 ? (140 + upgrades.sprintPower * 120) * getRebirthMultiplier() : 0;
-      const padBonus = padBoostTimer > 0 ? 160 * getRebirthMultiplier() : 0;
-      return Math.min(base + sprintBonus + padBonus, cap);
-    }
-
     function formatCapDisplay() {
       return isWorld2Infinite() ? '∞' : getWorldCap().toLocaleString('de-DE');
-    }
-
-    function getUpgradeSpeedCost(baseCost, lvl) {
-      return Math.round(baseCost + lvl * 35);
     }
 
     function checkMilestones() {
@@ -2032,7 +2079,8 @@
 
     function renderSkinShop() {
       ui.skinShopGrid.innerHTML = '';
-      for (const sk of SKINS) {
+      const shopSkins = SKINS.filter(s => !s.adminOnly);
+      for (const sk of shopSkins) {
         const card = document.createElement('div');
         card.className = 'upgrade-card';
 
@@ -2089,27 +2137,18 @@
       ui.rebirthHud.textContent = `${rebirthCount} (${getRebirthMultiplier().toFixed(1)}x)`;
       ui.speed.textContent = currentSpeed.toFixed(1);
       ui.capSpeed.textContent = formatCapDisplay();
-      ui.lvlMaxSpeed.textContent = upgrades.maxSpeed;
-      ui.lvlAccel.textContent = upgrades.accel;
-      ui.lvlStepPower.textContent = upgrades.stepPower;
-      ui.lvlSprintPower.textContent = upgrades.sprintPower;
-
-      const c1 = getUpgradeSpeedCost(40, upgrades.maxSpeed);
-      const c2 = getUpgradeSpeedCost(35, upgrades.accel);
-      const c3 = getUpgradeSpeedCost(50, upgrades.stepPower);
-      const c4 = getUpgradeSpeedCost(55, upgrades.sprintPower);
-
-      ui.buyMaxSpeedBtn.textContent = `Kaufen (-${c1} Speed)`;
-      ui.buyAccelBtn.textContent = `Kaufen (-${c2} Speed)`;
-      ui.buyStepPowerBtn.textContent = `Kaufen (-${c3} Speed)`;
-      ui.buySprintPowerBtn.textContent = `Kaufen (-${c4} Speed)`;
-
-      ui.buyMaxSpeedBtn.disabled = currentSpeed < c1;
-      ui.buyAccelBtn.disabled = currentSpeed < c2;
-      ui.buyStepPowerBtn.disabled = currentSpeed < c3;
-      ui.buySprintPowerBtn.disabled = currentSpeed < c4;
-
       ui.modalRebirthBtn.disabled = currentSpeed < 10000;
+
+      if (activeSkinId === 'overlord') {
+        ui.adminEquipOverlordBtn.textContent = '✓ Overlord aktiv';
+        ui.adminEquipOverlordBtn.classList.add('skin-equipped');
+      } else {
+        ui.adminEquipOverlordBtn.textContent = unlockedSkins.has('overlord')
+          ? 'Overlord ausrüsten'
+          : 'Freischalten & ausrüsten';
+        ui.adminEquipOverlordBtn.classList.remove('skin-equipped');
+      }
+
       renderSkinShop();
     }
 
@@ -2133,48 +2172,6 @@
 
     ui.rebirthBtn.addEventListener('click', () => { initAudio(); performRebirth(); });
     ui.modalRebirthBtn.addEventListener('click', () => { initAudio(); performRebirth(); });
-
-    ui.buyMaxSpeedBtn.addEventListener('click', () => {
-      const cost = getUpgradeSpeedCost(40, upgrades.maxSpeed);
-      if (currentSpeed >= cost) {
-        currentSpeed = Math.max(0, currentSpeed - cost);
-        upgrades.maxSpeed += 1;
-        const cap = getWorldCap();
-        currentSpeed = Math.min(currentSpeed + 45 * getRebirthMultiplier(), cap);
-        playSound('buy');
-        refreshShopUI();
-      }
-    });
-
-    ui.buyAccelBtn.addEventListener('click', () => {
-      const cost = getUpgradeSpeedCost(35, upgrades.accel);
-      if (currentSpeed >= cost) {
-        currentSpeed = Math.max(0, currentSpeed - cost);
-        upgrades.accel += 1;
-        playSound('buy');
-        refreshShopUI();
-      }
-    });
-
-    ui.buyStepPowerBtn.addEventListener('click', () => {
-      const cost = getUpgradeSpeedCost(50, upgrades.stepPower);
-      if (currentSpeed >= cost) {
-        currentSpeed = Math.max(0, currentSpeed - cost);
-        upgrades.stepPower += 1;
-        playSound('buy');
-        refreshShopUI();
-      }
-    });
-
-    ui.buySprintPowerBtn.addEventListener('click', () => {
-      const cost = getUpgradeSpeedCost(55, upgrades.sprintPower);
-      if (currentSpeed >= cost) {
-        currentSpeed = Math.max(0, currentSpeed - cost);
-        upgrades.sprintPower += 1;
-        playSound('buy');
-        refreshShopUI();
-      }
-    });
 
     function startWorldTransitionScene(targetWorldId) {
       if (targetWorldId === 2 && currentWorld === 1) {
@@ -2217,7 +2214,7 @@
       }
     });
 
-    // ---------- Admin-Panel (funktioniert in Welt 1 & Welt 2 inkl. +250) ----------
+    // ---------- Admin-Panel (Welt 1 & Welt 2 + Admin-Only Skin) ----------
     document.getElementById('submitAdminCodeBtn').addEventListener('click', () => {
       const entered = ui.adminCodeInput.value.trim().toUpperCase();
       if (entered === SECRET_ADMIN_CODE) {
@@ -2225,7 +2222,10 @@
         ui.adminStatusMsg.textContent = `✅ Admin aktiv in Welt ${currentWorld}!`;
         ui.adminControls.style.opacity = '1';
         ui.adminControls.style.pointerEvents = 'auto';
+        ui.adminExclusiveSkinBox.style.opacity = '1';
+        ui.adminExclusiveSkinBox.style.pointerEvents = 'auto';
         playSound('boost');
+        refreshShopUI();
       } else {
         ui.adminStatusMsg.textContent = '❌ Falscher Code.';
       }
@@ -2241,11 +2241,22 @@
       refreshShopUI();
     });
 
-    document.getElementById('adminUnlockSkinsBtn').addEventListener('click', () => {
+    document.getElementById('adminUnlockAllShopSkinsBtn').addEventListener('click', () => {
       if (!adminUnlocked) return;
-      for (const s of SKINS) unlockedSkins.add(s.id);
+      for (const s of SKINS) {
+        if (!s.adminOnly) unlockedSkins.add(s.id);
+      }
       playSound('buy');
-      ui.adminStatusMsg.textContent = '🎭 Alle Skins freigeschaltet!';
+      ui.adminStatusMsg.textContent = '🎭 Alle 9 Shop-Skins freigeschaltet!';
+      refreshShopUI();
+    });
+
+    document.getElementById('adminEquipOverlordBtn').addEventListener('click', () => {
+      if (!adminUnlocked) return;
+      unlockedSkins.add('overlord');
+      applySkin('overlord');
+      playSound('buy');
+      ui.adminStatusMsg.textContent = '👑 Admin Overlord Skin ausgerüstet!';
       refreshShopUI();
     });
 
@@ -2480,7 +2491,7 @@
       } else if (isDoubleTap && !airPushUsed) {
         airPushUsed = true;
         velY = Math.max(velY, 10.5);
-        currentSpeed = Math.min(currentSpeed + (18 + upgrades.sprintPower * 12) * getRebirthMultiplier(), getWorldCap());
+        currentSpeed = Math.min(currentSpeed + 22 * getRebirthMultiplier(), getWorldCap());
         checkMilestones();
         squashAmount = 0.2;
         playSound('airpush');
@@ -2549,6 +2560,11 @@
         }
       });
 
+      if (activeSkinId === 'overlord') {
+        overlordHalo1.rotation.z += dt * 3.5;
+        overlordHalo2.rotation.y += dt * 4.5;
+      }
+
       // ---------- Weltwechsel-Szene ----------
       if (worldSceneActive) {
         worldSceneTimer += dt;
@@ -2612,7 +2628,7 @@
           }
         } else if (wantsSprint && !sprintExhaustedThisHold && sprintCooldownTimer <= 0 && gameStarted && !uiModalOpen) {
           sprintActiveTimer = SPRINT_DURATION;
-          const sprintBurst = (38 + upgrades.sprintPower * 28) * getRebirthMultiplier();
+          const sprintBurst = 45 * getRebirthMultiplier();
           currentSpeed = Math.min(currentSpeed + sprintBurst, getWorldCap());
           checkMilestones();
           squashAmount = 0.22;
@@ -2667,7 +2683,7 @@
           dX /= len;
           dZ /= len;
 
-          const accelGain = (16 + upgrades.accel * 12 + (sprintActiveTimer > 0 ? 28 + upgrades.sprintPower * 18 : 0)) * getRebirthMultiplier() * inputMag;
+          const accelGain = (22 + (sprintActiveTimer > 0 ? 34 : 0)) * getRebirthMultiplier() * inputMag;
           currentSpeed = Math.min(currentSpeed + accelGain * dt, worldCap);
 
           const visualMoveSpeed = Math.min(20 + currentSpeed * 0.035, 130);
@@ -2690,10 +2706,10 @@
           distanceAccumulator += stepDist;
           const stepLength = 2.5;
           if (distanceAccumulator >= stepLength) {
-            const earned = Math.floor(distanceAccumulator / stepLength) * (1 + Math.floor(upgrades.stepPower * 0.5));
+            const earned = Math.floor(distanceAccumulator / stepLength);
             distanceAccumulator = 0;
             steps += earned;
-            const stepGain = earned * (2.4 + upgrades.stepPower * 1.8) * getRebirthMultiplier();
+            const stepGain = earned * 3.2 * getRebirthMultiplier();
             currentSpeed = Math.min(currentSpeed + stepGain, worldCap);
           }
         }
@@ -2796,7 +2812,7 @@
         rightArm.mid.rotation.x = THREE.MathUtils.lerp(rightArm.mid.rotation.x, -0.25, 0.15);
       }
 
-      // ---------- Exakte Spur-Modi (ohne Vermischung bis 10.000) ----------
+      // ---------- Exakte Spur-Modi ----------
       let trailMode = 'base';
       if (currentWorld === 1) {
         if (currentSpeed >= 5000) trailMode = 'plasma';
@@ -3019,8 +3035,8 @@
           if (dx * dx + dz * dz < bp.radius * bp.radius && Math.abs(player.position.y - bp.group.position.y) < 4.2 && bp.cooldown <= 0) {
             bp.cooldown = 1.8;
             padBoostTimer = 3.0;
-            steps += 2 * (1 + Math.floor(upgrades.stepPower * 0.5));
-            const padGain = ((currentWorld === 2 ? 75 : 55) + upgrades.stepPower * 18) * getRebirthMultiplier();
+            steps += 2;
+            const padGain = (currentWorld === 2 ? 85 : 65) * getRebirthMultiplier();
             currentSpeed = Math.min(currentSpeed + padGain, getWorldCap());
             checkMilestones();
             if (isGrounded) velY = 8.0;
@@ -3055,9 +3071,8 @@
             orbs.splice(i, 1);
 
             orbsCollected += 1;
-            const gainedSteps = 2 * (1 + Math.floor(upgrades.stepPower * 0.5));
-            steps += gainedSteps;
-            const orbGain = ((currentWorld === 2 ? 16 : 12) + upgrades.stepPower * 6) * getRebirthMultiplier();
+            steps += 2;
+            const orbGain = (currentWorld === 2 ? 18 : 14) * getRebirthMultiplier();
             currentSpeed = Math.min(currentSpeed + orbGain, getWorldCap());
             checkMilestones();
             playSound('orb', steps);
