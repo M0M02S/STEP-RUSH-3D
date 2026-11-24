@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no" />
-  <title>Step Rush 3D — 15-Min Grind & 10 Skins Edition</title>
+  <title>Step Rush 3D — 25–30 Min Marathon & 10 Skins Edition</title>
   <style>
     * { box-sizing: border-box; }
     html, body {
@@ -739,10 +739,10 @@
   <!-- Startmenü -->
   <div id="startMenu">
     <div class="menu-card">
-      <span class="menu-pill">Hardcore ~15 Min Grind · 10 Unique 3D Skins</span>
+      <span class="menu-pill">Marathon ~25–30 Min Grind · 10 Unique 3D Skins</span>
       <h1 class="menu-title">STEP RUSH 3D</h1>
       <p class="menu-subtitle">
-        Hardcore-Grind (~15 Min bis Rebirth): Welt 1 bis <strong>5.000 Speed</strong> · Welt 2 bis <strong>10.000 Speed</strong> · <strong>9 Shop-Skins + 1 Admin-Only-Skin</strong> &amp; unendlicher Speed in Welt 2 nach <strong>Rebirth</strong>!
+        Marathon-Grind (~25–30 Min bis Rebirth): Welt 1 bis <strong>5.000 Speed</strong> · Welt 2 bis <strong>10.000 Speed</strong> · <strong>9 Shop-Skins + 1 Admin-Only-Skin</strong> &amp; spürbar eskalierender Speed in Welt 2 nach <strong>Rebirth</strong>!
       </p>
       <div class="stage-strip">
         <span class="stage-chip">🌪️ 100 Wind</span>
@@ -817,7 +817,7 @@
         <div>
           <div style="font-weight:900; font-size:15px; color:#fef08a;">♻️ Rebirth (ab 10.000 Speed)</div>
           <div style="font-size:12px; color:#e2e8f0; margin-top:2px;">
-            Startet in <strong>Welt 1</strong> neu bei <strong>0 Speed</strong>, gibt <strong>+0.25x Speed-Multiplikator</strong> und schaltet in <strong>Welt 2 unendlichen Speed (∞)</strong> frei!
+            Startet in <strong>Welt 1</strong> neu bei <strong>0 Speed</strong>, gibt <strong>+0.15x Speed-Multiplikator</strong> und schaltet in <strong>Welt 2 unendlichen Speed (∞)</strong> frei!
           </div>
         </div>
         <button class="rebirth-action-btn" id="modalRebirthBtn" disabled>Rebirth (10.000 Speed)</button>
@@ -968,7 +968,7 @@
     scene.background = new THREE.Color(0x38bdf8);
     scene.fog = new THREE.FogExp2(0x7dd3fc, 0.00045);
 
-    const camera = new THREE.PerspectiveCamera(72, innerWidth / innerHeight, 0.1, 4000);
+    const camera = new THREE.PerspectiveCamera(72, innerWidth / innerHeight, 0.1, 4500);
 
     const renderer = new THREE.WebGLRenderer({ antialias: true, powerPreference: 'high-performance' });
     renderer.setSize(innerWidth, innerHeight);
@@ -976,7 +976,7 @@
     renderer.shadowMap.enabled = true;
     renderer.shadowMap.type = THREE.PCFSoftShadowMap;
     renderer.toneMapping = THREE.ACESFilmicToneMapping;
-    renderer.toneMappingExposure = 1.12;
+    renderer.toneMappingExposure = 1.14;
     document.body.appendChild(renderer.domElement);
 
     const hemiLight = new THREE.HemisphereLight(0xe0f2fe, 0x22c55e, 1.45);
@@ -995,7 +995,7 @@
     sun.shadow.camera.bottom = -sd;
     scene.add(sun);
 
-    const playerLight = new THREE.PointLight(0x38bdf8, 0, 48);
+    const playerLight = new THREE.PointLight(0x38bdf8, 0, 52);
     scene.add(playerLight);
 
     // ---------- Welt 1: Strahlender Taghimmel, Wolken & Sonnen-Halo ----------
@@ -1038,12 +1038,12 @@
       clouds.push({ group: cGroup, speedX: 2.4 + Math.random() * 3.6 });
     }
 
-    // ---------- Welt 2: Sternenhimmel, Mond, Kosmos-Bogen & Planeten ----------
+    // ---------- Welt 2: Sternenhimmel, Mond, Kosmos-Bogen, Planeten & Nebel ----------
     const cosmosGroup = new THREE.Group();
     cosmosGroup.visible = false;
     scene.add(cosmosGroup);
 
-    const starCount = 2800;
+    const starCount = 3400;
     const starPositions = new Float32Array(starCount * 3);
     const starColors = new Float32Array(starCount * 3);
     const paletteStar = [
@@ -1051,13 +1051,14 @@
       new THREE.Color(0xbae6fd),
       new THREE.Color(0xe9d5ff),
       new THREE.Color(0xfef08a),
-      new THREE.Color(0x5eead4)
+      new THREE.Color(0x5eead4),
+      new THREE.Color(0xf472b6)
     ];
 
     for (let i = 0; i < starCount; i++) {
       const theta = Math.random() * Math.PI * 2;
       const phi = Math.acos(Math.random() * 0.94 + 0.06);
-      const r = 1450 + Math.random() * 600;
+      const r = 1450 + Math.random() * 650;
       starPositions[i * 3] = r * Math.sin(phi) * Math.cos(theta);
       starPositions[i * 3 + 1] = Math.abs(r * Math.cos(phi)) + 30;
       starPositions[i * 3 + 2] = r * Math.sin(phi) * Math.sin(theta);
@@ -1070,34 +1071,41 @@
     const starGeo = new THREE.BufferGeometry();
     starGeo.setAttribute('position', new THREE.BufferAttribute(starPositions, 3));
     starGeo.setAttribute('color', new THREE.BufferAttribute(starColors, 3));
-    const starMat = new THREE.PointsMaterial({ vertexColors: true, size: 6.2, transparent: true, opacity: 0.98 });
+    const starMat = new THREE.PointsMaterial({ vertexColors: true, size: 6.5, transparent: true, opacity: 0.98 });
     const starsPoints = new THREE.Points(starGeo, starMat);
     cosmosGroup.add(starsPoints);
 
     const nightMoon = new THREE.Mesh(
-      new THREE.SphereGeometry(88, 28, 28),
-      new THREE.MeshStandardMaterial({ color: 0xe0e7ff, emissive: 0x6366f1, emissiveIntensity: 1.0, roughness: 0.5 })
+      new THREE.SphereGeometry(96, 32, 32),
+      new THREE.MeshStandardMaterial({ color: 0xe0e7ff, emissive: 0x6366f1, emissiveIntensity: 1.15, roughness: 0.45 })
     );
     nightMoon.position.set(-760, 540, -1120);
     cosmosGroup.add(nightMoon);
 
     const ringPlanet = new THREE.Mesh(
-      new THREE.SphereGeometry(54, 24, 24),
-      new THREE.MeshStandardMaterial({ color: 0xf472b6, emissive: 0x9d174d, emissiveIntensity: 0.7, roughness: 0.42 })
+      new THREE.SphereGeometry(62, 28, 28),
+      new THREE.MeshStandardMaterial({ color: 0xf472b6, emissive: 0x9d174d, emissiveIntensity: 0.85, roughness: 0.38 })
     );
     ringPlanet.position.set(860, 420, -1250);
     const planetRing = new THREE.Mesh(
-      new THREE.RingGeometry(76, 122, 48),
-      new THREE.MeshBasicMaterial({ color: 0xfde047, side: THREE.DoubleSide, transparent: true, opacity: 0.52 })
+      new THREE.RingGeometry(86, 138, 56),
+      new THREE.MeshBasicMaterial({ color: 0xfde047, side: THREE.DoubleSide, transparent: true, opacity: 0.62 })
     );
     planetRing.rotation.x = Math.PI * 0.36;
     planetRing.rotation.y = 0.25;
     ringPlanet.add(planetRing);
     cosmosGroup.add(ringPlanet);
 
+    const twinPlanet = new THREE.Mesh(
+      new THREE.SphereGeometry(42, 24, 24),
+      new THREE.MeshStandardMaterial({ color: 0x2dd4bf, emissive: 0x0f766e, emissiveIntensity: 0.95, roughness: 0.35 })
+    );
+    twinPlanet.position.set(0, 620, -1480);
+    cosmosGroup.add(twinPlanet);
+
     const cosmosArc = new THREE.Mesh(
-      new THREE.TorusGeometry(980, 12, 12, 96),
-      new THREE.MeshBasicMaterial({ color: 0x818cf8, transparent: true, opacity: 0.32 })
+      new THREE.TorusGeometry(1020, 14, 14, 110),
+      new THREE.MeshBasicMaterial({ color: 0xc084fc, transparent: true, opacity: 0.36 })
     );
     cosmosArc.position.set(0, 260, -900);
     cosmosArc.rotation.set(0.35, 0.2, 0.15);
@@ -1221,11 +1229,13 @@
       snowCap: new THREE.MeshStandardMaterial({ color: 0xffffff, emissive: 0xe0f2fe, emissiveIntensity: 0.35, roughness: 0.45 }),
       cactus: new THREE.MeshStandardMaterial({ color: 0x16a34a, emissive: 0x15803d, emissiveIntensity: 0.2, roughness: 0.72 }),
       sandRock: new THREE.MeshStandardMaterial({ color: 0xf59e0b, emissive: 0xb45309, emissiveIntensity: 0.22, roughness: 0.78 }),
-      lavaGlow: new THREE.MeshStandardMaterial({ color: 0xf97316, emissive: 0xea580c, emissiveIntensity: 1.9, roughness: 0.22 }),
-      obsidian: new THREE.MeshStandardMaterial({ color: 0x1e293b, roughness: 0.7, metalness: 0.5 }),
-      crystal: new THREE.MeshStandardMaterial({ color: 0x2dd4bf, emissive: 0x14b8a6, emissiveIntensity: 1.65, roughness: 0.14, metalness: 0.6 }),
-      prism: new THREE.MeshStandardMaterial({ color: 0xfacc15, emissive: 0xeab308, emissiveIntensity: 1.35, roughness: 0.2, metalness: 0.7 }),
-      nebulaStone: new THREE.MeshStandardMaterial({ color: 0xa855f7, emissive: 0x7e22ce, emissiveIntensity: 1.45, roughness: 0.2, metalness: 0.55 }),
+      lavaGlow: new THREE.MeshStandardMaterial({ color: 0xf97316, emissive: 0xea580c, emissiveIntensity: 2.05, roughness: 0.22 }),
+      obsidian: new THREE.MeshStandardMaterial({ color: 0x1e293b, roughness: 0.65, metalness: 0.55 }),
+      crystal: new THREE.MeshStandardMaterial({ color: 0x2dd4bf, emissive: 0x14b8a6, emissiveIntensity: 1.85, roughness: 0.14, metalness: 0.65 }),
+      prism: new THREE.MeshStandardMaterial({ color: 0xfacc15, emissive: 0xeab308, emissiveIntensity: 1.55, roughness: 0.2, metalness: 0.7 }),
+      nebulaStone: new THREE.MeshStandardMaterial({ color: 0xc084fc, emissive: 0x7e22ce, emissiveIntensity: 1.75, roughness: 0.2, metalness: 0.6 }),
+      neonCyan: new THREE.MeshBasicMaterial({ color: 0x38bdf8, transparent: true, opacity: 0.78 }),
+      neonPink: new THREE.MeshBasicMaterial({ color: 0xf472b6, transparent: true, opacity: 0.78 }),
       padBase: new THREE.MeshStandardMaterial({ color: 0x0f172a, emissive: 0xf97316, emissiveIntensity: 1.05, roughness: 0.25, metalness: 0.65 }),
       padRing: new THREE.MeshBasicMaterial({ color: 0xfacc15 }),
       padBeam: new THREE.MeshBasicMaterial({ color: 0x38bdf8, transparent: true, opacity: 0.55 }),
@@ -1240,8 +1250,8 @@
       coneSmall: new THREE.ConeGeometry(1.6, 3.4, 6),
       cactusStem: new THREE.CylinderGeometry(0.4, 0.46, 3.2, 7),
       rock: new THREE.DodecahedronGeometry(1.9, 0),
-      spire: new THREE.ConeGeometry(2.0, 6.5, 6),
-      crystal: new THREE.CylinderGeometry(0.4, 1.25, 5.5, 6),
+      spire: new THREE.ConeGeometry(2.2, 7.6, 6),
+      crystal: new THREE.CylinderGeometry(0.42, 1.35, 6.2, 6),
       padBase: new THREE.CylinderGeometry(4.4, 5.0, 0.35, 24),
       padRing: new THREE.TorusGeometry(4.1, 0.24, 10, 28),
       padBeam: new THREE.CylinderGeometry(0.42, 0.42, 3.4, 12),
@@ -1251,6 +1261,7 @@
     let boostPads = [];
     let orbs = [];
     let floatingWorldProps = [];
+    let spinningRings = [];
 
     function spawnOrbAt(x, z, yOffset = 1.45) {
       const groundY = getTerrainHeight(x, z);
@@ -1270,6 +1281,7 @@
       boostPads = [];
       orbs = [];
       floatingWorldProps = [];
+      spinningRings = [];
 
       const half = getWorldHalf();
 
@@ -1286,18 +1298,18 @@
         cosmosGroup.visible = false;
       } else {
         scene.background = new THREE.Color(0x050919);
-        scene.fog = new THREE.FogExp2(0x0a1128, 0.00046);
-        hemiLight.color.setHex(0x818cf8);
-        hemiLight.groundColor.setHex(0x0f172a);
-        hemiLight.intensity = 1.15;
-        sun.color.setHex(0xc4b5fd);
-        sun.intensity = 1.55;
-        horizonSea.material.color.setHex(0x090d24);
+        scene.fog = new THREE.FogExp2(0x0b122b, 0.00042);
+        hemiLight.color.setHex(0x93c5fd);
+        hemiLight.groundColor.setHex(0x1e1b4b);
+        hemiLight.intensity = 1.25;
+        sun.color.setHex(0xd8b4fe);
+        sun.intensity = 1.65;
+        horizonSea.material.color.setHex(0x0a1029);
         dayGroup.visible = false;
         cosmosGroup.visible = true;
       }
 
-      const segs = worldId === 1 ? 190 : 210;
+      const segs = worldId === 1 ? 190 : 220;
       const tGeo = new THREE.PlaneGeometry(half * 2, half * 2, segs, segs);
       tGeo.rotateX(-Math.PI / 2);
       const pAttr = tGeo.attributes.position;
@@ -1307,12 +1319,12 @@
       const c1B = new THREE.Color(worldId === 1 ? 0x86efac : 0x2dd4bf);
       const c2A = new THREE.Color(worldId === 1 ? 0xf59e0b : 0xb91c1c);
       const c2B = new THREE.Color(worldId === 1 ? 0xfef08a : 0xf97316);
-      const c3A = new THREE.Color(worldId === 1 ? 0x38bdf8 : 0x4c1d95);
-      const c3B = new THREE.Color(worldId === 1 ? 0xffffff : 0xc084fc);
+      const c3A = new THREE.Color(worldId === 1 ? 0x38bdf8 : 0x581c87);
+      const c3B = new THREE.Color(worldId === 1 ? 0xffffff : 0xd8b4fe);
       const c4A = new THREE.Color(worldId === 1 ? 0x0284c7 : 0x1d4ed8);
       const c4B = new THREE.Color(worldId === 1 ? 0x7dd3fc : 0x38bdf8);
-      const c5A = new THREE.Color(worldId === 1 ? 0x991b1b : 0x713f12);
-      const c5B = new THREE.Color(worldId === 1 ? 0xfb923c : 0xfacc15);
+      const c5A = new THREE.Color(worldId === 1 ? 0x991b1b : 0x854d0e);
+      const c5B = new THREE.Color(worldId === 1 ? 0xfb923c : 0xfef08a);
       const tmp = new THREE.Color();
 
       for (let i = 0; i < pAttr.count; i++) {
@@ -1345,7 +1357,7 @@
 
       const tMesh = new THREE.Mesh(
         tGeo,
-        new THREE.MeshStandardMaterial({ vertexColors: true, roughness: 0.78, metalness: 0.1 })
+        new THREE.MeshStandardMaterial({ vertexColors: true, roughness: 0.76, metalness: worldId === 2 ? 0.18 : 0.1 })
       );
       tMesh.receiveShadow = true;
       worldGroup.add(tMesh);
@@ -1361,7 +1373,80 @@
         worldGroup.add(wall);
       }
 
-      const propCount = worldId === 1 ? 340 : 380;
+      // Extras nur für Welt 2: Schwebende Kosmos-Inseln & Astral-Tore
+      if (worldId === 2) {
+        const islandCoords = [
+          { x: -240, z: -260, y: 42, s: 1.2 },
+          { x: 320, z: -340, y: 55, s: 1.4 },
+          { x: 680, z: 420, y: 48, s: 1.1 },
+          { x: -720, z: 520, y: 64, s: 1.5 },
+          { x: 1300, z: 1200, y: 78, s: 1.7 },
+          { x: -1250, z: -950, y: 58, s: 1.3 },
+          { x: 1550, z: -780, y: 68, s: 1.4 }
+        ];
+
+        for (let idx = 0; idx < islandCoords.length; idx++) {
+          const ic = islandCoords[idx];
+          const islGroup = new THREE.Group();
+
+          const topDisk = new THREE.Mesh(
+            new THREE.CylinderGeometry(16 * ic.s, 6 * ic.s, 7 * ic.s, 8),
+            sharedMats.obsidian
+          );
+          const bottomCone = new THREE.Mesh(
+            new THREE.ConeGeometry(8 * ic.s, 22 * ic.s, 7),
+            sharedMats.nebulaStone
+          );
+          bottomCone.position.y = -13 * ic.s;
+          bottomCone.rotation.x = Math.PI;
+
+          const haloRing = new THREE.Mesh(
+            new THREE.TorusGeometry(21 * ic.s, 0.55, 10, 36),
+            idx % 2 === 0 ? sharedMats.neonCyan : sharedMats.neonPink
+          );
+          haloRing.rotation.x = Math.PI / 2.4;
+          haloRing.position.y = 3.2 * ic.s;
+
+          const centerCrystal = new THREE.Mesh(sharedGeos.crystal, sharedMats.crystal);
+          centerCrystal.position.y = 6.5 * ic.s;
+
+          islGroup.add(topDisk, bottomCone, haloRing, centerCrystal);
+          islGroup.position.set(ic.x, ic.y, ic.z);
+          worldGroup.add(islGroup);
+          floatingWorldProps.push({ mesh: islGroup, baseY: ic.y, phase: idx * 1.1 });
+          spinningRings.push({ mesh: haloRing, speed: (idx % 2 === 0 ? 1 : -1) * 0.45 });
+        }
+
+        const gateCoords = [
+          { x: 0, z: -150, rotY: 0 },
+          { x: 520, z: 180, rotY: 0.7 },
+          { x: -560, z: -220, rotY: -0.6 },
+          { x: 950, z: 750, rotY: 1.1 },
+          { x: -980, z: 680, rotY: -1.1 }
+        ];
+
+        for (let g = 0; g < gateCoords.length; g++) {
+          const gc = gateCoords[g];
+          const gy = getTerrainHeight(gc.x, gc.z);
+          const gateGroup = new THREE.Group();
+          gateGroup.position.set(gc.x, gy + 11, gc.z);
+          gateGroup.rotation.y = gc.rotY;
+
+          const outerGate = new THREE.Mesh(
+            new THREE.TorusGeometry(11, 0.65, 12, 42),
+            g % 2 === 0 ? sharedMats.neonCyan : sharedMats.neonPink
+          );
+          const innerGate = new THREE.Mesh(
+            new THREE.TorusGeometry(8.2, 0.35, 10, 36),
+            sharedMats.padRing
+          );
+          gateGroup.add(outerGate, innerGate);
+          worldGroup.add(gateGroup);
+          spinningRings.push({ mesh: innerGate, speed: 0.9 });
+        }
+      }
+
+      const propCount = worldId === 1 ? 340 : 440;
       for (let i = 0; i < propCount; i++) {
         const rx = (Math.random() - 0.5) * (half * 1.88);
         const rz = (Math.random() - 0.5) * (half * 1.88);
@@ -1418,17 +1503,17 @@
         } else {
           if (w.b2 > w.b1 && w.b2 > w.b3 && w.b2 > w.b4 && w.b2 > w.b5) {
             const sp = new THREE.Mesh(sharedGeos.spire, sharedMats.lavaGlow);
-            sp.position.set(rx, ry + 2.8, rz);
+            sp.position.set(rx, ry + 3.2, rz);
             worldGroup.add(sp);
           } else if (w.b5 > w.b1 && w.b5 > w.b3 && w.b5 > w.b4) {
             const ob = new THREE.Mesh(sharedGeos.rock, sharedMats.prism);
-            ob.position.set(rx, ry + 1.4, rz);
+            ob.position.set(rx, ry + 1.6, rz);
             worldGroup.add(ob);
           } else {
-            const cr = new THREE.Mesh(sharedGeos.crystal, Math.random() < 0.28 ? sharedMats.nebulaStone : sharedMats.crystal);
-            const baseFloatY = ry + 2.5 + (Math.random() < 0.35 ? 2.2 : 0);
+            const cr = new THREE.Mesh(sharedGeos.crystal, Math.random() < 0.32 ? sharedMats.nebulaStone : sharedMats.crystal);
+            const baseFloatY = ry + 2.8 + (Math.random() < 0.4 ? 2.6 : 0);
             cr.position.set(rx, baseFloatY, rz);
-            cr.rotation.z = (Math.random() - 0.5) * 0.25;
+            cr.rotation.z = (Math.random() - 0.5) * 0.28;
             worldGroup.add(cr);
             floatingWorldProps.push({ mesh: cr, baseY: baseFloatY, phase: Math.random() * Math.PI * 2 });
           }
@@ -1444,7 +1529,8 @@
         : [
             { x: 0, z: -90 }, { x: 140, z: 60 }, { x: -150, z: 95 },
             { x: 880, z: 180 }, { x: 1100, z: 950 }, { x: -240, z: -1050 },
-            { x: 420, z: -1250 }, { x: -1150, z: -320 }, { x: 220, z: 1200 }, { x: 1500, z: -420 }
+            { x: 420, z: -1250 }, { x: -1150, z: -320 }, { x: 220, z: 1200 }, { x: 1500, z: -420 },
+            { x: -1450, z: -1250 }, { x: 1650, z: 1450 }
           ];
 
       for (const bp of padCoords) {
@@ -1467,7 +1553,7 @@
       for (let i = 1; i <= 16; i++) {
         spawnOrbAt(0, -i * 7.5, 1.45);
       }
-      const orbTotal = worldId === 1 ? 420 : 480;
+      const orbTotal = worldId === 1 ? 420 : 520;
       for (let i = 0; i < orbTotal; i++) {
         spawnOrbAt((Math.random() - 0.5) * (half * 1.88), (Math.random() - 0.5) * (half * 1.88), 1.45);
       }
@@ -1848,7 +1934,7 @@
     scene.add(player);
 
     // ---------- Partikel-Pool, Spur-Ribbons, Blitze & Sternschnuppen ----------
-    const PARTICLE_POOL_SIZE = 380;
+    const PARTICLE_POOL_SIZE = 420;
     const sharedParticleGeo = new THREE.OctahedronGeometry(0.24, 0);
     const particlePool = [];
 
@@ -1887,7 +1973,7 @@
     const trailSegments = [];
     const trailSegmentGeo = new THREE.BoxGeometry(0.32, 0.14, 1.8);
     function spawnTrailSegment(x, y, z, yaw, colorHex, life = 0.34, scaleX = 1, scaleY = 1) {
-      if (trailSegments.length > 90) return;
+      if (trailSegments.length > 100) return;
       const mat = new THREE.MeshBasicMaterial({ color: colorHex, transparent: true, opacity: 0.88 });
       const mesh = new THREE.Mesh(trailSegmentGeo, mat);
       mesh.position.set(x, y, z);
@@ -1902,7 +1988,7 @@
     const boltMatCore = new THREE.LineBasicMaterial({ color: 0xfef08a, transparent: true, opacity: 1 });
 
     function spawnLightningStrike() {
-      if (lightningBolts.length > 32) return;
+      if (lightningBolts.length > 36) return;
       const angle = Math.random() * Math.PI * 2;
       const radius = 0.25 + Math.random() * 1.9;
       let cx = player.position.x + Math.cos(angle) * radius;
@@ -1927,12 +2013,12 @@
     const shootingStarMat = new THREE.LineBasicMaterial({ color: 0xe0f2fe, transparent: true, opacity: 0.92 });
 
     function spawnShootingStarInWorld2() {
-      if (currentWorld !== 2 || shootingStars.length > 10) return;
-      const sx = player.position.x + (Math.random() - 0.5) * 520;
-      const sy = 140 + Math.random() * 160;
-      const sz = player.position.z - 160 - Math.random() * 260;
-      const dx = (Math.random() < 0.5 ? 1 : -1) * (50 + Math.random() * 38);
-      const dy = -20 - Math.random() * 14;
+      if (currentWorld !== 2 || shootingStars.length > 12) return;
+      const sx = player.position.x + (Math.random() - 0.5) * 560;
+      const sy = 140 + Math.random() * 180;
+      const sz = player.position.z - 160 - Math.random() * 280;
+      const dx = (Math.random() < 0.5 ? 1 : -1) * (54 + Math.random() * 42);
+      const dy = -22 - Math.random() * 14;
       const dz = 25 + Math.random() * 25;
 
       const geo = new THREE.BufferGeometry().setFromPoints([
@@ -2026,7 +2112,7 @@
     };
 
     function getRebirthMultiplier() {
-      return 1 + rebirthCount * 0.25;
+      return 1 + rebirthCount * 0.15;
     }
 
     function isWorld2Infinite() {
@@ -2191,7 +2277,7 @@
       if (targetWorldId === 2) {
         ui.worldSceneTitle.textContent = '🌌 WECHSEL IN WELT 2 (STERNENNACHT)';
         ui.worldSceneSub.textContent = rebirthCount > 0
-          ? 'Nach Rebirth: In Welt 2 gilt unendlicher Speed (∞)!'
+          ? 'Nach Rebirth: In Welt 2 gilt unendlicher Speed (∞) mit echtem Overdrive-Schub!'
           : 'Bis zu 10.000 Speed · Licht-Spur (7.500+) & Alle Effekte (10.000+)!';
       } else {
         ui.worldSceneTitle.textContent = '☀️ RÜCKKEHR IN WELT 1 (MAX 5.000)';
@@ -2490,7 +2576,7 @@
       } else if (isDoubleTap && !airPushUsed) {
         airPushUsed = true;
         velY = Math.max(velY, 10.5);
-        currentSpeed = Math.min(currentSpeed + 3.0 * getRebirthMultiplier(), getWorldCap());
+        currentSpeed = Math.min(currentSpeed + 1.5 * getRebirthMultiplier(), getWorldCap());
         checkMilestones();
         squashAmount = 0.2;
         playSound('airpush');
@@ -2533,12 +2619,19 @@
         starsPoints.rotation.y += dt * 0.014;
         cosmosArc.rotation.z += dt * 0.04;
         ringPlanet.rotation.y += dt * 0.08;
-        if (Math.random() < 0.08) spawnShootingStarInWorld2();
+        twinPlanet.rotation.y -= dt * 0.06;
+        if (Math.random() < 0.11) spawnShootingStarInWorld2();
       }
 
       for (const prop of floatingWorldProps) {
-        prop.mesh.position.y = prop.baseY + Math.sin(now * 0.0022 + prop.phase) * 0.85;
-        prop.mesh.rotation.y += dt * 0.9;
+        prop.mesh.position.y = prop.baseY + Math.sin(now * 0.002 + prop.phase) * 1.25;
+        if (prop.mesh.children.length === 0) {
+          prop.mesh.rotation.y += dt * 0.9;
+        }
+      }
+
+      for (const sr of spinningRings) {
+        sr.mesh.rotation.z += dt * sr.speed;
       }
 
       for (let i = shootingStars.length - 1; i >= 0; i--) {
@@ -2612,7 +2705,7 @@
           player.position.set(0, getTerrainHeight(0, 0), 0);
         }
       } else {
-        // ---------- Normales Gameplay (Hardcore ~15 Min bis Rebirth) ----------
+        // ---------- Normales Gameplay (Marathon ~25–30 Min bis Rebirth + echter Overdrive nach Rebirth) ----------
         const wantsSprint = Boolean(keys['ShiftLeft'] || keys['ShiftRight'] || touchSprintHeld);
 
         if (sprintCooldownTimer > 0) {
@@ -2627,7 +2720,7 @@
           }
         } else if (wantsSprint && !sprintExhaustedThisHold && sprintCooldownTimer <= 0 && gameStarted && !uiModalOpen) {
           sprintActiveTimer = SPRINT_DURATION;
-          const sprintBurst = 6.5 * getRebirthMultiplier();
+          const sprintBurst = 3.2 * getRebirthMultiplier();
           currentSpeed = Math.min(currentSpeed + sprintBurst, getWorldCap());
           checkMilestones();
           squashAmount = 0.22;
@@ -2682,10 +2775,18 @@
           dX /= len;
           dZ /= len;
 
-          const accelGain = (3.4 + (sprintActiveTimer > 0 ? 4.2 : 0)) * getRebirthMultiplier() * inputMag;
+          const accelGain = (1.7 + (sprintActiveTimer > 0 ? 2.1 : 0)) * getRebirthMultiplier() * inputMag;
           currentSpeed = Math.min(currentSpeed + accelGain * dt, worldCap);
 
-          const visualMoveSpeed = Math.min(18 + currentSpeed * 0.014, 95);
+          // Fix: Bei hohem Speed (besonders in Welt 2 nach Rebirth bei 10.000–100.000+) spürbar weiter steigern!
+          const baseScale = 18 + Math.min(currentSpeed * 0.014, 72);
+          const excessOver10k = Math.max(0, currentSpeed - 10000);
+          const postRebirthBoost = isWorld2Infinite()
+            ? Math.min(Math.pow(excessOver10k, 0.56) * 1.15, 165)
+            : 0;
+          const sprintMult = sprintActiveTimer > 0 ? 1.38 : 1.0;
+          const visualMoveSpeed = (baseScale + postRebirthBoost) * sprintMult;
+
           player.position.x += dX * visualMoveSpeed * dt;
           player.position.z += dZ * visualMoveSpeed * dt;
 
@@ -2708,7 +2809,7 @@
             const earned = Math.floor(distanceAccumulator / stepLength);
             distanceAccumulator = 0;
             steps += earned;
-            const stepGain = earned * 0.42 * getRebirthMultiplier();
+            const stepGain = earned * 0.21 * getRebirthMultiplier();
             currentSpeed = Math.min(currentSpeed + stepGain, worldCap);
           }
         }
@@ -2740,8 +2841,8 @@
         || (controlMode === 'touch' && Math.hypot(touchMoveVec.x, touchMoveVec.y) > 0.08);
 
       if (isGrounded && hasMoveInput && !worldSceneActive) {
-        const speedNorm = Math.min(currentSpeed / 600, 1.5);
-        const strideFreq = 8.0 + speedNorm * 12.0;
+        const speedNorm = Math.min(currentSpeed / 600, 1.8);
+        const strideFreq = 8.0 + speedNorm * 13.0;
         animCycle += dt * strideFreq;
 
         const swing = Math.sin(animCycle);
@@ -2751,25 +2852,25 @@
         const elbowBendL = -0.45 - Math.max(0, Math.sin(animCycle)) * (0.55 + speedNorm * 0.35);
         const elbowBendR = -0.45 - Math.max(0, Math.sin(animCycle + Math.PI)) * (0.55 + speedNorm * 0.35);
 
-        const forwardLean = (sprintActiveTimer > 0 ? 0.38 : 0.12 + speedNorm * 0.16);
+        const forwardLean = (sprintActiveTimer > 0 ? 0.42 : 0.14 + Math.min(speedNorm * 0.18, 0.28));
         chestPivot.rotation.x = forwardLean + Math.abs(Math.sin(animCycle)) * 0.06;
-        chestPivot.rotation.y = Math.sin(animCycle) * (0.14 + speedNorm * 0.08);
+        chestPivot.rotation.y = Math.sin(animCycle) * (0.14 + Math.min(speedNorm * 0.08, 0.12));
         pelvis.rotation.y = -Math.sin(animCycle) * 0.08;
-        chestPivot.position.y = 1.05 + Math.abs(Math.cos(animCycle)) * (0.06 + speedNorm * 0.04);
+        chestPivot.position.y = 1.05 + Math.abs(Math.cos(animCycle)) * (0.06 + Math.min(speedNorm * 0.04, 0.06));
 
         headPivot.rotation.x = -forwardLean * 0.6 + Math.sin(animCycle * 2) * 0.03;
         headPivot.rotation.y = -Math.sin(animCycle) * 0.12;
 
-        leftLeg.root.rotation.x = swing * (0.75 + speedNorm * 0.32);
+        leftLeg.root.rotation.x = swing * (0.75 + Math.min(speedNorm * 0.32, 0.42));
         leftLeg.mid.rotation.x = -kneeBendL;
 
-        rightLeg.root.rotation.x = swingOpp * (0.75 + speedNorm * 0.32);
+        rightLeg.root.rotation.x = swingOpp * (0.75 + Math.min(speedNorm * 0.32, 0.42));
         rightLeg.mid.rotation.x = -kneeBendR;
 
-        leftArm.root.rotation.x = swingOpp * (0.8 + speedNorm * 0.35);
+        leftArm.root.rotation.x = swingOpp * (0.8 + Math.min(speedNorm * 0.35, 0.45));
         leftArm.mid.rotation.x = elbowBendL;
 
-        rightArm.root.rotation.x = swing * (0.8 + speedNorm * 0.35);
+        rightArm.root.rotation.x = swing * (0.8 + Math.min(speedNorm * 0.35, 0.45));
         rightArm.mid.rotation.x = elbowBendR;
       } else if (!isGrounded || worldSceneActive) {
         const upPose = velY > 0.5 || worldSceneActive;
@@ -2866,6 +2967,7 @@
       if (!worldSceneActive && (hasMoveInput || !isGrounded || currentSpeed >= 2500)) {
         const backX = Math.sin(player.rotation.y);
         const backZ = Math.cos(player.rotation.y);
+        const burstCount = isWorld2Infinite() && currentSpeed > 15000 ? 6 : 3;
 
         if (showWind) {
           spawnTrailSegment(
@@ -2874,14 +2976,14 @@
             player.position.z + backZ * 1.2 + (Math.random() - 0.5) * 0.9,
             player.rotation.y, 0x67e8f9, 0.32, 1.4, 0.7
           );
-          for (let k = 0; k < 3; k++) {
+          for (let k = 0; k < burstCount; k++) {
             const ang = Math.random() * Math.PI * 2;
             spawnParticle(
               player.position.x + Math.cos(ang) * 1.1,
               player.position.y + 0.5 + Math.random() * 1.4,
               player.position.z + Math.sin(ang) * 1.1,
               0xa5f3fc, backX * 8 + Math.cos(ang) * 4, 1.5 + Math.random() * 2.5, backZ * 8 + Math.sin(ang) * 4,
-              0.38, 1.15, -1.0
+              0.38, 1.2, -1.0
             );
           }
         }
@@ -2893,7 +2995,7 @@
             player.position.z + backZ * 1.3 + (Math.random() - 0.5) * 0.8,
             player.rotation.y, 0xff5722, 0.36, 1.5, 1.2
           );
-          for (let k = 0; k < 3; k++) {
+          for (let k = 0; k < burstCount; k++) {
             const ang = Math.random() * Math.PI * 2;
             const col = Math.random() < 0.5 ? 0xff4500 : (Math.random() < 0.8 ? 0xf97316 : 0xfacc15);
             spawnParticle(
@@ -2901,27 +3003,27 @@
               player.position.y + 0.3 + Math.random() * 1.1,
               player.position.z + Math.sin(ang) * 0.75,
               col, (Math.random() - 0.5) * 3.5, 5.2 + Math.random() * 4.5, (Math.random() - 0.5) * 3.5,
-              0.42, 1.55, -9.0
+              0.42, 1.6, -9.0
             );
           }
         }
 
         if (showLightning) {
-          if (Math.random() < 0.85) spawnLightningStrike();
+          if (Math.random() < 0.9) spawnLightningStrike();
           spawnTrailSegment(
             player.position.x + backX * 1.4,
             player.position.y + 1.0,
             player.position.z + backZ * 1.4,
             player.rotation.y, 0xe879f9, 0.28, 1.2, 1.4
           );
-          for (let k = 0; k < 3; k++) {
+          for (let k = 0; k < burstCount; k++) {
             spawnParticle(
               player.position.x + (Math.random() - 0.5) * 1.4,
               player.position.y + 0.4 + Math.random() * 1.8,
               player.position.z + (Math.random() - 0.5) * 1.4,
               Math.random() < 0.55 ? 0xe879f9 : 0xfef08a,
               (Math.random() - 0.5) * 13, 4.5 + Math.random() * 5, (Math.random() - 0.5) * 13,
-              0.3, 1.45, 7.0
+              0.3, 1.5, 7.0
             );
           }
         }
@@ -2933,7 +3035,7 @@
             player.position.z + backZ * 1.5,
             player.rotation.y, 0x38bdf8, 0.4, 1.8, 1.5
           );
-          for (let k = 0; k < 4; k++) {
+          for (let k = 0; k < burstCount + 1; k++) {
             const ang = now * 0.01 + (k / 4) * Math.PI * 2;
             spawnParticle(
               player.position.x + Math.cos(ang) * 1.2,
@@ -2941,7 +3043,7 @@
               player.position.z + Math.sin(ang) * 1.2,
               k % 2 === 0 ? 0x38bdf8 : 0xf472b6,
               Math.cos(ang) * 9.5, 3.2 + Math.random() * 4.2, Math.sin(ang) * 9.5,
-              0.44, 1.75, 2.0
+              0.44, 1.8, 2.0
             );
           }
         }
@@ -2953,7 +3055,7 @@
             player.position.z + backZ * 1.6,
             player.rotation.y, 0xfef08a, 0.45, 2.2, 1.8
           );
-          for (let k = 0; k < 4; k++) {
+          for (let k = 0; k < burstCount + 1; k++) {
             const ang = Math.random() * Math.PI * 2;
             spawnParticle(
               player.position.x + Math.cos(ang) * 1.3,
@@ -2961,7 +3063,7 @@
               player.position.z + Math.sin(ang) * 1.3,
               k % 2 === 0 ? 0xfef08a : 0xe0f2fe,
               Math.cos(ang) * 8.0, 4.5 + Math.random() * 4.5, Math.sin(ang) * 8.0,
-              0.45, 1.85, -3.0
+              0.45, 1.9, -3.0
             );
           }
         }
@@ -2995,7 +3097,7 @@
       core.rotation.x += dt * 2.8;
 
       if (trailMode === 'overdrive') {
-        playerLight.intensity = 6.2;
+        playerLight.intensity = 6.8;
         playerLight.color.setHex(0xfacc15);
       } else if (trailMode === 'light') {
         playerLight.intensity = 5.4;
@@ -3035,7 +3137,7 @@
             bp.cooldown = 1.8;
             padBoostTimer = 3.0;
             steps += 2;
-            const padGain = (currentWorld === 2 ? 14.5 : 11.0) * getRebirthMultiplier();
+            const padGain = (currentWorld === 2 ? 7.2 : 5.5) * getRebirthMultiplier();
             currentSpeed = Math.min(currentSpeed + padGain, getWorldCap());
             checkMilestones();
             if (isGrounded) velY = 8.0;
@@ -3071,7 +3173,7 @@
 
             orbsCollected += 1;
             steps += 2;
-            const orbGain = (currentWorld === 2 ? 3.2 : 2.4) * getRebirthMultiplier();
+            const orbGain = (currentWorld === 2 ? 1.6 : 1.2) * getRebirthMultiplier();
             currentSpeed = Math.min(currentSpeed + orbGain, getWorldCap());
             checkMilestones();
             playSound('orb', steps);
@@ -3112,7 +3214,9 @@
       }
 
       // ---------- Kamera ----------
-      let distBack = 7.8 + Math.min(currentSpeed * 0.002, 7.5);
+      const over10kCam = Math.max(0, currentSpeed - 10000);
+      const overdriveCamPull = isWorld2Infinite() ? Math.min(Math.pow(over10kCam, 0.35) * 1.25, 11.0) : 0;
+      let distBack = 7.8 + Math.min(currentSpeed * 0.002, 7.5) + overdriveCamPull;
       let pitchNow = cameraPitch;
       let lookTargetY = player.position.y + 1.55;
 
@@ -3148,7 +3252,8 @@
 
       camera.lookAt(player.position.x, lookTargetY, player.position.z);
 
-      const targetFov = worldSceneActive ? 82 : (72 + Math.min(currentSpeed * 0.004, 24));
+      const overdriveFov = isWorld2Infinite() ? Math.min(Math.pow(over10kCam, 0.28) * 3.2, 18) : 0;
+      const targetFov = worldSceneActive ? 82 : (72 + Math.min(currentSpeed * 0.004, 24) + overdriveFov);
       camera.fov = THREE.MathUtils.lerp(camera.fov, targetFov, 1 - Math.exp(-8 * dt));
       camera.updateProjectionMatrix();
 
@@ -3162,7 +3267,7 @@
         ui.capSpeed.textContent = formatCapDisplay();
         ui.rebirthHud.textContent = `${rebirthCount} (${getRebirthMultiplier().toFixed(2)}x)`;
 
-        const barCap = isWorld2Infinite() ? 10000 : getWorldCap();
+        const barCap = isWorld2Infinite() ? 100000 : getWorldCap();
         const pct = Math.min(100, (currentSpeed / Math.max(barCap, 1)) * 100);
         ui.speedFill.style.width = `${pct}%`;
 
