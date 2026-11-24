@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no" />
-  <title>Step Rush 3D — 10 Unique Skins & Rebirth Edition</title>
+  <title>Step Rush 3D — 15-Min Grind & 10 Skins Edition</title>
   <style>
     * { box-sizing: border-box; }
     html, body {
@@ -739,10 +739,10 @@
   <!-- Startmenü -->
   <div id="startMenu">
     <div class="menu-card">
-      <span class="menu-pill">10 Unique 3D Skins · Multi-World · Rebirth</span>
+      <span class="menu-pill">Hardcore ~15 Min Grind · 10 Unique 3D Skins</span>
       <h1 class="menu-title">STEP RUSH 3D</h1>
       <p class="menu-subtitle">
-        Welt 1 bis <strong>5.000 Speed</strong> · Welt 2 bis <strong>10.000 Speed</strong> · <strong>9 Shop-Skins + 1 Admin-Only-Skin</strong> mit eigenen 3D-Modellen &amp; unendlichem Speed nach <strong>Rebirth</strong>!
+        Hardcore-Grind (~15 Min bis Rebirth): Welt 1 bis <strong>5.000 Speed</strong> · Welt 2 bis <strong>10.000 Speed</strong> · <strong>9 Shop-Skins + 1 Admin-Only-Skin</strong> &amp; unendlicher Speed in Welt 2 nach <strong>Rebirth</strong>!
       </p>
       <div class="stage-strip">
         <span class="stage-chip">🌪️ 100 Wind</span>
@@ -800,7 +800,7 @@
     <div id="worldSceneSub">Der Charakter katapultiert sich hoch in die Luft und landet auf der Insel!</div>
   </div>
 
-  <!-- Skin-Shop & Rebirth Modal (keine Upgrades!) -->
+  <!-- Skin-Shop & Rebirth Modal -->
   <div class="modal-backdrop hidden" id="shopModal">
     <div class="modal-box">
       <div class="modal-header">
@@ -817,7 +817,7 @@
         <div>
           <div style="font-weight:900; font-size:15px; color:#fef08a;">♻️ Rebirth (ab 10.000 Speed)</div>
           <div style="font-size:12px; color:#e2e8f0; margin-top:2px;">
-            Startet in <strong>Welt 1</strong> neu bei <strong>0 Speed</strong>, gibt <strong>+0.75x Speed-Multiplikator</strong> und schaltet in <strong>Welt 2 unendlichen Speed (∞)</strong> frei!
+            Startet in <strong>Welt 1</strong> neu bei <strong>0 Speed</strong>, gibt <strong>+0.25x Speed-Multiplikator</strong> und schaltet in <strong>Welt 2 unendlichen Speed (∞)</strong> frei!
           </div>
         </div>
         <button class="rebirth-action-btn" id="modalRebirthBtn" disabled>Rebirth (10.000 Speed)</button>
@@ -1478,14 +1478,14 @@
     // ---------- 10 Skins mit stark unterschiedlichen 3D-Silhouetten & Bauteilen ----------
     const SKINS = [
       { id: 'cyber', name: '1. Cyber Runner', desc: 'Schulter-Klingen & Visier-Kamm.', cost: 0, adminOnly: false, primary: 0x0284c7, accent: 0x38bdf8, helmet: 0xf8fafc, visor: 0x38bdf8 },
-      { id: 'inferno', name: '2. Inferno Knight', desc: 'Ritter-Hörner & Rückenflügel.', cost: 120, adminOnly: false, primary: 0xdc2626, accent: 0xf97316, helmet: 0xfff7ed, visor: 0xfacc15 },
-      { id: 'venom', name: '3. Venom Stalker', desc: 'Rückenstacheln & breite Schultern.', cost: 260, adminOnly: false, primary: 0x059669, accent: 0x4ade80, helmet: 0xecfdf5, visor: 0xa3e635 },
-      { id: 'void', name: '4. Void Sovereign', desc: 'Astral-Krone & schwebende Klingen.', cost: 480, adminOnly: false, primary: 0x7c3aed, accent: 0xe879f9, helmet: 0xfaf5ff, visor: 0xf472b6 },
-      { id: 'samurai', name: '5. Samurai Ronin', desc: 'Breiter Kabuto-Hut & Rücken-Katana.', cost: 750, adminOnly: false, primary: 0x991b1b, accent: 0xfacc15, helmet: 0xfef2f2, visor: 0xfef08a },
-      { id: 'mecha', name: '6. Mecha Titan', desc: 'Kasten-Panzerkopf, Antennen & Blöcke.', cost: 1150, adminOnly: false, primary: 0x475569, accent: 0x38bdf8, helmet: 0xcbd5e1, visor: 0x22d3ee },
-      { id: 'valkyrie', name: '7. Frost Valkyrie', desc: 'Flügel-Ohren & Eiskristall-Rücken.', cost: 1650, adminOnly: false, primary: 0x0369a1, accent: 0x67e8f9, helmet: 0xf0f9ff, visor: 0x7dd3fc },
-      { id: 'pharaoh', name: '8. Solar Pharaoh', desc: 'Pharaonen-Kopfkrone & Brust-Kragen.', cost: 2300, adminOnly: false, primary: 0xb45309, accent: 0xfacc15, helmet: 0x1e3a8a, visor: 0xfef08a },
-      { id: 'assassin', name: '9. Shadow Assassin', desc: 'Spitze Kapuze, Schal & Doppel-Dolche.', cost: 3200, adminOnly: false, primary: 0x18181b, accent: 0xf43f5e, helmet: 0x27272a, visor: 0xfb7185 },
+      { id: 'inferno', name: '2. Inferno Knight', desc: 'Ritter-Hörner & Rückenflügel.', cost: 80, adminOnly: false, primary: 0xdc2626, accent: 0xf97316, helmet: 0xfff7ed, visor: 0xfacc15 },
+      { id: 'venom', name: '3. Venom Stalker', desc: 'Rückenstacheln & breite Schultern.', cost: 180, adminOnly: false, primary: 0x059669, accent: 0x4ade80, helmet: 0xecfdf5, visor: 0xa3e635 },
+      { id: 'void', name: '4. Void Sovereign', desc: 'Astral-Krone & schwebende Klingen.', cost: 340, adminOnly: false, primary: 0x7c3aed, accent: 0xe879f9, helmet: 0xfaf5ff, visor: 0xf472b6 },
+      { id: 'samurai', name: '5. Samurai Ronin', desc: 'Breiter Kabuto-Hut & Rücken-Katana.', cost: 550, adminOnly: false, primary: 0x991b1b, accent: 0xfacc15, helmet: 0xfef2f2, visor: 0xfef08a },
+      { id: 'mecha', name: '6. Mecha Titan', desc: 'Kasten-Panzerkopf, Antennen & Blöcke.', cost: 850, adminOnly: false, primary: 0x475569, accent: 0x38bdf8, helmet: 0xcbd5e1, visor: 0x22d3ee },
+      { id: 'valkyrie', name: '7. Frost Valkyrie', desc: 'Flügel-Ohren & Eiskristall-Rücken.', cost: 1250, adminOnly: false, primary: 0x0369a1, accent: 0x67e8f9, helmet: 0xf0f9ff, visor: 0x7dd3fc },
+      { id: 'pharaoh', name: '8. Solar Pharaoh', desc: 'Pharaonen-Kopfkrone & Brust-Kragen.', cost: 1750, adminOnly: false, primary: 0xb45309, accent: 0xfacc15, helmet: 0x1e3a8a, visor: 0xfef08a },
+      { id: 'assassin', name: '9. Shadow Assassin', desc: 'Spitze Kapuze, Schal & Doppel-Dolche.', cost: 2400, adminOnly: false, primary: 0x18181b, accent: 0xf43f5e, helmet: 0x27272a, visor: 0xfb7185 },
       { id: 'overlord', name: '10. Admin Overlord', desc: 'Exklusiver Admin-Only-Skin mit Halo & Türmen.', cost: 0, adminOnly: true, primary: 0xbe185d, accent: 0xfacc15, helmet: 0xffffff, visor: 0x38bdf8 }
     ];
 
@@ -1577,7 +1577,6 @@
     visor.position.set(0, 0.29, 0.25);
     headPivot.add(visor);
 
-    // ---- 10 verschiedene 3D-Skin-Ausrüstungen ----
     const skinGearGroups = {
       cyber: new THREE.Group(),
       inferno: new THREE.Group(),
@@ -1644,7 +1643,7 @@
     voidShardR.position.set(0.78, 0.68, -0.15);
     skinGearGroups.void.add(voidShardL, voidShardR);
 
-    // 5. Samurai Ronin (breiter Kabuto-Kegel + Rücken-Katana)
+    // 5. Samurai Ronin
     const samuraiHat = new THREE.Mesh(new THREE.ConeGeometry(0.76, 0.36, 16), armorAccentMat);
     samuraiHat.position.set(0, 0.62, 0);
     const katanaBlade = new THREE.Mesh(new THREE.BoxGeometry(0.06, 1.35, 0.12), skinHelmetMat);
@@ -1652,7 +1651,7 @@
     katanaBlade.rotation.z = -0.58;
     skinGearGroups.samurai.add(samuraiHat, katanaBlade);
 
-    // 6. Mecha Titan (Kastenkopf + Antennen + schwere Schulterblöcke)
+    // 6. Mecha Titan
     const mechaBoxHead = new THREE.Mesh(new THREE.BoxGeometry(0.66, 0.56, 0.62), jointDarkMat);
     mechaBoxHead.position.set(0, 0.3, 0);
     const antL = new THREE.Mesh(new THREE.CylinderGeometry(0.03, 0.04, 0.55, 6), armorAccentMat);
@@ -1665,7 +1664,7 @@
     mechaBlockR.position.set(0.62, 0.66, 0);
     skinGearGroups.mecha.add(mechaBoxHead, antL, antR, mechaBlockL, mechaBlockR);
 
-    // 7. Frost Valkyrie (Flügel-Ohren + Eissplitter)
+    // 7. Frost Valkyrie
     const valkWingL = new THREE.Mesh(new THREE.BoxGeometry(0.55, 0.14, 0.08), skinHelmetMat);
     valkWingL.position.set(-0.52, 0.42, -0.05);
     valkWingL.rotation.z = 0.45;
@@ -1676,7 +1675,7 @@
     iceShardBack.position.set(0, 0.45, -0.48);
     skinGearGroups.valkyrie.add(valkWingL, valkWingR, iceShardBack);
 
-    // 8. Solar Pharaoh (Kopfkrone mit Seitenschutz + goldener Brust-Kragen)
+    // 8. Solar Pharaoh
     const pharaohHood = new THREE.Mesh(new THREE.BoxGeometry(0.76, 0.48, 0.42), armorAccentMat);
     pharaohHood.position.set(0, 0.24, -0.06);
     const solarCollar = new THREE.Mesh(new THREE.TorusGeometry(0.46, 0.08, 8, 20), armorAccentMat);
@@ -1684,7 +1683,7 @@
     solarCollar.position.set(0, 0.72, 0.05);
     skinGearGroups.pharaoh.add(pharaohHood, solarCollar);
 
-    // 9. Shadow Assassin (Spitze Kapuze, Nacken-Schal & Doppel-Dolche)
+    // 9. Shadow Assassin
     const assassinHood = new THREE.Mesh(new THREE.ConeGeometry(0.42, 0.58, 8), jointDarkMat);
     assassinHood.position.set(0, 0.62, -0.08);
     assassinHood.rotation.x = -0.35;
@@ -1696,7 +1695,7 @@
     daggerR.rotation.x = -2.4;
     skinGearGroups.assassin.add(assassinHood, daggerL, daggerR);
 
-    // 10. Admin Overlord (Admin-Only: Doppel-Halo, Schulter-Türme & Krone)
+    // 10. Admin Overlord
     const overlordHalo1 = new THREE.Mesh(new THREE.TorusGeometry(0.54, 0.045, 10, 32), armorAccentMat);
     overlordHalo1.position.set(0, 0.55, -0.18);
     const overlordHalo2 = new THREE.Mesh(new THREE.TorusGeometry(0.72, 0.035, 10, 32), visorGlowMat);
@@ -2027,7 +2026,7 @@
     };
 
     function getRebirthMultiplier() {
-      return 1 + rebirthCount * 0.75;
+      return 1 + rebirthCount * 0.25;
     }
 
     function isWorld2Infinite() {
@@ -2134,7 +2133,7 @@
       ui.shopMaxSpeedDisplay.textContent = formatCapDisplay();
       ui.shopRebirthDisplay.textContent = rebirthCount;
       ui.shopMultDisplay.textContent = `${getRebirthMultiplier().toFixed(2)}x`;
-      ui.rebirthHud.textContent = `${rebirthCount} (${getRebirthMultiplier().toFixed(1)}x)`;
+      ui.rebirthHud.textContent = `${rebirthCount} (${getRebirthMultiplier().toFixed(2)}x)`;
       ui.speed.textContent = currentSpeed.toFixed(1);
       ui.capSpeed.textContent = formatCapDisplay();
       ui.modalRebirthBtn.disabled = currentSpeed < 10000;
@@ -2491,7 +2490,7 @@
       } else if (isDoubleTap && !airPushUsed) {
         airPushUsed = true;
         velY = Math.max(velY, 10.5);
-        currentSpeed = Math.min(currentSpeed + 22 * getRebirthMultiplier(), getWorldCap());
+        currentSpeed = Math.min(currentSpeed + 3.0 * getRebirthMultiplier(), getWorldCap());
         checkMilestones();
         squashAmount = 0.2;
         playSound('airpush');
@@ -2613,7 +2612,7 @@
           player.position.set(0, getTerrainHeight(0, 0), 0);
         }
       } else {
-        // ---------- Normales Gameplay ----------
+        // ---------- Normales Gameplay (Hardcore ~15 Min bis Rebirth) ----------
         const wantsSprint = Boolean(keys['ShiftLeft'] || keys['ShiftRight'] || touchSprintHeld);
 
         if (sprintCooldownTimer > 0) {
@@ -2628,7 +2627,7 @@
           }
         } else if (wantsSprint && !sprintExhaustedThisHold && sprintCooldownTimer <= 0 && gameStarted && !uiModalOpen) {
           sprintActiveTimer = SPRINT_DURATION;
-          const sprintBurst = 45 * getRebirthMultiplier();
+          const sprintBurst = 6.5 * getRebirthMultiplier();
           currentSpeed = Math.min(currentSpeed + sprintBurst, getWorldCap());
           checkMilestones();
           squashAmount = 0.22;
@@ -2683,10 +2682,10 @@
           dX /= len;
           dZ /= len;
 
-          const accelGain = (22 + (sprintActiveTimer > 0 ? 34 : 0)) * getRebirthMultiplier() * inputMag;
+          const accelGain = (3.4 + (sprintActiveTimer > 0 ? 4.2 : 0)) * getRebirthMultiplier() * inputMag;
           currentSpeed = Math.min(currentSpeed + accelGain * dt, worldCap);
 
-          const visualMoveSpeed = Math.min(20 + currentSpeed * 0.035, 130);
+          const visualMoveSpeed = Math.min(18 + currentSpeed * 0.014, 95);
           player.position.x += dX * visualMoveSpeed * dt;
           player.position.z += dZ * visualMoveSpeed * dt;
 
@@ -2704,12 +2703,12 @@
         const stepDist = Math.hypot(player.position.x - prevX, player.position.z - prevZ);
         if (isGrounded && stepDist > 0.001) {
           distanceAccumulator += stepDist;
-          const stepLength = 2.5;
+          const stepLength = 2.6;
           if (distanceAccumulator >= stepLength) {
             const earned = Math.floor(distanceAccumulator / stepLength);
             distanceAccumulator = 0;
             steps += earned;
-            const stepGain = earned * 3.2 * getRebirthMultiplier();
+            const stepGain = earned * 0.42 * getRebirthMultiplier();
             currentSpeed = Math.min(currentSpeed + stepGain, worldCap);
           }
         }
@@ -2741,8 +2740,8 @@
         || (controlMode === 'touch' && Math.hypot(touchMoveVec.x, touchMoveVec.y) > 0.08);
 
       if (isGrounded && hasMoveInput && !worldSceneActive) {
-        const speedNorm = Math.min(currentSpeed / 400, 1.5);
-        const strideFreq = 8.0 + speedNorm * 13.0;
+        const speedNorm = Math.min(currentSpeed / 600, 1.5);
+        const strideFreq = 8.0 + speedNorm * 12.0;
         animCycle += dt * strideFreq;
 
         const swing = Math.sin(animCycle);
@@ -3036,7 +3035,7 @@
             bp.cooldown = 1.8;
             padBoostTimer = 3.0;
             steps += 2;
-            const padGain = (currentWorld === 2 ? 85 : 65) * getRebirthMultiplier();
+            const padGain = (currentWorld === 2 ? 14.5 : 11.0) * getRebirthMultiplier();
             currentSpeed = Math.min(currentSpeed + padGain, getWorldCap());
             checkMilestones();
             if (isGrounded) velY = 8.0;
@@ -3072,7 +3071,7 @@
 
             orbsCollected += 1;
             steps += 2;
-            const orbGain = (currentWorld === 2 ? 18 : 14) * getRebirthMultiplier();
+            const orbGain = (currentWorld === 2 ? 3.2 : 2.4) * getRebirthMultiplier();
             currentSpeed = Math.min(currentSpeed + orbGain, getWorldCap());
             checkMilestones();
             playSound('orb', steps);
@@ -3161,7 +3160,7 @@
         ui.orbs.textContent = orbsCollected;
         ui.speed.textContent = currentSpeed.toFixed(1);
         ui.capSpeed.textContent = formatCapDisplay();
-        ui.rebirthHud.textContent = `${rebirthCount} (${getRebirthMultiplier().toFixed(1)}x)`;
+        ui.rebirthHud.textContent = `${rebirthCount} (${getRebirthMultiplier().toFixed(2)}x)`;
 
         const barCap = isWorld2Infinite() ? 10000 : getWorldCap();
         const pct = Math.min(100, (currentSpeed / Math.max(barCap, 1)) * 100);
