@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="de">
+<html lang="en">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no" />
@@ -35,13 +35,45 @@
     #startMenu.hidden { display: none; }
 
     .menu-card {
-      width: min(94vw, 720px);
+      width: min(94vw, 740px);
       background: linear-gradient(155deg, rgba(15, 23, 42, 0.95), rgba(6, 11, 24, 0.98));
       border: 1px solid rgba(125, 211, 252, 0.36);
       border-radius: 32px;
-      padding: 36px 30px;
+      padding: 32px 28px;
       text-align: center;
       box-shadow: 0 35px 100px rgba(0, 0, 0, 0.85), 0 0 70px rgba(56, 189, 248, 0.18);
+    }
+
+    .lang-row {
+      display: flex;
+      justify-content: center;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin-bottom: 16px;
+    }
+
+    .lang-btn {
+      background: rgba(15, 23, 42, 0.88);
+      border: 1px solid rgba(148, 163, 184, 0.35);
+      color: #cbd5e1;
+      border-radius: 999px;
+      padding: 6px 13px;
+      font-size: 12px;
+      font-weight: 800;
+      cursor: pointer;
+      transition: all 0.15s ease;
+    }
+
+    .lang-btn:hover {
+      border-color: #38bdf8;
+      color: #ffffff;
+    }
+
+    .lang-btn.active {
+      background: linear-gradient(90deg, #0284c7, #7c3aed);
+      border-color: #7dd3fc;
+      color: #ffffff;
+      box-shadow: 0 0 18px rgba(56, 189, 248, 0.35);
     }
 
     .menu-pill {
@@ -71,8 +103,8 @@
     .menu-subtitle {
       color: #cbd5e1;
       font-size: 14px;
-      margin: 0 auto 24px;
-      max-width: 580px;
+      margin: 0 auto 22px;
+      max-width: 600px;
       line-height: 1.65;
     }
 
@@ -81,7 +113,7 @@
       flex-wrap: wrap;
       justify-content: center;
       gap: 8px;
-      margin-bottom: 26px;
+      margin-bottom: 24px;
     }
 
     .stage-chip {
@@ -739,29 +771,35 @@
   <!-- Startmenü -->
   <div id="startMenu">
     <div class="menu-card">
-      <span class="menu-pill">Marathon ~25–30 Min Grind · 10 Unique 3D Skins</span>
+      <div class="lang-row" id="languageSelector">
+        <button class="lang-btn active" data-lang="en">🇬🇧 English</button>
+        <button class="lang-btn" data-lang="de">🇩🇪 Deutsch</button>
+        <button class="lang-btn" data-lang="es">🇪🇸 Español</button>
+        <button class="lang-btn" data-lang="fr">🇫🇷 Français</button>
+      </div>
+      <span class="menu-pill" id="menuPill">Marathon ~25–30 Min Grind · 10 Unique 3D Skins</span>
       <h1 class="menu-title">STEP RUSH 3D</h1>
-      <p class="menu-subtitle">
-        Marathon-Grind (~25–30 Min bis Rebirth): Welt 1 bis <strong>5.000 Speed</strong> · Welt 2 bis <strong>10.000 Speed</strong> · <strong>9 Shop-Skins + 1 Admin-Only-Skin</strong> &amp; spürbar eskalierender Speed in Welt 2 nach <strong>Rebirth</strong>!
+      <p class="menu-subtitle" id="menuSubtitle">
+        Marathon grind (~25–30 min to Rebirth): World 1 up to <strong>5,000 Speed</strong> · World 2 up to <strong>10,000 Speed</strong> · <strong>9 Shop Skins + 1 Admin-Only Skin</strong> &amp; scaling post-Rebirth speed in World 2!
       </p>
-      <div class="stage-strip">
+      <div class="stage-strip" id="stageStrip">
         <span class="stage-chip">🌪️ 100 Wind</span>
-        <span class="stage-chip">🔥 1.000 Feuer</span>
-        <span class="stage-chip">⚡ 2.500 Blitz</span>
-        <span class="stage-chip">🌌 5.000 Plasma + Welt 2</span>
-        <span class="stage-chip">☀️ 7.500 Licht</span>
-        <span class="stage-chip">👑 10.000 Alle Effekte</span>
+        <span class="stage-chip">🔥 1,000 Fire</span>
+        <span class="stage-chip">⚡ 2,500 Lightning</span>
+        <span class="stage-chip">🌌 5,000 Plasma + World 2</span>
+        <span class="stage-chip">☀️ 7,500 Light</span>
+        <span class="stage-chip">👑 10,000 All Effects</span>
       </div>
       <div class="device-grid">
         <button class="device-btn" id="btnPC">
           <span class="device-icon">🖱️⌨️</span>
-          <span class="device-name">Maus &amp; Keyboard</span>
-          <span class="device-desc">WASD = Laufen · Shift = 5s Sprint (10s CD)<br>Maus = Kamera · 2x Space = Air-Push</span>
+          <span class="device-name" id="pcName">Mouse &amp; Keyboard</span>
+          <span class="device-desc" id="pcDesc">WASD = Move · Shift = 5s Sprint (10s CD)<br>Mouse = Camera · 2x Space = Air-Push</span>
         </button>
         <button class="device-btn" id="btnTouch">
           <span class="device-icon">📱📟</span>
-          <span class="device-name">Handy &amp; Tablet</span>
-          <span class="device-desc">Joystick links · Wischen rechts<br>SPRINT = 5s Boost (10s CD) · 2x Jump = Push</span>
+          <span class="device-name" id="touchName">Phone &amp; Tablet</span>
+          <span class="device-desc" id="touchDesc">Left Stick · Swipe Right<br>SPRINT = 5s Boost (10s CD) · 2x Jump = Push</span>
         </button>
       </div>
     </div>
@@ -769,61 +807,61 @@
 
   <!-- HUD -->
   <div id="hud">
-    <div class="card"><span class="label">Schritte</span><span class="value" id="steps">0</span></div>
-    <div class="card"><span class="label">Orbs</span><span class="value" id="orbs">0</span></div>
-    <div class="card" id="speedCard"><span class="label">Speed</span><span class="value" id="speed">0.0</span></div>
-    <div class="card"><span class="label">Max-Speed</span><span class="value" id="capSpeed">5000</span></div>
-    <div class="card"><span class="label">Rebirth</span><span class="value" id="rebirthHud">0 (1.0x)</span></div>
+    <div class="card"><span class="label" id="lblSteps">Steps</span><span class="value" id="steps">0</span></div>
+    <div class="card"><span class="label" id="lblOrbs">Orbs</span><span class="value" id="orbs">0</span></div>
+    <div class="card" id="speedCard"><span class="label" id="lblSpeed">Speed</span><span class="value" id="speed">0.0</span></div>
+    <div class="card"><span class="label" id="lblMaxSpeed">Max Speed</span><span class="value" id="capSpeed">5000</span></div>
+    <div class="card"><span class="label" id="lblRebirth">Rebirth</span><span class="value" id="rebirthHud">0 (1.0x)</span></div>
     <div class="hud-actions">
-      <button class="hud-btn" id="openShopBtn">🎭 Skin-Shop</button>
+      <button class="hud-btn" id="openShopBtn">🎭 Skin Shop</button>
       <button class="hud-btn" id="openAdminBtn">🛡️ Admin</button>
-      <button class="hud-btn" id="newWorldBtn">🌌 Neue Welt</button>
-      <button class="hud-btn" id="returnOldWorldBtn">☀️ Alte Welt</button>
+      <button class="hud-btn" id="newWorldBtn">🌌 New World</button>
+      <button class="hud-btn" id="returnOldWorldBtn">☀️ Old World</button>
       <button class="hud-btn" id="rebirthBtn">♻️ REBIRTH</button>
-      <button class="hud-btn" id="menuSwitchBtn">⚙️ Steuerung</button>
+      <button class="hud-btn" id="menuSwitchBtn">⚙️ Menu / Lang</button>
     </div>
   </div>
 
   <div id="statusRow">
-    <div class="badge" id="worldBadge">☀️ Welt 1 (Max 5.000)</div>
-    <div class="badge" id="biomeBadge">🌿 Sonnen-Wiese</div>
-    <div class="badge" id="sprintBadge">⚡ Sprint bereit (5.0s)</div>
-    <div class="badge" id="fxBadge">✨ Spur: Basis (&lt;100)</div>
+    <div class="badge" id="worldBadge">☀️ World 1 (Max 5,000)</div>
+    <div class="badge" id="biomeBadge">🌿 Sun Meadow</div>
+    <div class="badge" id="sprintBadge">⚡ Sprint Ready (5.0s)</div>
+    <div class="badge" id="fxBadge">✨ Trail: Base (&lt;100)</div>
   </div>
 
   <div id="speedBar"><div id="speedFill"></div></div>
-  <div id="pcHint" class="hidden">WASD = Bewegen · Shift gedrückt = 5s Sprint (10s CD) · 2x Leertaste = Air-Push · Maus ziehen = Kamera</div>
+  <div id="pcHint" class="hidden">WASD = Move · Hold Shift = 5s Sprint (10s CD) · 2x Space = Air-Push · Drag Mouse = Camera</div>
 
   <!-- Banner während der 3D-Weltwechsel-Szene -->
   <div id="worldSceneBanner" class="hidden">
-    <div id="worldSceneTitle">🚀 HIMMELSSPRUNG...</div>
-    <div id="worldSceneSub">Der Charakter katapultiert sich hoch in die Luft und landet auf der Insel!</div>
+    <div id="worldSceneTitle">🚀 SKY LAUNCH...</div>
+    <div id="worldSceneSub">Your character blasts into the sky and lands on the island!</div>
   </div>
 
   <!-- Skin-Shop & Rebirth Modal -->
   <div class="modal-backdrop hidden" id="shopModal">
     <div class="modal-box">
       <div class="modal-header">
-        <h2 class="modal-title">🎭 Skin-Shop &amp; Rebirth</h2>
+        <h2 class="modal-title" id="shopModalTitle">🎭 Skin Shop &amp; Rebirth</h2>
         <button class="close-btn" id="closeShopBtn">✕</button>
       </div>
       <div class="shop-wallet-bar">
-        <span>⚡ Speed: <strong id="shopSpeedDisplay">0.0</strong></span>
-        <span>🚀 Limit: <strong id="shopMaxSpeedDisplay">5000</strong></span>
-        <span>♻️ Rebirth: <strong id="shopRebirthDisplay">0</strong> (<span id="shopMultDisplay">1.0x</span>)</span>
+        <span>⚡ <span id="walletSpeedLabel">Speed</span>: <strong id="shopSpeedDisplay">0.0</strong></span>
+        <span>🚀 <span id="walletLimitLabel">Limit</span>: <strong id="shopMaxSpeedDisplay">5000</strong></span>
+        <span>♻️ <span id="walletRebirthLabel">Rebirth</span>: <strong id="shopRebirthDisplay">0</strong> (<span id="shopMultDisplay">1.0x</span>)</span>
       </div>
 
       <div class="rebirth-banner-box">
         <div>
-          <div style="font-weight:900; font-size:15px; color:#fef08a;">♻️ Rebirth (ab 10.000 Speed)</div>
-          <div style="font-size:12px; color:#e2e8f0; margin-top:2px;">
-            Startet in <strong>Welt 1</strong> neu bei <strong>0 Speed</strong>, gibt <strong>+0.15x Speed-Multiplikator</strong> und schaltet in <strong>Welt 2 unendlichen Speed (∞)</strong> frei!
+          <div style="font-weight:900; font-size:15px; color:#fef08a;" id="rebirthBoxTitle">♻️ Rebirth (at 10,000 Speed)</div>
+          <div style="font-size:12px; color:#e2e8f0; margin-top:2px;" id="rebirthBoxDesc">
+            Resets to <strong>World 1</strong> at <strong>0 Speed</strong>, grants <strong>+0.15x Speed Multiplier</strong>, and unlocks <strong>Infinite Speed (∞)</strong> in <strong>World 2</strong>!
           </div>
         </div>
-        <button class="rebirth-action-btn" id="modalRebirthBtn" disabled>Rebirth (10.000 Speed)</button>
+        <button class="rebirth-action-btn" id="modalRebirthBtn" disabled>Rebirth (10,000 Speed)</button>
       </div>
 
-      <div class="section-heading">🎭 9 Shop-Skins (der 10. Skin ist exklusiv im Admin-Panel)</div>
+      <div class="section-heading" id="shopSectionHeading">🎭 9 Shop Skins (10th Skin is exclusive in Admin Panel)</div>
       <div class="shop-grid" id="skinShopGrid"></div>
     </div>
   </div>
@@ -832,33 +870,33 @@
   <div class="modal-backdrop hidden" id="adminModal">
     <div class="modal-box">
       <div class="modal-header">
-        <h2 class="modal-title">🛡️ Admin Panel (Welt 1 &amp; Welt 2)</h2>
+        <h2 class="modal-title" id="adminModalTitle">🛡️ Admin Panel (World 1 &amp; World 2)</h2>
         <button class="close-btn" id="closeAdminBtn">✕</button>
       </div>
-      <div style="font-size:13px; color:#cbd5e1; margin-bottom:10px; line-height:1.45;">
-        Gib den Admin-Code ein – funktioniert in <strong>Welt 1</strong> und <strong>Welt 2</strong>:
+      <div style="font-size:13px; color:#cbd5e1; margin-bottom:10px; line-height:1.45;" id="adminPromptText">
+        Enter the admin code – works in <strong>World 1</strong> and <strong>World 2</strong>:
       </div>
       <div class="admin-row">
-        <input class="admin-input" id="adminCodeInput" type="text" placeholder="Admin-Code eingeben..." />
-        <button class="buy-btn" id="submitAdminCodeBtn">Aktivieren</button>
+        <input class="admin-input" id="adminCodeInput" type="text" placeholder="Enter admin code..." />
+        <button class="buy-btn" id="submitAdminCodeBtn">Unlock</button>
       </div>
-      <div class="admin-status" id="adminStatusMsg">Noch nicht freigeschaltet.</div>
+      <div class="admin-status" id="adminStatusMsg">Locked.</div>
 
       <div class="admin-action-grid" id="adminControls" style="opacity:0.45; pointer-events:none;">
-        <button class="admin-btn" id="adminAdd250Btn">⚡ +250 Speed geben</button>
-        <button class="admin-btn" id="adminUnlockAllShopSkinsBtn">🎭 Alle 9 Shop-Skins freischalten</button>
-        <button class="admin-btn" id="adminSet5000Btn">🌌 Auf 5.000 Speed setzen</button>
-        <button class="admin-btn" id="adminSet10000Btn">👑 Auf 10.000 Speed setzen</button>
+        <button class="admin-btn" id="adminAdd250Btn">⚡ +250 Speed</button>
+        <button class="admin-btn" id="adminUnlockAllShopSkinsBtn">🎭 Unlock All 9 Shop Skins</button>
+        <button class="admin-btn" id="adminSet5000Btn">🌌 Set Speed to 5,000</button>
+        <button class="admin-btn" id="adminSet10000Btn">👑 Set Speed to 10,000</button>
       </div>
 
       <div class="admin-skin-box" id="adminExclusiveSkinBox" style="opacity:0.45; pointer-events:none;">
         <div>
-          <div style="font-weight:900; font-size:15px; color:#f9a8d4;">👑 Skin #10: Admin Overlord (Admin-Only)</div>
-          <div style="font-size:12px; color:#e2e8f0; margin-top:2px;">
-            Exklusiver Admin-Skin mit Doppel-Halo, Schulter-Türmen &amp; Astral-Krone.
+          <div style="font-weight:900; font-size:15px; color:#f9a8d4;" id="adminOverlordTitle">👑 Skin #10: Admin Overlord (Admin-Only)</div>
+          <div style="font-size:12px; color:#e2e8f0; margin-top:2px;" id="adminOverlordDesc">
+            Exclusive admin skin with twin halos, shoulder towers &amp; astral crown.
           </div>
         </div>
-        <button class="buy-btn" id="adminEquipOverlordBtn">Admin-Skin ausrüsten</button>
+        <button class="buy-btn" id="adminEquipOverlordBtn">Equip Admin Skin</button>
       </div>
     </div>
   </div>
@@ -887,6 +925,356 @@
     import * as THREE from 'three';
 
     const SECRET_ADMIN_CODE = 'KHARMASH';
+    const STORAGE_KEY = 'step_rush_3d_save_v1';
+
+    // ---------- Mehrsprachigkeit (Standard: Englisch) ----------
+    const LOCALES = {
+      en: {
+        menuPill: 'Marathon ~25–30 Min Grind · 10 Unique 3D Skins',
+        menuSubtitle: 'Marathon grind (~25–30 min to Rebirth): World 1 up to <strong>5,000 Speed</strong> · World 2 up to <strong>10,000 Speed</strong> · <strong>9 Shop Skins + 1 Admin-Only Skin</strong> &amp; scaling post-Rebirth speed in World 2!',
+        chips: [
+          '🌪️ 100 Wind',
+          '🔥 1,000 Fire',
+          '⚡ 2,500 Lightning',
+          '🌌 5,000 Plasma + World 2',
+          '☀️ 7,500 Light',
+          '👑 10,000 All Effects'
+        ],
+        pcName: 'Mouse & Keyboard',
+        pcDesc: 'WASD = Move · Shift = 5s Sprint (10s CD)<br>Mouse = Camera · 2x Space = Air-Push',
+        touchName: 'Phone & Tablet',
+        touchDesc: 'Left Stick · Swipe Right<br>SPRINT = 5s Boost (10s CD) · 2x Jump = Push',
+        lblSteps: 'Steps',
+        lblOrbs: 'Orbs',
+        lblSpeed: 'Speed',
+        lblMaxSpeed: 'Max Speed',
+        lblRebirth: 'Rebirth',
+        openShopBtn: '🎭 Skin Shop',
+        openAdminBtn: '🛡️ Admin',
+        newWorldBtn: '🌌 New World',
+        returnOldWorldBtn: '☀️ Old World',
+        rebirthBtn: '♻️ REBIRTH',
+        menuSwitchBtn: '⚙️ Menu / Lang',
+        pcHint: 'WASD = Move · Hold Shift = 5s Sprint (10s CD) · 2x Space = Air-Push · Drag Mouse = Camera',
+        world1Badge: '☀️ World 1 (Max 5,000)',
+        world2CapBadge: '🌙 World 2 (Max 10,000)',
+        world2InfBadge: '🌙 World 2 (Infinite ∞)',
+        biomesW1: ['🌿 Sun Meadow', '🏜️ Golden Dune', '❄️ Crystal Peak', '🌊 Azure Coast', '🌋 Ember Volcano'],
+        biomesW2: ['💎 Star Crystal', '🔥 Night Magma', '🌌 Moon Glacier', '🌊 Cosmos Lake', '✨ Star Dune'],
+        sprintReady: '⚡ Sprint Ready (5.0s / 10s CD)',
+        sprintActive: (t) => `⚡ SPRINT: ${t.toFixed(1)}s`,
+        sprintCd: (t) => `⏳ Cooldown: ${t.toFixed(1)}s`,
+        fxBase: '✨ Trail: Base (<100)',
+        fxWind: '🌪️ Trail: Wind (100+)',
+        fxFire: '🔥 Trail: Fire (1,000+)',
+        fxLightning: '⚡ Trail: Lightning (2,500+)',
+        fxPlasma: '🌌 Trail: Plasma (5,000+)',
+        fxLight: '☀️ Trail: Light (7,500+)',
+        fxOverdrive: '👑 Trail: All Effects (10,000+)',
+        shopModalTitle: '🎭 Skin Shop & Rebirth',
+        walletSpeedLabel: 'Speed',
+        walletLimitLabel: 'Limit',
+        walletRebirthLabel: 'Rebirth',
+        rebirthBoxTitle: '♻️ Rebirth (at 10,000 Speed)',
+        rebirthBoxDesc: 'Resets to <strong>World 1</strong> at <strong>0 Speed</strong>, grants <strong>+0.15x Speed Multiplier</strong>, and unlocks <strong>Infinite Speed (∞)</strong> in <strong>World 2</strong>!',
+        modalRebirthBtn: 'Rebirth (10,000 Speed)',
+        shopSectionHeading: '🎭 9 Shop Skins (10th Skin is exclusive in Admin Panel)',
+        equipped: '✓ Equipped',
+        equip: 'Equip',
+        buySkin: (cost) => `Buy (-${cost} Speed)`,
+        adminModalTitle: '🛡️ Admin Panel (World 1 & World 2)',
+        adminPromptText: 'Enter the admin code – works in <strong>World 1</strong> and <strong>World 2</strong>:',
+        adminPlaceholder: 'Enter admin code...',
+        submitAdminCodeBtn: 'Unlock',
+        adminLocked: 'Locked.',
+        adminUnlockedMsg: (w) => `✅ Admin active in World ${w}!`,
+        adminWrongCode: '❌ Wrong code.',
+        adminAdd250Btn: '⚡ +250 Speed',
+        adminUnlockAllShopSkinsBtn: '🎭 Unlock All 9 Shop Skins',
+        adminSet5000Btn: '🌌 Set Speed to 5,000',
+        adminSet10000Btn: '👑 Set Speed to 10,000',
+        adminOverlordTitle: '👑 Skin #10: Admin Overlord (Admin-Only)',
+        adminOverlordDesc: 'Exclusive admin skin with twin halos, shoulder towers & astral crown.',
+        adminEquipOverlordBtn: 'Equip Admin Skin',
+        adminOverlordActive: '✓ Overlord Active',
+        sceneToW2Title: '🌌 ENTERING WORLD 2 (STAR NIGHT)',
+        sceneToW2SubInf: 'Post-Rebirth: World 2 unlocks Infinite Speed (∞) with overdrive rush!',
+        sceneToW2SubCap: 'Up to 10,000 Speed · Light Trail (7,500+) & All Effects (10,000+)!',
+        sceneToW1Title: '☀️ RETURNING TO WORLD 1 (MAX 5,000)',
+        sceneToW1Sub: 'Bright sky islands with Wind, Fire, Lightning & Plasma trails!',
+        skins: {
+          cyber: { name: '1. Cyber Runner', desc: 'Shoulder blades & visor crest.' },
+          inferno: { name: '2. Inferno Knight', desc: 'Knight horns & back wings.' },
+          venom: { name: '3. Venom Stalker', desc: 'Back spikes & broad pauldrons.' },
+          void: { name: '4. Void Sovereign', desc: 'Astral crown & floating shards.' },
+          samurai: { name: '5. Samurai Ronin', desc: 'Wide Kabuto hat & back katana.' },
+          mecha: { name: '6. Mecha Titan', desc: 'Box armor head, antennas & blocks.' },
+          valkyrie: { name: '7. Frost Valkyrie', desc: 'Winged ears & ice crystal back.' },
+          pharaoh: { name: '8. Solar Pharaoh', desc: 'Pharaoh headdress & solar collar.' },
+          assassin: { name: '9. Shadow Assassin', desc: 'Pointed hood & twin daggers.' }
+        }
+      },
+      de: {
+        menuPill: 'Marathon ~25–30 Min Grind · 10 Unique 3D Skins',
+        menuSubtitle: 'Marathon-Grind (~25–30 Min bis Rebirth): Welt 1 bis <strong>5.000 Speed</strong> · Welt 2 bis <strong>10.000 Speed</strong> · <strong>9 Shop-Skins + 1 Admin-Only-Skin</strong> &amp; spürbar eskalierender Speed in Welt 2 nach <strong>Rebirth</strong>!',
+        chips: [
+          '🌪️ 100 Wind',
+          '🔥 1.000 Feuer',
+          '⚡ 2.500 Blitz',
+          '🌌 5.000 Plasma + Welt 2',
+          '☀️ 7.500 Licht',
+          '👑 10.000 Alle Effekte'
+        ],
+        pcName: 'Maus & Keyboard',
+        pcDesc: 'WASD = Laufen · Shift = 5s Sprint (10s CD)<br>Maus = Kamera · 2x Space = Air-Push',
+        touchName: 'Handy & Tablet',
+        touchDesc: 'Joystick links · Wischen rechts<br>SPRINT = 5s Boost (10s CD) · 2x Jump = Push',
+        lblSteps: 'Schritte',
+        lblOrbs: 'Orbs',
+        lblSpeed: 'Speed',
+        lblMaxSpeed: 'Max-Speed',
+        lblRebirth: 'Rebirth',
+        openShopBtn: '🎭 Skin-Shop',
+        openAdminBtn: '🛡️ Admin',
+        newWorldBtn: '🌌 Neue Welt',
+        returnOldWorldBtn: '☀️ Alte Welt',
+        rebirthBtn: '♻️ REBIRTH',
+        menuSwitchBtn: '⚙️ Menü / Spr.',
+        pcHint: 'WASD = Bewegen · Shift gedrückt = 5s Sprint (10s CD) · 2x Leertaste = Air-Push · Maus ziehen = Kamera',
+        world1Badge: '☀️ Welt 1 (Max 5.000)',
+        world2CapBadge: '🌙 Welt 2 (Max 10.000)',
+        world2InfBadge: '🌙 Welt 2 (Unendlich ∞)',
+        biomesW1: ['🌿 Sonnen-Wiese', '🏜️ Gold-Düne', '❄️ Kristall-Gipfel', '🌊 Azur-Küste', '🌋 Glut-Vulkan'],
+        biomesW2: ['💎 Sternen-Kristall', '🔥 Nacht-Magma', '🌌 Mond-Gletscher', '🌊 Kosmos-See', '✨ Sternen-Düne'],
+        sprintReady: '⚡ Sprint bereit (5.0s / 10s CD)',
+        sprintActive: (t) => `⚡ SPRINT: ${t.toFixed(1)}s`,
+        sprintCd: (t) => `⏳ Cooldown: ${t.toFixed(1)}s`,
+        fxBase: '✨ Spur: Basis (<100)',
+        fxWind: '🌪️ Spur: Wind (100+)',
+        fxFire: '🔥 Spur: Feuer (1.000+)',
+        fxLightning: '⚡ Spur: Blitz (2.500+)',
+        fxPlasma: '🌌 Spur: Plasma (5.000+)',
+        fxLight: '☀️ Spur: Licht (7.500+)',
+        fxOverdrive: '👑 Spur: Alle Effekte (10.000+)',
+        shopModalTitle: '🎭 Skin-Shop & Rebirth',
+        walletSpeedLabel: 'Speed',
+        walletLimitLabel: 'Limit',
+        walletRebirthLabel: 'Rebirth',
+        rebirthBoxTitle: '♻️ Rebirth (ab 10.000 Speed)',
+        rebirthBoxDesc: 'Startet in <strong>Welt 1</strong> neu bei <strong>0 Speed</strong>, gibt <strong>+0.15x Speed-Multiplikator</strong> und schaltet in <strong>Welt 2 unendlichen Speed (∞)</strong> frei!',
+        modalRebirthBtn: 'Rebirth (10.000 Speed)',
+        shopSectionHeading: '🎭 9 Shop-Skins (der 10. Skin ist exklusiv im Admin-Panel)',
+        equipped: '✓ Ausgerüstet',
+        equip: 'Ausrüsten',
+        buySkin: (cost) => `Kaufen (-${cost} Speed)`,
+        adminModalTitle: '🛡️ Admin Panel (Welt 1 & Welt 2)',
+        adminPromptText: 'Gib den Admin-Code ein – funktioniert in <strong>Welt 1</strong> und <strong>Welt 2</strong>:',
+        adminPlaceholder: 'Admin-Code eingeben...',
+        submitAdminCodeBtn: 'Aktivieren',
+        adminLocked: 'Noch nicht freigeschaltet.',
+        adminUnlockedMsg: (w) => `✅ Admin aktiv in Welt ${w}!`,
+        adminWrongCode: '❌ Falscher Code.',
+        adminAdd250Btn: '⚡ +250 Speed geben',
+        adminUnlockAllShopSkinsBtn: '🎭 Alle 9 Shop-Skins freischalten',
+        adminSet5000Btn: '🌌 Auf 5.000 Speed setzen',
+        adminSet10000Btn: '👑 Auf 10.000 Speed setzen',
+        adminOverlordTitle: '👑 Skin #10: Admin Overlord (Admin-Only)',
+        adminOverlordDesc: 'Exklusiver Admin-Skin mit Doppel-Halo, Schulter-Türmen & Astral-Krone.',
+        adminEquipOverlordBtn: 'Admin-Skin ausrüsten',
+        adminOverlordActive: '✓ Overlord aktiv',
+        sceneToW2Title: '🌌 WECHSEL IN WELT 2 (STERNENNACHT)',
+        sceneToW2SubInf: 'Nach Rebirth: In Welt 2 gilt unendlicher Speed (∞) mit echtem Overdrive-Schub!',
+        sceneToW2SubCap: 'Bis zu 10.000 Speed · Licht-Spur (7.500+) & Alle Effekte (10.000+)!',
+        sceneToW1Title: '☀️ RÜCKKEHR IN WELT 1 (MAX 5.000)',
+        sceneToW1Sub: 'Helle Himmels-Inseln mit Wind-, Feuer-, Blitz- & Plasma-Spur!',
+        skins: {
+          cyber: { name: '1. Cyber Runner', desc: 'Schulter-Klingen & Visier-Kamm.' },
+          inferno: { name: '2. Inferno Knight', desc: 'Ritter-Hörner & Rückenflügel.' },
+          venom: { name: '3. Venom Stalker', desc: 'Rückenstacheln & breite Schultern.' },
+          void: { name: '4. Void Sovereign', desc: 'Astral-Krone & schwebende Klingen.' },
+          samurai: { name: '5. Samurai Ronin', desc: 'Breiter Kabuto-Hut & Rücken-Katana.' },
+          mecha: { name: '6. Mecha Titan', desc: 'Kasten-Panzerkopf, Antennen & Blöcke.' },
+          valkyrie: { name: '7. Frost Valkyrie', desc: 'Flügel-Ohren & Eiskristall-Rücken.' },
+          pharaoh: { name: '8. Solar Pharaoh', desc: 'Pharaonen-Kopfkrone & Brust-Kragen.' },
+          assassin: { name: '9. Shadow Assassin', desc: 'Spitze Kapuze & Doppel-Dolche.' }
+        }
+      },
+      es: {
+        menuPill: 'Maratón ~25–30 Min · 10 Skins 3D Únicos',
+        menuSubtitle: 'Grind maratón (~25–30 min hasta Rebirth): Mundo 1 hasta <strong>5.000 Speed</strong> · Mundo 2 hasta <strong>10.000 Speed</strong> · <strong>9 Skins de Tienda + 1 Skin Admin</strong> y velocidad escalable tras Rebirth en Mundo 2!',
+        chips: [
+          '🌪️ 100 Viento',
+          '🔥 1.000 Fuego',
+          '⚡ 2.500 Rayo',
+          '🌌 5.000 Plasma + Mundo 2',
+          '☀️ 7.500 Luz',
+          '👑 10.000 Todos los Efectos'
+        ],
+        pcName: 'Ratón y Teclado',
+        pcDesc: 'WASD = Mover · Shift = Sprint 5s (10s CD)<br>Ratón = Cámara · 2x Espacio = Impulso',
+        touchName: 'Móvil y Tableta',
+        touchDesc: 'Joystick izq. · Deslizar der.<br>SPRINT = Boost 5s (10s CD) · 2x Salto = Impulso',
+        lblSteps: 'Pasos',
+        lblOrbs: 'Orbes',
+        lblSpeed: 'Velocidad',
+        lblMaxSpeed: 'Vel. Máx.',
+        lblRebirth: 'Rebirth',
+        openShopBtn: '🎭 Tienda Skins',
+        openAdminBtn: '🛡️ Admin',
+        newWorldBtn: '🌌 Nuevo Mundo',
+        returnOldWorldBtn: '☀️ Mundo Anterior',
+        rebirthBtn: '♻️ REBIRTH',
+        menuSwitchBtn: '⚙️ Menú / Idioma',
+        pcHint: 'WASD = Mover · Mantén Shift = Sprint 5s (10s CD) · 2x Espacio = Impulso · Arrastra Ratón = Cámara',
+        world1Badge: '☀️ Mundo 1 (Máx. 5.000)',
+        world2CapBadge: '🌙 Mundo 2 (Máx. 10.000)',
+        world2InfBadge: '🌙 Mundo 2 (Infinito ∞)',
+        biomesW1: ['🌿 Pradera Solar', '🏜️ Duna Dorada', '❄️ Pico Cristal', '🌊 Costa Azur', '🌋 Volcán Ascua'],
+        biomesW2: ['💎 Cristal Estelar', '🔥 Magma Nocturno', '🌌 Glaciar Lunar', '🌊 Lago Cósmico', '✨ Duna Estelar'],
+        sprintReady: '⚡ Sprint listo (5.0s / 10s CD)',
+        sprintActive: (t) => `⚡ SPRINT: ${t.toFixed(1)}s`,
+        sprintCd: (t) => `⏳ Enfriamiento: ${t.toFixed(1)}s`,
+        fxBase: '✨ Estela: Base (<100)',
+        fxWind: '🌪️ Estela: Viento (100+)',
+        fxFire: '🔥 Estela: Fuego (1.000+)',
+        fxLightning: '⚡ Estela: Rayo (2.500+)',
+        fxPlasma: '🌌 Estela: Plasma (5.000+)',
+        fxLight: '☀️ Estela: Luz (7.500+)',
+        fxOverdrive: '👑 Estela: Todos los Efectos (10.000+)',
+        shopModalTitle: '🎭 Tienda de Skins y Rebirth',
+        walletSpeedLabel: 'Velocidad',
+        walletLimitLabel: 'Límite',
+        walletRebirthLabel: 'Rebirth',
+        rebirthBoxTitle: '♻️ Rebirth (a los 10.000 Speed)',
+        rebirthBoxDesc: 'Vuelve al <strong>Mundo 1</strong> con <strong>0 Speed</strong>, otorga <strong>+0.15x Multiplicador</strong> y desbloquea <strong>Velocidad Infinita (∞)</strong> en el <strong>Mundo 2</strong>!',
+        modalRebirthBtn: 'Rebirth (10.000 Speed)',
+        shopSectionHeading: '🎭 9 Skins de Tienda (el 10.º Skin es exclusivo del Panel Admin)',
+        equipped: '✓ Equipado',
+        equip: 'Equipar',
+        buySkin: (cost) => `Comprar (-${cost} Speed)`,
+        adminModalTitle: '🛡️ Panel Admin (Mundo 1 y Mundo 2)',
+        adminPromptText: 'Introduce el código admin – funciona en <strong>Mundo 1</strong> y <strong>Mundo 2</strong>:',
+        adminPlaceholder: 'Introduce código admin...',
+        submitAdminCodeBtn: 'Activar',
+        adminLocked: 'Bloqueado.',
+        adminUnlockedMsg: (w) => `✅ Admin activo en Mundo ${w}!`,
+        adminWrongCode: '❌ Código incorrecto.',
+        adminAdd250Btn: '⚡ +250 Speed',
+        adminUnlockAllShopSkinsBtn: '🎭 Desbloquear 9 Skins',
+        adminSet5000Btn: '🌌 Poner Speed en 5.000',
+        adminSet10000Btn: '👑 Poner Speed en 10.000',
+        adminOverlordTitle: '👑 Skin #10: Admin Overlord (Solo Admin)',
+        adminOverlordDesc: 'Skin exclusivo de admin con doble halo, torres en hombros y corona astral.',
+        adminEquipOverlordBtn: 'Equipar Skin Admin',
+        adminOverlordActive: '✓ Overlord activo',
+        sceneToW2Title: '🌌 ENTRANDO AL MUNDO 2 (NOCHE ESTELAR)',
+        sceneToW2SubInf: 'Tras Rebirth: ¡El Mundo 2 desbloquea Velocidad Infinita (∞) con empuje overdrive!',
+        sceneToW2SubCap: '¡Hasta 10.000 Speed · Estela de Luz (7.500+) y Todos los Efectos (10.000+)!',
+        sceneToW1Title: '☀️ VOLVIENDO AL MUNDO 1 (MÁX. 5.000)',
+        sceneToW1Sub: '¡Islas celestes brillantes con estelas de Viento, Fuego, Rayo y Plasma!',
+        skins: {
+          cyber: { name: '1. Cyber Runner', desc: 'Hojas en hombros y cresta en visor.' },
+          inferno: { name: '2. Inferno Knight', desc: 'Cuernos de caballero y alas traseras.' },
+          venom: { name: '3. Venom Stalker', desc: 'Púas dorsales y hombreras anchas.' },
+          void: { name: '4. Void Sovereign', desc: 'Corona astral y fragmentos flotantes.' },
+          samurai: { name: '5. Samurai Ronin', desc: 'Sombrero Kabuto ancho y katana.' },
+          mecha: { name: '6. Mecha Titan', desc: 'Cabeza blindada, antenas y bloques.' },
+          valkyrie: { name: '7. Frost Valkyrie', desc: 'Orejas aladas y cristal de hielo.' },
+          pharaoh: { name: '8. Solar Pharaoh', desc: 'Tocado de faraón y collar solar.' },
+          assassin: { name: '9. Shadow Assassin', desc: 'Capucha afilada y dagas gemelas.' }
+        }
+      },
+      fr: {
+        menuPill: 'Marathon ~25–30 Min · 10 Skins 3D Uniques',
+        menuSubtitle: 'Grind marathon (~25–30 min jusqu’au Rebirth) : Monde 1 jusqu’à <strong>5 000 Speed</strong> · Monde 2 jusqu’à <strong>10 000 Speed</strong> · <strong>9 Skins Boutique + 1 Skin Admin</strong> &amp; vitesse évolutive après Rebirth dans le Monde 2 !',
+        chips: [
+          '🌪️ 100 Vent',
+          '🔥 1 000 Feu',
+          '⚡ 2 500 Éclair',
+          '🌌 5 000 Plasma + Monde 2',
+          '☀️ 7 500 Lumière',
+          '👑 10 000 Tous les Effets'
+        ],
+        pcName: 'Souris & Clavier',
+        pcDesc: 'WASD = Bouger · Shift = Sprint 5s (10s CD)<br>Souris = Caméra · 2x Espace = Push aérien',
+        touchName: 'Téléphone & Tablette',
+        touchDesc: 'Joystick gauche · Glisser droite<br>SPRINT = Boost 5s (10s CD) · 2x Saut = Push',
+        lblSteps: 'Pas',
+        lblOrbs: 'Orbes',
+        lblSpeed: 'Vitesse',
+        lblMaxSpeed: 'Vitesse Max',
+        lblRebirth: 'Rebirth',
+        openShopBtn: '🎭 Boutique Skins',
+        openAdminBtn: '🛡️ Admin',
+        newWorldBtn: '🌌 Nouveau Monde',
+        returnOldWorldBtn: '☀️ Ancien Monde',
+        rebirthBtn: '♻️ REBIRTH',
+        menuSwitchBtn: '⚙️ Menu / Langue',
+        pcHint: 'WASD = Bouger · Maintenir Shift = Sprint 5s (10s CD) · 2x Espace = Push aérien · Glisser Souris = Caméra',
+        world1Badge: '☀️ Monde 1 (Max 5 000)',
+        world2CapBadge: '🌙 Monde 2 (Max 10 000)',
+        world2InfBadge: '🌙 Monde 2 (Infini ∞)',
+        biomesW1: ['🌿 Prairie Solaire', '🏜️ Dune Dorée', '❄️ Pic Cristal', '🌊 Côte Azur', '🌋 Volcan Braise'],
+        biomesW2: ['💎 Cristal Stellaire', '🔥 Magma Nocturne', '🌌 Glacier Lunaire', '🌊 Lac Cosmique', '✨ Dune Stellaire'],
+        sprintReady: '⚡ Sprint prêt (5.0s / 10s CD)',
+        sprintActive: (t) => `⚡ SPRINT : ${t.toFixed(1)}s`,
+        sprintCd: (t) => `⏳ Recharge : ${t.toFixed(1)}s`,
+        fxBase: '✨ Traînée : Base (<100)',
+        fxWind: '🌪️ Traînée : Vent (100+)',
+        fxFire: '🔥 Traînée : Feu (1 000+)',
+        fxLightning: '⚡ Traînée : Éclair (2 500+)',
+        fxPlasma: '🌌 Traînée : Plasma (5 000+)',
+        fxLight: '☀️ Traînée : Lumière (7 500+)',
+        fxOverdrive: '👑 Traînée : Tous les Effets (10 000+)',
+        shopModalTitle: '🎭 Boutique Skins & Rebirth',
+        walletSpeedLabel: 'Vitesse',
+        walletLimitLabel: 'Limite',
+        walletRebirthLabel: 'Rebirth',
+        rebirthBoxTitle: '♻️ Rebirth (à 10 000 Speed)',
+        rebirthBoxDesc: 'Redémarre dans le <strong>Monde 1</strong> à <strong>0 Speed</strong>, accorde <strong>+0.15x Multiplicateur</strong> et débloque la <strong>Vitesse Infinie (∞)</strong> dans le <strong>Monde 2</strong> !',
+        modalRebirthBtn: 'Rebirth (10 000 Speed)',
+        shopSectionHeading: '🎭 9 Skins Boutique (le 10e Skin est exclusif au Panneau Admin)',
+        equipped: '✓ Équipé',
+        equip: 'Équiper',
+        buySkin: (cost) => `Acheter (-${cost} Speed)`,
+        adminModalTitle: '🛡️ Panneau Admin (Monde 1 & Monde 2)',
+        adminPromptText: 'Entrez le code admin – fonctionne dans le <strong>Monde 1</strong> et le <strong>Monde 2</strong> :',
+        adminPlaceholder: 'Entrer le code admin...',
+        submitAdminCodeBtn: 'Activer',
+        adminLocked: 'Verrouillé.',
+        adminUnlockedMsg: (w) => `✅ Admin actif dans le Monde ${w} !`,
+        adminWrongCode: '❌ Code incorrect.',
+        adminAdd250Btn: '⚡ +250 Speed',
+        adminUnlockAllShopSkinsBtn: '🎭 Débloquer 9 Skins',
+        adminSet5000Btn: '🌌 Régler Speed à 5 000',
+        adminSet10000Btn: '👑 Régler Speed à 10 000',
+        adminOverlordTitle: '👑 Skin #10 : Admin Overlord (Admin Uniquement)',
+        adminOverlordDesc: 'Skin admin exclusif avec double halo, tours d’épaules & couronne astrale.',
+        adminEquipOverlordBtn: 'Équiper Skin Admin',
+        adminOverlordActive: '✓ Overlord actif',
+        sceneToW2Title: '🌌 ARRIVÉE DANS LE MONDE 2 (NUIT ÉTOILÉE)',
+        sceneToW2SubInf: 'Après Rebirth : Le Monde 2 débloque la Vitesse Infinie (∞) avec boost overdrive !',
+        sceneToW2SubCap: 'Jusqu’à 10 000 Speed · Traînée Lumière (7 500+) & Tous les Effets (10 000+) !',
+        sceneToW1Title: '☀️ RETOUR DANS LE MONDE 1 (MAX 5 000)',
+        sceneToW1Sub: 'Îles célestes lumineuses avec traînées Vent, Feu, Éclair & Plasma !',
+        skins: {
+          cyber: { name: '1. Cyber Runner', desc: 'Lames d’épaule & crête de visière.' },
+          inferno: { name: '2. Inferno Knight', desc: 'Cornes de chevalier & ailes dorsales.' },
+          venom: { name: '3. Venom Stalker', desc: 'Pointes dorsales & larges épaules.' },
+          void: { name: '4. Void Sovereign', desc: 'Couronne astrale & éclats flottants.' },
+          samurai: { name: '5. Samurai Ronin', desc: 'Chapeau Kabuto large & katana dorsal.' },
+          mecha: { name: '6. Mecha Titan', desc: 'Tête blindée, antennes & blocs.' },
+          valkyrie: { name: '7. Frost Valkyrie', desc: 'Oreilles ailées & cristal de glace.' },
+          pharaoh: { name: '8. Solar Pharaoh', desc: 'Coiffe de pharaon & collier solaire.' },
+          assassin: { name: '9. Shadow Assassin', desc: 'Capuche pointue & doubles dagues.' }
+        }
+      }
+    };
+
+    let currentLang = 'en';
+    function tr() {
+      return LOCALES[currentLang] || LOCALES.en;
+    }
 
     // ---------- Audio Synthesizer ----------
     let audioCtx = null;
@@ -976,26 +1364,26 @@
     renderer.shadowMap.enabled = true;
     renderer.shadowMap.type = THREE.PCFSoftShadowMap;
     renderer.toneMapping = THREE.ACESFilmicToneMapping;
-    renderer.toneMappingExposure = 1.14;
+    renderer.toneMappingExposure = 1.16;
     document.body.appendChild(renderer.domElement);
 
-    const hemiLight = new THREE.HemisphereLight(0xe0f2fe, 0x22c55e, 1.45);
+    const hemiLight = new THREE.HemisphereLight(0xe0f2fe, 0x22c55e, 1.5);
     scene.add(hemiLight);
 
-    const sun = new THREE.DirectionalLight(0xfffbeb, 2.0);
+    const sun = new THREE.DirectionalLight(0xfffbeb, 2.1);
     sun.position.set(220, 340, 180);
     sun.castShadow = true;
-    sun.shadow.mapSize.set(1024, 1024);
+    sun.shadow.mapSize.set(2048, 2048);
     sun.shadow.camera.near = 40;
     sun.shadow.camera.far = 780;
-    const sd = 130;
+    const sd = 135;
     sun.shadow.camera.left = -sd;
     sun.shadow.camera.right = sd;
     sun.shadow.camera.top = sd;
     sun.shadow.camera.bottom = -sd;
     scene.add(sun);
 
-    const playerLight = new THREE.PointLight(0x38bdf8, 0, 52);
+    const playerLight = new THREE.PointLight(0x38bdf8, 0, 56);
     scene.add(playerLight);
 
     // ---------- Welt 1: Strahlender Taghimmel, Wolken & Sonnen-Halo ----------
@@ -1009,17 +1397,25 @@
     sunOrb.position.set(780, 560, -1180);
     dayGroup.add(sunOrb);
 
+    const sunHaloRing = new THREE.Mesh(
+      new THREE.RingGeometry(116, 152, 48),
+      new THREE.MeshBasicMaterial({ color: 0xfef08a, side: THREE.DoubleSide, transparent: true, opacity: 0.35 })
+    );
+    sunHaloRing.position.copy(sunOrb.position);
+    sunHaloRing.lookAt(0, 0, 0);
+    dayGroup.add(sunHaloRing);
+
     const cloudMat = new THREE.MeshStandardMaterial({
       color: 0xffffff,
       emissive: 0xe0f2fe,
-      emissiveIntensity: 0.18,
-      roughness: 0.88,
+      emissiveIntensity: 0.22,
+      roughness: 0.85,
       metalness: 0.0
     });
     const puffGeo = new THREE.IcosahedronGeometry(1, 1);
     const clouds = [];
 
-    for (let i = 0; i < 64; i++) {
+    for (let i = 0; i < 68; i++) {
       const cGroup = new THREE.Group();
       const puffCount = 4 + Math.floor(Math.random() * 4);
       for (let p = 0; p < puffCount; p++) {
@@ -1153,23 +1549,24 @@
 
     function getBiomeInfo(x, z) {
       const w = getBiomeWeights(x, z);
+      const t = tr();
       if (currentWorld === 1) {
         const list = [
-          { val: w.b1, label: '🌿 Sonnen-Wiese', color: '#4ade80' },
-          { val: w.b2, label: '🏜️ Gold-Düne', color: '#fbbf24' },
-          { val: w.b3, label: '❄️ Kristall-Gipfel', color: '#7dd3fc' },
-          { val: w.b4, label: '🌊 Azur-Küste', color: '#38bdf8' },
-          { val: w.b5, label: '🌋 Glut-Vulkan', color: '#fb7185' }
+          { val: w.b1, label: t.biomesW1[0], color: '#4ade80' },
+          { val: w.b2, label: t.biomesW1[1], color: '#fbbf24' },
+          { val: w.b3, label: t.biomesW1[2], color: '#7dd3fc' },
+          { val: w.b4, label: t.biomesW1[3], color: '#38bdf8' },
+          { val: w.b5, label: t.biomesW1[4], color: '#fb7185' }
         ];
         list.sort((a, b) => b.val - a.val);
         return list[0];
       } else {
         const list = [
-          { val: w.b1, label: '💎 Sternen-Kristall', color: '#2dd4bf' },
-          { val: w.b2, label: '🔥 Nacht-Magma', color: '#f87171' },
-          { val: w.b3, label: '🌌 Mond-Gletscher', color: '#c084fc' },
-          { val: w.b4, label: '🌊 Kosmos-See', color: '#38bdf8' },
-          { val: w.b5, label: '✨ Sternen-Düne', color: '#facc15' }
+          { val: w.b1, label: t.biomesW2[0], color: '#2dd4bf' },
+          { val: w.b2, label: t.biomesW2[1], color: '#f87171' },
+          { val: w.b3, label: t.biomesW2[2], color: '#c084fc' },
+          { val: w.b4, label: t.biomesW2[3], color: '#38bdf8' },
+          { val: w.b5, label: t.biomesW2[4], color: '#facc15' }
         ];
         list.sort((a, b) => b.val - a.val);
         return list[0];
@@ -1212,9 +1609,9 @@
       new THREE.MeshStandardMaterial({
         color: 0x0284c7,
         emissive: 0x0369a1,
-        emissiveIntensity: 0.22,
-        roughness: 0.22,
-        metalness: 0.45
+        emissiveIntensity: 0.24,
+        roughness: 0.2,
+        metalness: 0.48
       })
     );
     horizonSea.rotation.x = -Math.PI / 2;
@@ -1222,24 +1619,30 @@
     scene.add(horizonSea);
 
     const sharedMats = {
-      trunk: new THREE.MeshStandardMaterial({ color: 0x6b3e26, roughness: 0.9 }),
-      leafBright: new THREE.MeshStandardMaterial({ color: 0x22c55e, emissive: 0x15803d, emissiveIntensity: 0.22, roughness: 0.72 }),
-      sunBeacon: new THREE.MeshStandardMaterial({ color: 0xfef08a, emissive: 0xfacc15, emissiveIntensity: 1.4, roughness: 0.2 }),
-      snowPine: new THREE.MeshStandardMaterial({ color: 0x0ea5e9, emissive: 0x0284c7, emissiveIntensity: 0.25, roughness: 0.65 }),
-      snowCap: new THREE.MeshStandardMaterial({ color: 0xffffff, emissive: 0xe0f2fe, emissiveIntensity: 0.35, roughness: 0.45 }),
-      cactus: new THREE.MeshStandardMaterial({ color: 0x16a34a, emissive: 0x15803d, emissiveIntensity: 0.2, roughness: 0.72 }),
-      sandRock: new THREE.MeshStandardMaterial({ color: 0xf59e0b, emissive: 0xb45309, emissiveIntensity: 0.22, roughness: 0.78 }),
+      trunk: new THREE.MeshStandardMaterial({ color: 0x6b3e26, roughness: 0.88 }),
+      leafBright: new THREE.MeshStandardMaterial({ color: 0x22c55e, emissive: 0x15803d, emissiveIntensity: 0.28, roughness: 0.68 }),
+      sunBeacon: new THREE.MeshStandardMaterial({ color: 0xfef08a, emissive: 0xfacc15, emissiveIntensity: 1.55, roughness: 0.2 }),
+      sunGoldRing: new THREE.MeshBasicMaterial({ color: 0xfde047, transparent: true, opacity: 0.72 }),
+      skyIslandTop: new THREE.MeshStandardMaterial({ color: 0x4ade80, emissive: 0x16a34a, emissiveIntensity: 0.25, roughness: 0.72 }),
+      skyIslandRock: new THREE.MeshStandardMaterial({ color: 0x78350f, roughness: 0.88 }),
+      snowPine: new THREE.MeshStandardMaterial({ color: 0x0ea5e9, emissive: 0x0284c7, emissiveIntensity: 0.28, roughness: 0.62 }),
+      snowCap: new THREE.MeshStandardMaterial({ color: 0xffffff, emissive: 0xe0f2fe, emissiveIntensity: 0.38, roughness: 0.42 }),
+      cactus: new THREE.MeshStandardMaterial({ color: 0x16a34a, emissive: 0x15803d, emissiveIntensity: 0.24, roughness: 0.7 }),
+      sandRock: new THREE.MeshStandardMaterial({ color: 0xf59e0b, emissive: 0xb45309, emissiveIntensity: 0.25, roughness: 0.76 }),
       lavaGlow: new THREE.MeshStandardMaterial({ color: 0xf97316, emissive: 0xea580c, emissiveIntensity: 2.05, roughness: 0.22 }),
       obsidian: new THREE.MeshStandardMaterial({ color: 0x1e293b, roughness: 0.65, metalness: 0.55 }),
       crystal: new THREE.MeshStandardMaterial({ color: 0x2dd4bf, emissive: 0x14b8a6, emissiveIntensity: 1.85, roughness: 0.14, metalness: 0.65 }),
       prism: new THREE.MeshStandardMaterial({ color: 0xfacc15, emissive: 0xeab308, emissiveIntensity: 1.55, roughness: 0.2, metalness: 0.7 }),
       nebulaStone: new THREE.MeshStandardMaterial({ color: 0xc084fc, emissive: 0x7e22ce, emissiveIntensity: 1.75, roughness: 0.2, metalness: 0.6 }),
-      neonCyan: new THREE.MeshBasicMaterial({ color: 0x38bdf8, transparent: true, opacity: 0.78 }),
-      neonPink: new THREE.MeshBasicMaterial({ color: 0xf472b6, transparent: true, opacity: 0.78 }),
-      padBase: new THREE.MeshStandardMaterial({ color: 0x0f172a, emissive: 0xf97316, emissiveIntensity: 1.05, roughness: 0.25, metalness: 0.65 }),
-      padRing: new THREE.MeshBasicMaterial({ color: 0xfacc15 }),
-      padBeam: new THREE.MeshBasicMaterial({ color: 0x38bdf8, transparent: true, opacity: 0.55 }),
-      orb: new THREE.MeshStandardMaterial({ color: 0xfacc15, emissive: 0xf59e0b, emissiveIntensity: 1.55, roughness: 0.16, metalness: 0.55 }),
+      neonCyan: new THREE.MeshBasicMaterial({ color: 0x38bdf8, transparent: true, opacity: 0.82 }),
+      neonPink: new THREE.MeshBasicMaterial({ color: 0xf472b6, transparent: true, opacity: 0.82 }),
+      padBase: new THREE.MeshStandardMaterial({ color: 0x0f172a, emissive: 0xf97316, emissiveIntensity: 1.25, roughness: 0.22, metalness: 0.72 }),
+      padOuterRing: new THREE.MeshBasicMaterial({ color: 0x38bdf8 }),
+      padInnerRing: new THREE.MeshBasicMaterial({ color: 0xfacc15 }),
+      padCoreGem: new THREE.MeshStandardMaterial({ color: 0xfef08a, emissive: 0xf59e0b, emissiveIntensity: 1.9, roughness: 0.12, metalness: 0.8 }),
+      padBeam: new THREE.MeshBasicMaterial({ color: 0x38bdf8, transparent: true, opacity: 0.58 }),
+      orbCore: new THREE.MeshStandardMaterial({ color: 0xfef08a, emissive: 0xf59e0b, emissiveIntensity: 1.75, roughness: 0.14, metalness: 0.65 }),
+      orbHalo: new THREE.MeshBasicMaterial({ color: 0x38bdf8, transparent: true, opacity: 0.85 }),
       border: new THREE.MeshBasicMaterial({ color: 0xffffff, transparent: true, opacity: 0.15 })
     };
 
@@ -1252,10 +1655,13 @@
       rock: new THREE.DodecahedronGeometry(1.9, 0),
       spire: new THREE.ConeGeometry(2.2, 7.6, 6),
       crystal: new THREE.CylinderGeometry(0.42, 1.35, 6.2, 6),
-      padBase: new THREE.CylinderGeometry(4.4, 5.0, 0.35, 24),
-      padRing: new THREE.TorusGeometry(4.1, 0.24, 10, 28),
-      padBeam: new THREE.CylinderGeometry(0.42, 0.42, 3.4, 12),
-      orb: new THREE.SphereGeometry(0.75, 14, 14)
+      padBase: new THREE.CylinderGeometry(4.6, 5.3, 0.4, 28),
+      padOuterRing: new THREE.TorusGeometry(4.85, 0.22, 10, 36),
+      padInnerRing: new THREE.TorusGeometry(3.45, 0.22, 10, 32),
+      padCoreGem: new THREE.OctahedronGeometry(1.15, 0),
+      padBeam: new THREE.CylinderGeometry(0.48, 0.48, 4.2, 14),
+      orbCore: new THREE.OctahedronGeometry(0.62, 1),
+      orbHalo: new THREE.TorusGeometry(0.95, 0.08, 8, 24)
     };
 
     let boostPads = [];
@@ -1263,12 +1669,19 @@
     let floatingWorldProps = [];
     let spinningRings = [];
 
+    // Detailliertere Speed-Orbs (Kern + rotierender Energie-Ring)
     function spawnOrbAt(x, z, yOffset = 1.45) {
       const groundY = getTerrainHeight(x, z);
-      const mesh = new THREE.Mesh(sharedGeos.orb, sharedMats.orb);
-      mesh.position.set(x, groundY + yOffset, z);
-      worldGroup.add(mesh);
-      orbs.push({ mesh, x, z, yOffset, phase: Math.random() * Math.PI * 2 });
+      const orbGroup = new THREE.Group();
+      orbGroup.position.set(x, groundY + yOffset, z);
+
+      const coreMesh = new THREE.Mesh(sharedGeos.orbCore, sharedMats.orbCore);
+      const haloMesh = new THREE.Mesh(sharedGeos.orbHalo, sharedMats.orbHalo);
+      haloMesh.rotation.x = Math.PI / 3;
+
+      orbGroup.add(coreMesh, haloMesh);
+      worldGroup.add(orbGroup);
+      orbs.push({ mesh: orbGroup, coreMesh, haloMesh, x, z, yOffset, phase: Math.random() * Math.PI * 2 });
     }
 
     function buildWorld(worldId) {
@@ -1290,9 +1703,9 @@
         scene.fog = new THREE.FogExp2(0x7dd3fc, 0.00044);
         hemiLight.color.setHex(0xe0f2fe);
         hemiLight.groundColor.setHex(0x22c55e);
-        hemiLight.intensity = 1.45;
+        hemiLight.intensity = 1.5;
         sun.color.setHex(0xfffbeb);
-        sun.intensity = 2.0;
+        sun.intensity = 2.1;
         horizonSea.material.color.setHex(0x0284c7);
         dayGroup.visible = true;
         cosmosGroup.visible = false;
@@ -1309,7 +1722,7 @@
         cosmosGroup.visible = true;
       }
 
-      const segs = worldId === 1 ? 190 : 220;
+      const segs = worldId === 1 ? 210 : 220;
       const tGeo = new THREE.PlaneGeometry(half * 2, half * 2, segs, segs);
       tGeo.rotateX(-Math.PI / 2);
       const pAttr = tGeo.attributes.position;
@@ -1357,7 +1770,7 @@
 
       const tMesh = new THREE.Mesh(
         tGeo,
-        new THREE.MeshStandardMaterial({ vertexColors: true, roughness: 0.76, metalness: worldId === 2 ? 0.18 : 0.1 })
+        new THREE.MeshStandardMaterial({ vertexColors: true, roughness: 0.74, metalness: worldId === 2 ? 0.18 : 0.12 })
       );
       tMesh.receiveShadow = true;
       worldGroup.add(tMesh);
@@ -1373,7 +1786,80 @@
         worldGroup.add(wall);
       }
 
-      // Extras nur für Welt 2: Schwebende Kosmos-Inseln & Astral-Tore
+      // Welt 1: Schwebende Sonnen-Inseln & Himmels-Tore (auf Niveau von Welt 2 gehoben)
+      if (worldId === 1) {
+        const skyIslandCoords = [
+          { x: -260, z: -240, y: 40, s: 1.15 },
+          { x: 340, z: -310, y: 52, s: 1.3 },
+          { x: 690, z: 410, y: 46, s: 1.1 },
+          { x: -710, z: 490, y: 58, s: 1.35 },
+          { x: 1050, z: 1050, y: 74, s: 1.5 },
+          { x: -1150, z: -860, y: 54, s: 1.25 }
+        ];
+
+        for (let idx = 0; idx < skyIslandCoords.length; idx++) {
+          const ic = skyIslandCoords[idx];
+          const islGroup = new THREE.Group();
+
+          const grassCap = new THREE.Mesh(
+            new THREE.CylinderGeometry(15 * ic.s, 11 * ic.s, 3.2 * ic.s, 12),
+            sharedMats.skyIslandTop
+          );
+          grassCap.position.y = 1.6 * ic.s;
+
+          const rockCone = new THREE.Mesh(
+            new THREE.ConeGeometry(11 * ic.s, 20 * ic.s, 9),
+            sharedMats.skyIslandRock
+          );
+          rockCone.position.y = -10 * ic.s;
+          rockCone.rotation.x = Math.PI;
+
+          const sunRing = new THREE.Mesh(
+            new THREE.TorusGeometry(19.5 * ic.s, 0.48, 10, 36),
+            sharedMats.sunGoldRing
+          );
+          sunRing.rotation.x = Math.PI / 2.3;
+          sunRing.position.y = 3.2 * ic.s;
+
+          const beacon = new THREE.Mesh(sharedGeos.crystal, sharedMats.sunBeacon);
+          beacon.position.y = 6.2 * ic.s;
+
+          islGroup.add(grassCap, rockCone, sunRing, beacon);
+          islGroup.position.set(ic.x, ic.y, ic.z);
+          worldGroup.add(islGroup);
+          floatingWorldProps.push({ mesh: islGroup, baseY: ic.y, phase: idx * 1.15 });
+          spinningRings.push({ mesh: sunRing, speed: (idx % 2 === 0 ? 1 : -1) * 0.42 });
+        }
+
+        const sunGateCoords = [
+          { x: 0, z: -145, rotY: 0 },
+          { x: 540, z: 160, rotY: 0.65 },
+          { x: -560, z: -210, rotY: -0.65 },
+          { x: 920, z: 760, rotY: 1.05 }
+        ];
+
+        for (let g = 0; g < sunGateCoords.length; g++) {
+          const gc = sunGateCoords[g];
+          const gy = getTerrainHeight(gc.x, gc.z);
+          const gateGroup = new THREE.Group();
+          gateGroup.position.set(gc.x, gy + 10.5, gc.z);
+          gateGroup.rotation.y = gc.rotY;
+
+          const outerArch = new THREE.Mesh(
+            new THREE.TorusGeometry(10.5, 0.58, 12, 42),
+            sharedMats.sunGoldRing
+          );
+          const innerArch = new THREE.Mesh(
+            new THREE.TorusGeometry(7.8, 0.32, 10, 36),
+            sharedMats.neonCyan
+          );
+          gateGroup.add(outerArch, innerArch);
+          worldGroup.add(gateGroup);
+          spinningRings.push({ mesh: innerArch, speed: 0.85 });
+        }
+      }
+
+      // Welt 2: Schwebende Kosmos-Inseln & Astral-Tore
       if (worldId === 2) {
         const islandCoords = [
           { x: -240, z: -260, y: 42, s: 1.2 },
@@ -1438,7 +1924,7 @@
           );
           const innerGate = new THREE.Mesh(
             new THREE.TorusGeometry(8.2, 0.35, 10, 36),
-            sharedMats.padRing
+            sharedMats.padInnerRing
           );
           gateGroup.add(outerGate, innerGate);
           worldGroup.add(gateGroup);
@@ -1446,7 +1932,7 @@
         }
       }
 
-      const propCount = worldId === 1 ? 340 : 440;
+      const propCount = worldId === 1 ? 420 : 440;
       for (let i = 0; i < propCount; i++) {
         const rx = (Math.random() - 0.5) * (half * 1.88);
         const rz = (Math.random() - 0.5) * (half * 1.88);
@@ -1483,7 +1969,7 @@
               worldGroup.add(rock);
             }
           } else {
-            if (i % 9 === 0) {
+            if (i % 8 === 0) {
               const beacon = new THREE.Mesh(sharedGeos.crystal, sharedMats.sunBeacon);
               const baseY = ry + 3.2;
               beacon.position.set(rx, baseY, rz);
@@ -1520,11 +2006,13 @@
         }
       }
 
+      // Detailliertere Boost-Pads (Sockel + 2 Ringe + schwebender Kern-Kristall + Lichtsäule)
       const padCoords = worldId === 1
         ? [
             { x: 0, z: -85 }, { x: 120, z: 45 }, { x: -130, z: 70 },
             { x: 820, z: 140 }, { x: 960, z: 820 }, { x: -180, z: -860 },
-            { x: 300, z: -980 }, { x: -880, z: -240 }, { x: 140, z: 920 }, { x: 1050, z: 1050 }
+            { x: 300, z: -980 }, { x: -880, z: -240 }, { x: 140, z: 920 }, { x: 1050, z: 1050 },
+            { x: -1200, z: -1050 }, { x: 1350, z: -950 }
           ]
         : [
             { x: 0, z: -90 }, { x: 140, z: 60 }, { x: -150, z: 95 },
@@ -1539,21 +2027,39 @@
         group.position.set(bp.x, by + 0.18, bp.z);
 
         const baseMesh = new THREE.Mesh(sharedGeos.padBase, sharedMats.padBase);
-        const ringMesh = new THREE.Mesh(sharedGeos.padRing, sharedMats.padRing);
-        ringMesh.rotation.x = Math.PI / 2;
-        ringMesh.position.y = 0.22;
-        const beamMesh = new THREE.Mesh(sharedGeos.padBeam, sharedMats.padBeam);
-        beamMesh.position.y = 1.9;
+        const outerRingMesh = new THREE.Mesh(sharedGeos.padOuterRing, sharedMats.padOuterRing);
+        outerRingMesh.rotation.x = Math.PI / 2;
+        outerRingMesh.position.y = 0.24;
 
-        group.add(baseMesh, ringMesh, beamMesh);
+        const innerRingMesh = new THREE.Mesh(sharedGeos.padInnerRing, sharedMats.padInnerRing);
+        innerRingMesh.rotation.x = Math.PI / 2;
+        innerRingMesh.position.y = 0.42;
+
+        const coreGemMesh = new THREE.Mesh(sharedGeos.padCoreGem, sharedMats.padCoreGem);
+        coreGemMesh.position.y = 1.65;
+
+        const beamMesh = new THREE.Mesh(sharedGeos.padBeam, sharedMats.padBeam);
+        beamMesh.position.y = 2.2;
+
+        group.add(baseMesh, outerRingMesh, innerRingMesh, coreGemMesh, beamMesh);
         worldGroup.add(group);
-        boostPads.push({ group, ringMesh, beamMesh, x: bp.x, z: bp.z, radius: 5.4, cooldown: 0 });
+        boostPads.push({
+          group,
+          outerRingMesh,
+          innerRingMesh,
+          coreGemMesh,
+          beamMesh,
+          x: bp.x,
+          z: bp.z,
+          radius: 5.5,
+          cooldown: 0
+        });
       }
 
       for (let i = 1; i <= 16; i++) {
         spawnOrbAt(0, -i * 7.5, 1.45);
       }
-      const orbTotal = worldId === 1 ? 420 : 520;
+      const orbTotal = worldId === 1 ? 460 : 520;
       for (let i = 0; i < orbTotal; i++) {
         spawnOrbAt((Math.random() - 0.5) * (half * 1.88), (Math.random() - 0.5) * (half * 1.88), 1.45);
       }
@@ -1563,17 +2069,23 @@
 
     // ---------- 10 Skins mit stark unterschiedlichen 3D-Silhouetten & Bauteilen ----------
     const SKINS = [
-      { id: 'cyber', name: '1. Cyber Runner', desc: 'Schulter-Klingen & Visier-Kamm.', cost: 0, adminOnly: false, primary: 0x0284c7, accent: 0x38bdf8, helmet: 0xf8fafc, visor: 0x38bdf8 },
-      { id: 'inferno', name: '2. Inferno Knight', desc: 'Ritter-Hörner & Rückenflügel.', cost: 80, adminOnly: false, primary: 0xdc2626, accent: 0xf97316, helmet: 0xfff7ed, visor: 0xfacc15 },
-      { id: 'venom', name: '3. Venom Stalker', desc: 'Rückenstacheln & breite Schultern.', cost: 180, adminOnly: false, primary: 0x059669, accent: 0x4ade80, helmet: 0xecfdf5, visor: 0xa3e635 },
-      { id: 'void', name: '4. Void Sovereign', desc: 'Astral-Krone & schwebende Klingen.', cost: 340, adminOnly: false, primary: 0x7c3aed, accent: 0xe879f9, helmet: 0xfaf5ff, visor: 0xf472b6 },
-      { id: 'samurai', name: '5. Samurai Ronin', desc: 'Breiter Kabuto-Hut & Rücken-Katana.', cost: 550, adminOnly: false, primary: 0x991b1b, accent: 0xfacc15, helmet: 0xfef2f2, visor: 0xfef08a },
-      { id: 'mecha', name: '6. Mecha Titan', desc: 'Kasten-Panzerkopf, Antennen & Blöcke.', cost: 850, adminOnly: false, primary: 0x475569, accent: 0x38bdf8, helmet: 0xcbd5e1, visor: 0x22d3ee },
-      { id: 'valkyrie', name: '7. Frost Valkyrie', desc: 'Flügel-Ohren & Eiskristall-Rücken.', cost: 1250, adminOnly: false, primary: 0x0369a1, accent: 0x67e8f9, helmet: 0xf0f9ff, visor: 0x7dd3fc },
-      { id: 'pharaoh', name: '8. Solar Pharaoh', desc: 'Pharaonen-Kopfkrone & Brust-Kragen.', cost: 1750, adminOnly: false, primary: 0xb45309, accent: 0xfacc15, helmet: 0x1e3a8a, visor: 0xfef08a },
-      { id: 'assassin', name: '9. Shadow Assassin', desc: 'Spitze Kapuze, Schal & Doppel-Dolche.', cost: 2400, adminOnly: false, primary: 0x18181b, accent: 0xf43f5e, helmet: 0x27272a, visor: 0xfb7185 },
-      { id: 'overlord', name: '10. Admin Overlord', desc: 'Exklusiver Admin-Only-Skin mit Halo & Türmen.', cost: 0, adminOnly: true, primary: 0xbe185d, accent: 0xfacc15, helmet: 0xffffff, visor: 0x38bdf8 }
+      { id: 'cyber', cost: 0, adminOnly: false, primary: 0x0284c7, accent: 0x38bdf8, helmet: 0xf8fafc, visor: 0x38bdf8 },
+      { id: 'inferno', cost: 80, adminOnly: false, primary: 0xdc2626, accent: 0xf97316, helmet: 0xfff7ed, visor: 0xfacc15 },
+      { id: 'venom', cost: 180, adminOnly: false, primary: 0x059669, accent: 0x4ade80, helmet: 0xecfdf5, visor: 0xa3e635 },
+      { id: 'void', cost: 340, adminOnly: false, primary: 0x7c3aed, accent: 0xe879f9, helmet: 0xfaf5ff, visor: 0xf472b6 },
+      { id: 'samurai', cost: 550, adminOnly: false, primary: 0x991b1b, accent: 0xfacc15, helmet: 0xfef2f2, visor: 0xfef08a },
+      { id: 'mecha', cost: 850, adminOnly: false, primary: 0x475569, accent: 0x38bdf8, helmet: 0xcbd5e1, visor: 0x22d3ee },
+      { id: 'valkyrie', cost: 1250, adminOnly: false, primary: 0x0369a1, accent: 0x67e8f9, helmet: 0xf0f9ff, visor: 0x7dd3fc },
+      { id: 'pharaoh', cost: 1750, adminOnly: false, primary: 0xb45309, accent: 0xfacc15, helmet: 0x1e3a8a, visor: 0xfef08a },
+      { id: 'assassin', cost: 2400, adminOnly: false, primary: 0x18181b, accent: 0xf43f5e, helmet: 0x27272a, visor: 0xfb7185 },
+      { id: 'overlord', cost: 0, adminOnly: true, primary: 0xbe185d, accent: 0xfacc15, helmet: 0xffffff, visor: 0x38bdf8 }
     ];
+
+    function getSkinTexts(skinId) {
+      const t = tr();
+      if (t.skins && t.skins[skinId]) return t.skins[skinId];
+      return { name: skinId, desc: '' };
+    }
 
     const unlockedSkins = new Set(['cyber']);
     let activeSkinId = 'cyber';
@@ -1867,32 +2379,36 @@
     const rightArm = createDetailedLimb(0.48, 0.62, 0, 0.36, 0.34, 0.18, false);
     chestPivot.add(leftArm.root, rightArm.root);
 
-    // ---------- Sauber getrennte 3D-Spur-Rigs ----------
+    // ---------- Detaillierte 3D-Spur-Rigs ----------
     const windRig = new THREE.Group();
     windRig.visible = false;
-    const windRingGeo = new THREE.TorusGeometry(0.95, 0.055, 10, 32);
-    const windRingMat = new THREE.MeshBasicMaterial({ color: 0xa5f3fc, transparent: true, opacity: 0.72 });
+    const windRingGeo = new THREE.TorusGeometry(0.98, 0.06, 12, 36);
+    const windRingMat = new THREE.MeshBasicMaterial({ color: 0xa5f3fc, transparent: true, opacity: 0.78 });
     const windRing1 = new THREE.Mesh(windRingGeo, windRingMat);
     windRing1.rotation.x = Math.PI / 2;
-    windRing1.position.y = 0.65;
+    windRing1.position.y = 0.62;
     const windRing2 = new THREE.Mesh(windRingGeo, windRingMat);
     windRing2.rotation.x = Math.PI / 2;
-    windRing2.position.y = 1.35;
-    windRing2.scale.setScalar(0.78);
-    windRig.add(windRing1, windRing2);
+    windRing2.position.y = 1.28;
+    windRing2.scale.setScalar(0.8);
+    const windRing3 = new THREE.Mesh(windRingGeo, windRingMat);
+    windRing3.rotation.x = Math.PI / 2.4;
+    windRing3.position.y = 1.78;
+    windRing3.scale.setScalar(0.58);
+    windRig.add(windRing1, windRing2, windRing3);
     player.add(windRig);
 
     const fireRig = new THREE.Group();
     fireRig.visible = false;
-    const flameConeGeo = new THREE.ConeGeometry(0.28, 1.05, 6);
-    const flameMatOuter = new THREE.MeshBasicMaterial({ color: 0xff4500, transparent: true, opacity: 0.82 });
-    const flameMatInner = new THREE.MeshBasicMaterial({ color: 0xfacc15, transparent: true, opacity: 0.94 });
-    for (let i = 0; i < 6; i++) {
-      const ang = (i / 6) * Math.PI * 2;
+    const flameConeGeo = new THREE.ConeGeometry(0.3, 1.18, 7);
+    const flameMatOuter = new THREE.MeshBasicMaterial({ color: 0xff4500, transparent: true, opacity: 0.85 });
+    const flameMatInner = new THREE.MeshBasicMaterial({ color: 0xfef08a, transparent: true, opacity: 0.96 });
+    for (let i = 0; i < 8; i++) {
+      const ang = (i / 8) * Math.PI * 2;
       const cone = new THREE.Mesh(flameConeGeo, i % 2 === 0 ? flameMatOuter : flameMatInner);
-      cone.position.set(Math.cos(ang) * 0.62, 0.6 + (i % 3) * 0.25, Math.sin(ang) * 0.62);
-      cone.rotation.z = -Math.cos(ang) * 0.25;
-      cone.rotation.x = Math.sin(ang) * 0.25;
+      cone.position.set(Math.cos(ang) * 0.66, 0.58 + (i % 3) * 0.24, Math.sin(ang) * 0.66);
+      cone.rotation.z = -Math.cos(ang) * 0.28;
+      cone.rotation.x = Math.sin(ang) * 0.28;
       fireRig.add(cone);
     }
     player.add(fireRig);
@@ -1900,42 +2416,55 @@
     const plasmaRig = new THREE.Group();
     plasmaRig.visible = false;
     const plasmaOrbitRing = new THREE.Mesh(
-      new THREE.TorusGeometry(1.25, 0.07, 12, 36),
-      new THREE.MeshBasicMaterial({ color: 0x38bdf8, transparent: true, opacity: 0.82 })
+      new THREE.TorusGeometry(1.3, 0.075, 12, 40),
+      new THREE.MeshBasicMaterial({ color: 0x38bdf8, transparent: true, opacity: 0.86 })
     );
     plasmaOrbitRing.rotation.x = Math.PI / 2.6;
     plasmaOrbitRing.position.y = 1.25;
-    plasmaRig.add(plasmaOrbitRing);
 
-    const plasmaCoreGeo = new THREE.OctahedronGeometry(0.26, 0);
-    const plasmaMatA = new THREE.MeshBasicMaterial({ color: 0x38bdf8, transparent: true, opacity: 0.94 });
-    const plasmaMatB = new THREE.MeshBasicMaterial({ color: 0xf472b6, transparent: true, opacity: 0.94 });
-    for (let i = 0; i < 4; i++) {
-      const ang = (i / 4) * Math.PI * 2;
+    const plasmaSecondRing = new THREE.Mesh(
+      new THREE.TorusGeometry(1.08, 0.055, 12, 36),
+      new THREE.MeshBasicMaterial({ color: 0xf472b6, transparent: true, opacity: 0.8 })
+    );
+    plasmaSecondRing.rotation.y = Math.PI / 3;
+    plasmaSecondRing.position.y = 1.25;
+    plasmaRig.add(plasmaOrbitRing, plasmaSecondRing);
+
+    const plasmaCoreGeo = new THREE.OctahedronGeometry(0.28, 1);
+    const plasmaMatA = new THREE.MeshBasicMaterial({ color: 0x38bdf8, transparent: true, opacity: 0.95 });
+    const plasmaMatB = new THREE.MeshBasicMaterial({ color: 0xf472b6, transparent: true, opacity: 0.95 });
+    for (let i = 0; i < 6; i++) {
+      const ang = (i / 6) * Math.PI * 2;
       const orbCore = new THREE.Mesh(plasmaCoreGeo, i % 2 === 0 ? plasmaMatA : plasmaMatB);
-      orbCore.position.set(Math.cos(ang) * 1.25, 1.25, Math.sin(ang) * 1.25);
+      orbCore.position.set(Math.cos(ang) * 1.3, 1.25, Math.sin(ang) * 1.3);
       plasmaRig.add(orbCore);
     }
     player.add(plasmaRig);
 
     const lightRig = new THREE.Group();
     lightRig.visible = false;
-    const lightHaloGeo = new THREE.TorusGeometry(1.35, 0.085, 14, 42);
-    const lightHaloMat = new THREE.MeshBasicMaterial({ color: 0xfef08a, transparent: true, opacity: 0.9 });
+    const lightHaloGeo = new THREE.TorusGeometry(1.38, 0.09, 14, 44);
+    const lightHaloMat = new THREE.MeshBasicMaterial({ color: 0xfef08a, transparent: true, opacity: 0.92 });
     const lightHalo1 = new THREE.Mesh(lightHaloGeo, lightHaloMat);
     lightHalo1.rotation.x = Math.PI / 2;
     lightHalo1.position.y = 1.2;
     const lightHalo2 = new THREE.Mesh(lightHaloGeo, lightHaloMat);
     lightHalo2.rotation.y = Math.PI / 3;
     lightHalo2.position.y = 1.2;
-    lightRig.add(lightHalo1, lightHalo2);
+    const lightHalo3 = new THREE.Mesh(
+      new THREE.TorusGeometry(1.62, 0.045, 12, 48),
+      new THREE.MeshBasicMaterial({ color: 0xe0f2fe, transparent: true, opacity: 0.78 })
+    );
+    lightHalo3.rotation.x = Math.PI / 4;
+    lightHalo3.position.y = 1.25;
+    lightRig.add(lightHalo1, lightHalo2, lightHalo3);
     player.add(lightRig);
 
     scene.add(player);
 
     // ---------- Partikel-Pool, Spur-Ribbons, Blitze & Sternschnuppen ----------
-    const PARTICLE_POOL_SIZE = 420;
-    const sharedParticleGeo = new THREE.OctahedronGeometry(0.24, 0);
+    const PARTICLE_POOL_SIZE = 460;
+    const sharedParticleGeo = new THREE.OctahedronGeometry(0.25, 0);
     const particlePool = [];
 
     for (let i = 0; i < PARTICLE_POOL_SIZE; i++) {
@@ -1971,10 +2500,10 @@
     }
 
     const trailSegments = [];
-    const trailSegmentGeo = new THREE.BoxGeometry(0.32, 0.14, 1.8);
-    function spawnTrailSegment(x, y, z, yaw, colorHex, life = 0.34, scaleX = 1, scaleY = 1) {
-      if (trailSegments.length > 100) return;
-      const mat = new THREE.MeshBasicMaterial({ color: colorHex, transparent: true, opacity: 0.88 });
+    const trailSegmentGeo = new THREE.BoxGeometry(0.34, 0.16, 2.0);
+    function spawnTrailSegment(x, y, z, yaw, colorHex, life = 0.36, scaleX = 1, scaleY = 1) {
+      if (trailSegments.length > 110) return;
+      const mat = new THREE.MeshBasicMaterial({ color: colorHex, transparent: true, opacity: 0.9 });
       const mesh = new THREE.Mesh(trailSegmentGeo, mat);
       mesh.position.set(x, y, z);
       mesh.rotation.y = yaw;
@@ -1988,25 +2517,25 @@
     const boltMatCore = new THREE.LineBasicMaterial({ color: 0xfef08a, transparent: true, opacity: 1 });
 
     function spawnLightningStrike() {
-      if (lightningBolts.length > 36) return;
+      if (lightningBolts.length > 42) return;
       const angle = Math.random() * Math.PI * 2;
-      const radius = 0.25 + Math.random() * 1.9;
+      const radius = 0.2 + Math.random() * 2.1;
       let cx = player.position.x + Math.cos(angle) * radius;
       let cy = player.position.y + 0.15;
       let cz = player.position.z + Math.sin(angle) * radius;
 
       const pts = [new THREE.Vector3(cx, cy, cz)];
-      for (let i = 1; i <= 10; i++) {
-        cx += (Math.random() - 0.5) * 2.3;
-        cy += 0.68;
-        cz += (Math.random() - 0.5) * 2.3;
+      for (let i = 1; i <= 12; i++) {
+        cx += (Math.random() - 0.5) * 2.6;
+        cy += 0.65;
+        cz += (Math.random() - 0.5) * 2.6;
         pts.push(new THREE.Vector3(cx, cy, cz));
       }
 
       const geo = new THREE.BufferGeometry().setFromPoints(pts);
       const line = new THREE.Line(geo, Math.random() < 0.5 ? boltMatMain : boltMatCore);
       scene.add(line);
-      lightningBolts.push({ line, geo, life: 0.16 });
+      lightningBolts.push({ line, geo, life: 0.18 });
     }
 
     const shootingStars = [];
@@ -2030,7 +2559,7 @@
       shootingStars.push({ line, geo, vel: new THREE.Vector3(dx, dy, dz), life: 0.9 });
     }
 
-    // ---------- Spielzustand, Welten, Rebirth & Admin ----------
+    // ---------- Spielzustand, Welten, Rebirth, Admin & Speicherstand ----------
     let controlMode = null;
     let gameStarted = false;
     let uiModalOpen = false;
@@ -2074,10 +2603,83 @@
     let animCycle = 0;
     let squashAmount = 0;
 
+    function saveProgress() {
+      try {
+        const data = {
+          lang: currentLang,
+          controlMode,
+          currentWorld,
+          rebirthCount,
+          savedWorld1Speed,
+          savedWorld1Steps,
+          unlockedNewWorldAt5000,
+          currentSpeed,
+          steps,
+          orbsCollected,
+          unlockedSkins: Array.from(unlockedSkins),
+          activeSkinId,
+          adminUnlocked,
+          pos: { x: player.position.x, z: player.position.z }
+        };
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+      } catch (_) {}
+    }
+
+    function loadProgress() {
+      try {
+        const raw = localStorage.getItem(STORAGE_KEY);
+        if (!raw) return;
+        const data = JSON.parse(raw);
+        if (data.lang && LOCALES[data.lang]) currentLang = data.lang;
+        rebirthCount = Number(data.rebirthCount) || 0;
+        savedWorld1Speed = Number(data.savedWorld1Speed) || 0;
+        savedWorld1Steps = Number(data.savedWorld1Steps) || 0;
+        unlockedNewWorldAt5000 = Boolean(data.unlockedNewWorldAt5000);
+        currentSpeed = Number(data.currentSpeed) || 0;
+        steps = Number(data.steps) || 0;
+        orbsCollected = Number(data.orbsCollected) || 0;
+        adminUnlocked = Boolean(data.adminUnlocked);
+
+        if (Array.isArray(data.unlockedSkins)) {
+          unlockedSkins.clear();
+          for (const id of data.unlockedSkins) unlockedSkins.add(id);
+          unlockedSkins.add('cyber');
+        }
+
+        const targetW = (data.currentWorld === 2) ? 2 : 1;
+        if (targetW === 2) buildWorld(2);
+
+        if (data.pos && typeof data.pos.x === 'number' && typeof data.pos.z === 'number') {
+          const half = getWorldHalf();
+          const px = THREE.MathUtils.clamp(data.pos.x, -half + 6, half - 6);
+          const pz = THREE.MathUtils.clamp(data.pos.z, -half + 6, half - 6);
+          player.position.set(px, getTerrainHeight(px, pz), pz);
+        } else {
+          player.position.set(0, getTerrainHeight(0, 0), 0);
+        }
+
+        if (data.activeSkinId) applySkin(data.activeSkinId);
+      } catch (_) {}
+    }
+
+    loadProgress();
+
     const ui = {
       startMenu: document.getElementById('startMenu'),
+      menuPill: document.getElementById('menuPill'),
+      menuSubtitle: document.getElementById('menuSubtitle'),
+      stageStrip: document.getElementById('stageStrip'),
+      pcName: document.getElementById('pcName'),
+      pcDesc: document.getElementById('pcDesc'),
+      touchName: document.getElementById('touchName'),
+      touchDesc: document.getElementById('touchDesc'),
       pcHint: document.getElementById('pcHint'),
       touchControls: document.getElementById('touchControls'),
+      lblSteps: document.getElementById('lblSteps'),
+      lblOrbs: document.getElementById('lblOrbs'),
+      lblSpeed: document.getElementById('lblSpeed'),
+      lblMaxSpeed: document.getElementById('lblMaxSpeed'),
+      lblRebirth: document.getElementById('lblRebirth'),
       steps: document.getElementById('steps'),
       orbs: document.getElementById('orbs'),
       speed: document.getElementById('speed'),
@@ -2091,7 +2693,24 @@
       sprintBtn: document.getElementById('sprintBtn'),
       sprintBtnSub: document.getElementById('sprintBtnSub'),
       shopModal: document.getElementById('shopModal'),
+      shopModalTitle: document.getElementById('shopModalTitle'),
+      walletSpeedLabel: document.getElementById('walletSpeedLabel'),
+      walletLimitLabel: document.getElementById('walletLimitLabel'),
+      walletRebirthLabel: document.getElementById('walletRebirthLabel'),
+      rebirthBoxTitle: document.getElementById('rebirthBoxTitle'),
+      rebirthBoxDesc: document.getElementById('rebirthBoxDesc'),
+      shopSectionHeading: document.getElementById('shopSectionHeading'),
       adminModal: document.getElementById('adminModal'),
+      adminModalTitle: document.getElementById('adminModalTitle'),
+      adminPromptText: document.getElementById('adminPromptText'),
+      submitAdminCodeBtn: document.getElementById('submitAdminCodeBtn'),
+      adminAdd250Btn: document.getElementById('adminAdd250Btn'),
+      adminUnlockAllShopSkinsBtn: document.getElementById('adminUnlockAllShopSkinsBtn'),
+      adminSet5000Btn: document.getElementById('adminSet5000Btn'),
+      adminSet10000Btn: document.getElementById('adminSet10000Btn'),
+      adminOverlordTitle: document.getElementById('adminOverlordTitle'),
+      adminOverlordDesc: document.getElementById('adminOverlordDesc'),
+      menuSwitchBtn: document.getElementById('menuSwitchBtn'),
       newWorldBtn: document.getElementById('newWorldBtn'),
       returnOldWorldBtn: document.getElementById('returnOldWorldBtn'),
       rebirthBtn: document.getElementById('rebirthBtn'),
@@ -2111,6 +2730,79 @@
       worldSceneSub: document.getElementById('worldSceneSub')
     };
 
+    function applyLanguage(langCode) {
+      if (!LOCALES[langCode]) return;
+      currentLang = langCode;
+      document.documentElement.lang = langCode;
+
+      document.querySelectorAll('.lang-btn').forEach(btn => {
+        btn.classList.toggle('active', btn.dataset.lang === langCode);
+      });
+
+      const t = tr();
+      ui.menuPill.textContent = t.menuPill;
+      ui.menuSubtitle.innerHTML = t.menuSubtitle;
+      ui.stageStrip.innerHTML = t.chips.map(ch => `<span class="stage-chip">${ch}</span>`).join('');
+      ui.pcName.textContent = t.pcName;
+      ui.pcDesc.innerHTML = t.pcDesc;
+      ui.touchName.textContent = t.touchName;
+      ui.touchDesc.innerHTML = t.touchDesc;
+
+      ui.lblSteps.textContent = t.lblSteps;
+      ui.lblOrbs.textContent = t.lblOrbs;
+      ui.lblSpeed.textContent = t.lblSpeed;
+      ui.lblMaxSpeed.textContent = t.lblMaxSpeed;
+      ui.lblRebirth.textContent = t.lblRebirth;
+
+      document.getElementById('openShopBtn').textContent = t.openShopBtn;
+      document.getElementById('openAdminBtn').textContent = t.openAdminBtn;
+      ui.newWorldBtn.textContent = t.newWorldBtn;
+      ui.returnOldWorldBtn.textContent = t.returnOldWorldBtn;
+      ui.rebirthBtn.textContent = t.rebirthBtn;
+      ui.menuSwitchBtn.textContent = t.menuSwitchBtn;
+      ui.pcHint.textContent = t.pcHint;
+
+      ui.shopModalTitle.textContent = t.shopModalTitle;
+      ui.walletSpeedLabel.textContent = t.walletSpeedLabel;
+      ui.walletLimitLabel.textContent = t.walletLimitLabel;
+      ui.walletRebirthLabel.textContent = t.walletRebirthLabel;
+      ui.rebirthBoxTitle.textContent = t.rebirthBoxTitle;
+      ui.rebirthBoxDesc.innerHTML = t.rebirthBoxDesc;
+      ui.modalRebirthBtn.textContent = t.modalRebirthBtn;
+      ui.shopSectionHeading.textContent = t.shopSectionHeading;
+
+      ui.adminModalTitle.textContent = t.adminModalTitle;
+      ui.adminPromptText.innerHTML = t.adminPromptText;
+      ui.adminCodeInput.placeholder = t.adminPlaceholder;
+      ui.submitAdminCodeBtn.textContent = t.submitAdminCodeBtn;
+      ui.adminAdd250Btn.textContent = t.adminAdd250Btn;
+      ui.adminUnlockAllShopSkinsBtn.textContent = t.adminUnlockAllShopSkinsBtn;
+      ui.adminSet5000Btn.textContent = t.adminSet5000Btn;
+      ui.adminSet10000Btn.textContent = t.adminSet10000Btn;
+      ui.adminOverlordTitle.textContent = t.adminOverlordTitle;
+      ui.adminOverlordDesc.textContent = t.adminOverlordDesc;
+
+      if (!adminUnlocked) {
+        ui.adminStatusMsg.textContent = t.adminLocked;
+      } else {
+        ui.adminControls.style.opacity = '1';
+        ui.adminControls.style.pointerEvents = 'auto';
+        ui.adminExclusiveSkinBox.style.opacity = '1';
+        ui.adminExclusiveSkinBox.style.pointerEvents = 'auto';
+        ui.adminStatusMsg.textContent = t.adminUnlockedMsg(currentWorld);
+      }
+
+      refreshShopUI();
+      saveProgress();
+    }
+
+    document.querySelectorAll('.lang-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        initAudio();
+        applyLanguage(btn.dataset.lang);
+      });
+    });
+
     function getRebirthMultiplier() {
       return 1 + rebirthCount * 0.15;
     }
@@ -2125,7 +2817,7 @@
     }
 
     function formatCapDisplay() {
-      return isWorld2Infinite() ? '∞' : getWorldCap().toLocaleString('de-DE');
+      return isWorld2Infinite() ? '∞' : getWorldCap().toLocaleString('en-US');
     }
 
     function checkMilestones() {
@@ -2139,12 +2831,25 @@
       }
     }
 
+    if (currentWorld === 1 && (unlockedNewWorldAt5000 || currentSpeed >= 5000)) {
+      unlockedNewWorldAt5000 = true;
+      ui.newWorldBtn.classList.add('visible');
+    }
+    if (currentWorld === 2) {
+      ui.returnOldWorldBtn.classList.add('visible');
+    }
+    if (currentSpeed >= 10000) {
+      ui.rebirthBtn.classList.add('visible');
+    }
+
     function performRebirth() {
       if (currentSpeed < 10000 && !adminUnlocked) return;
       rebirthCount += 1;
       currentSpeed = 0;
       steps = 0;
       orbsCollected = 0;
+      savedWorld1Speed = 0;
+      savedWorld1Steps = 0;
       padBoostTimer = 0;
       sprintActiveTimer = 0;
       unlockedNewWorldAt5000 = false;
@@ -2160,9 +2865,11 @@
       isGrounded = true;
       playSound('warp');
       refreshShopUI();
+      saveProgress();
     }
 
     function renderSkinShop() {
+      const t = tr();
       ui.skinShopGrid.innerHTML = '';
       const shopSkins = SKINS.filter(s => !s.adminOnly);
       for (const sk of shopSkins) {
@@ -2171,30 +2878,32 @@
 
         const isOwned = unlockedSkins.has(sk.id);
         const isEquipped = activeSkinId === sk.id;
+        const stxt = getSkinTexts(sk.id);
 
         const titleEl = document.createElement('div');
         titleEl.className = 'upgrade-name';
-        titleEl.textContent = sk.name;
+        titleEl.textContent = stxt.name;
 
         const descEl = document.createElement('div');
         descEl.className = 'upgrade-desc';
-        descEl.textContent = sk.desc;
+        descEl.textContent = stxt.desc;
 
         const btnEl = document.createElement('button');
         btnEl.className = 'buy-btn' + (isEquipped ? ' skin-equipped' : '');
 
         if (isEquipped) {
-          btnEl.textContent = '✓ Ausgerüstet';
+          btnEl.textContent = t.equipped;
           btnEl.disabled = true;
         } else if (isOwned) {
-          btnEl.textContent = 'Ausrüsten';
+          btnEl.textContent = t.equip;
           btnEl.addEventListener('click', () => {
             applySkin(sk.id);
             playSound('buy');
             refreshShopUI();
+            saveProgress();
           });
         } else {
-          btnEl.textContent = `Kaufen (-${sk.cost} Speed)`;
+          btnEl.textContent = t.buySkin(sk.cost.toLocaleString('en-US'));
           btnEl.disabled = currentSpeed < sk.cost;
           btnEl.addEventListener('click', () => {
             if (currentSpeed >= sk.cost) {
@@ -2203,6 +2912,7 @@
               applySkin(sk.id);
               playSound('buy');
               refreshShopUI();
+              saveProgress();
             }
           });
         }
@@ -2215,6 +2925,7 @@
     }
 
     function refreshShopUI() {
+      const t = tr();
       ui.shopSpeedDisplay.textContent = currentSpeed.toFixed(1);
       ui.shopMaxSpeedDisplay.textContent = formatCapDisplay();
       ui.shopRebirthDisplay.textContent = rebirthCount;
@@ -2225,12 +2936,10 @@
       ui.modalRebirthBtn.disabled = currentSpeed < 10000;
 
       if (activeSkinId === 'overlord') {
-        ui.adminEquipOverlordBtn.textContent = '✓ Overlord aktiv';
+        ui.adminEquipOverlordBtn.textContent = t.adminOverlordActive;
         ui.adminEquipOverlordBtn.classList.add('skin-equipped');
       } else {
-        ui.adminEquipOverlordBtn.textContent = unlockedSkins.has('overlord')
-          ? 'Overlord ausrüsten'
-          : 'Freischalten & ausrüsten';
+        ui.adminEquipOverlordBtn.textContent = t.adminEquipOverlordBtn;
         ui.adminEquipOverlordBtn.classList.remove('skin-equipped');
       }
 
@@ -2264,6 +2973,7 @@
         savedWorld1Steps = steps;
       }
 
+      const t = tr();
       worldSceneTargetWorld = targetWorldId;
       worldSceneActive = true;
       worldSceneTimer = 0;
@@ -2275,13 +2985,11 @@
       playSound('warp');
 
       if (targetWorldId === 2) {
-        ui.worldSceneTitle.textContent = '🌌 WECHSEL IN WELT 2 (STERNENNACHT)';
-        ui.worldSceneSub.textContent = rebirthCount > 0
-          ? 'Nach Rebirth: In Welt 2 gilt unendlicher Speed (∞) mit echtem Overdrive-Schub!'
-          : 'Bis zu 10.000 Speed · Licht-Spur (7.500+) & Alle Effekte (10.000+)!';
+        ui.worldSceneTitle.textContent = t.sceneToW2Title;
+        ui.worldSceneSub.textContent = rebirthCount > 0 ? t.sceneToW2SubInf : t.sceneToW2SubCap;
       } else {
-        ui.worldSceneTitle.textContent = '☀️ RÜCKKEHR IN WELT 1 (MAX 5.000)';
-        ui.worldSceneSub.textContent = 'Helle Insel mit Wind-, Feuer-, Blitz- & Plasma-Spur!';
+        ui.worldSceneTitle.textContent = t.sceneToW1Title;
+        ui.worldSceneSub.textContent = t.sceneToW1Sub;
       }
     }
 
@@ -2301,18 +3009,20 @@
 
     // ---------- Admin-Panel (Welt 1 & Welt 2 + Admin-Only Skin) ----------
     document.getElementById('submitAdminCodeBtn').addEventListener('click', () => {
+      const t = tr();
       const entered = ui.adminCodeInput.value.trim().toUpperCase();
       if (entered === SECRET_ADMIN_CODE) {
         adminUnlocked = true;
-        ui.adminStatusMsg.textContent = `✅ Admin aktiv in Welt ${currentWorld}!`;
+        ui.adminStatusMsg.textContent = t.adminUnlockedMsg(currentWorld);
         ui.adminControls.style.opacity = '1';
         ui.adminControls.style.pointerEvents = 'auto';
         ui.adminExclusiveSkinBox.style.opacity = '1';
         ui.adminExclusiveSkinBox.style.pointerEvents = 'auto';
         playSound('boost');
         refreshShopUI();
+        saveProgress();
       } else {
-        ui.adminStatusMsg.textContent = '❌ Falscher Code.';
+        ui.adminStatusMsg.textContent = t.adminWrongCode;
       }
     });
 
@@ -2322,8 +3032,8 @@
       currentSpeed = Math.min(currentSpeed + 250, cap);
       checkMilestones();
       playSound('boost');
-      ui.adminStatusMsg.textContent = `⚡ +250 Speed in Welt ${currentWorld}! Aktuell: ${currentSpeed.toFixed(0)}`;
       refreshShopUI();
+      saveProgress();
     });
 
     document.getElementById('adminUnlockAllShopSkinsBtn').addEventListener('click', () => {
@@ -2332,8 +3042,8 @@
         if (!s.adminOnly) unlockedSkins.add(s.id);
       }
       playSound('buy');
-      ui.adminStatusMsg.textContent = '🎭 Alle 9 Shop-Skins freigeschaltet!';
       refreshShopUI();
+      saveProgress();
     });
 
     document.getElementById('adminEquipOverlordBtn').addEventListener('click', () => {
@@ -2341,8 +3051,8 @@
       unlockedSkins.add('overlord');
       applySkin('overlord');
       playSound('buy');
-      ui.adminStatusMsg.textContent = '👑 Admin Overlord Skin ausgerüstet!';
       refreshShopUI();
+      saveProgress();
     });
 
     document.getElementById('adminSet5000Btn').addEventListener('click', () => {
@@ -2350,8 +3060,8 @@
       currentSpeed = Math.min(5000, getWorldCap());
       checkMilestones();
       playSound('boost');
-      ui.adminStatusMsg.textContent = '🌌 Speed auf 5.000 gesetzt ("Neue Welt" bereit)!';
       refreshShopUI();
+      saveProgress();
     });
 
     document.getElementById('adminSet10000Btn').addEventListener('click', () => {
@@ -2364,8 +3074,8 @@
       currentSpeed = 10000;
       checkMilestones();
       playSound('boost');
-      ui.adminStatusMsg.textContent = '👑 Speed auf 10.000 gesetzt (Alle Effekte & Rebirth bereit)!';
       refreshShopUI();
+      saveProgress();
     });
 
     // ---------- Steuerung Startmenü & Eingaben ----------
@@ -2382,6 +3092,7 @@
         ui.pcHint.classList.add('hidden');
         ui.touchControls.classList.remove('hidden');
       }
+      saveProgress();
     }
 
     document.getElementById('btnPC').addEventListener('click', () => selectControlMode('pc'));
@@ -2389,6 +3100,8 @@
     document.getElementById('menuSwitchBtn').addEventListener('click', () => {
       ui.startMenu.classList.remove('hidden');
     });
+
+    applyLanguage(currentLang);
 
     let isMouseDragging = false;
     let lastMouseX = 0;
@@ -2596,12 +3309,11 @@
       }
     }
 
-    player.position.set(0, getTerrainHeight(0, 0), 0);
-
     // ---------- Haupt-Loop ----------
     let lastTime = performance.now();
     let hudTimer = 0;
-    let sceneGroundCache = getTerrainHeight(0, 0);
+    let saveTimer = 0;
+    let sceneGroundCache = getTerrainHeight(player.position.x, player.position.z);
 
     function animate(now) {
       requestAnimationFrame(animate);
@@ -2609,6 +3321,7 @@
       lastTime = now;
 
       if (dayGroup.visible) {
+        sunHaloRing.rotation.z += dt * 0.25;
         for (const cl of clouds) {
           cl.group.position.x += cl.speedX * dt;
           if (cl.group.position.x > 1950) cl.group.position.x = -1950;
@@ -2703,6 +3416,7 @@
           velY = 0;
           isGrounded = true;
           player.position.set(0, getTerrainHeight(0, 0), 0);
+          saveProgress();
         }
       } else {
         // ---------- Normales Gameplay (Marathon ~25–30 Min bis Rebirth + echter Overdrive nach Rebirth) ----------
@@ -2778,7 +3492,6 @@
           const accelGain = (1.7 + (sprintActiveTimer > 0 ? 2.1 : 0)) * getRebirthMultiplier() * inputMag;
           currentSpeed = Math.min(currentSpeed + accelGain * dt, worldCap);
 
-          // Fix: Bei hohem Speed (besonders in Welt 2 nach Rebirth bei 10.000–100.000+) spürbar weiter steigern!
           const baseScale = 18 + Math.min(currentSpeed * 0.014, 72);
           const excessOver10k = Math.max(0, currentSpeed - 10000);
           const postRebirthBoost = isWorld2Infinite()
@@ -2912,7 +3625,7 @@
         rightArm.mid.rotation.x = THREE.MathUtils.lerp(rightArm.mid.rotation.x, -0.25, 0.15);
       }
 
-      // ---------- Exakte Spur-Modi ----------
+      // ---------- Exakte Spur-Modi & Detaillierte Effekte ----------
       let trailMode = 'base';
       if (currentWorld === 1) {
         if (currentSpeed >= 5000) trailMode = 'plasma';
@@ -2940,90 +3653,94 @@
       lightRig.visible = showLight;
 
       if (showWind) {
-        windRing1.rotation.z += dt * 7.5;
-        windRing2.rotation.z -= dt * 9.0;
+        windRing1.rotation.z += dt * 8.0;
+        windRing2.rotation.z -= dt * 9.5;
+        windRing3.rotation.z += dt * 11.0;
       }
       if (showFire) {
-        fireRig.rotation.y += dt * 7.5;
+        fireRig.rotation.y += dt * 8.0;
         fireRig.children.forEach((cone, idx) => {
-          cone.scale.y = 0.85 + Math.sin(now * 0.024 + idx * 1.4) * 0.35;
+          cone.scale.y = 0.85 + Math.sin(now * 0.026 + idx * 1.4) * 0.38;
         });
       }
       if (showPlasma) {
-        plasmaOrbitRing.rotation.z += dt * 5.5;
-        plasmaRig.rotation.y += dt * 6.2;
+        plasmaOrbitRing.rotation.z += dt * 6.0;
+        plasmaSecondRing.rotation.x += dt * 5.2;
+        plasmaRig.rotation.y += dt * 6.8;
         plasmaRig.children.forEach((orbCore, idx) => {
-          if (idx > 0) {
-            orbCore.rotation.x += dt * 5.0;
-            orbCore.position.y = 1.25 + Math.cos(now * 0.01 + idx * 1.6) * 0.35;
+          if (idx >= 2) {
+            orbCore.rotation.x += dt * 5.5;
+            orbCore.position.y = 1.25 + Math.cos(now * 0.011 + idx * 1.6) * 0.38;
           }
         });
       }
       if (showLight) {
-        lightHalo1.rotation.z += dt * 6.0;
-        lightHalo2.rotation.x += dt * 5.0;
+        lightHalo1.rotation.z += dt * 6.5;
+        lightHalo2.rotation.x += dt * 5.5;
+        lightHalo3.rotation.y -= dt * 5.0;
       }
 
       if (!worldSceneActive && (hasMoveInput || !isGrounded || currentSpeed >= 2500)) {
         const backX = Math.sin(player.rotation.y);
         const backZ = Math.cos(player.rotation.y);
-        const burstCount = isWorld2Infinite() && currentSpeed > 15000 ? 6 : 3;
+        const burstCount = isWorld2Infinite() && currentSpeed > 15000 ? 7 : 4;
 
         if (showWind) {
           spawnTrailSegment(
-            player.position.x + backX * 1.2 + (Math.random() - 0.5) * 0.9,
-            player.position.y + 0.9 + (Math.random() - 0.5) * 0.8,
-            player.position.z + backZ * 1.2 + (Math.random() - 0.5) * 0.9,
-            player.rotation.y, 0x67e8f9, 0.32, 1.4, 0.7
+            player.position.x + backX * 1.2 + (Math.random() - 0.5) * 1.1,
+            player.position.y + 0.9 + (Math.random() - 0.5) * 0.9,
+            player.position.z + backZ * 1.2 + (Math.random() - 0.5) * 1.1,
+            player.rotation.y, 0x67e8f9, 0.34, 1.5, 0.75
           );
           for (let k = 0; k < burstCount; k++) {
             const ang = Math.random() * Math.PI * 2;
             spawnParticle(
-              player.position.x + Math.cos(ang) * 1.1,
-              player.position.y + 0.5 + Math.random() * 1.4,
-              player.position.z + Math.sin(ang) * 1.1,
-              0xa5f3fc, backX * 8 + Math.cos(ang) * 4, 1.5 + Math.random() * 2.5, backZ * 8 + Math.sin(ang) * 4,
-              0.38, 1.2, -1.0
+              player.position.x + Math.cos(ang) * 1.15,
+              player.position.y + 0.5 + Math.random() * 1.5,
+              player.position.z + Math.sin(ang) * 1.15,
+              k % 2 === 0 ? 0xa5f3fc : 0x38bdf8,
+              backX * 9 + Math.cos(ang) * 4.5, 1.6 + Math.random() * 2.6, backZ * 9 + Math.sin(ang) * 4.5,
+              0.4, 1.25, -1.0
             );
           }
         }
 
         if (showFire) {
           spawnTrailSegment(
-            player.position.x + backX * 1.3 + (Math.random() - 0.5) * 0.8,
+            player.position.x + backX * 1.3 + (Math.random() - 0.5) * 0.9,
             player.position.y + 0.75,
-            player.position.z + backZ * 1.3 + (Math.random() - 0.5) * 0.8,
-            player.rotation.y, 0xff5722, 0.36, 1.5, 1.2
+            player.position.z + backZ * 1.3 + (Math.random() - 0.5) * 0.9,
+            player.rotation.y, 0xff5722, 0.38, 1.6, 1.3
           );
           for (let k = 0; k < burstCount; k++) {
             const ang = Math.random() * Math.PI * 2;
-            const col = Math.random() < 0.5 ? 0xff4500 : (Math.random() < 0.8 ? 0xf97316 : 0xfacc15);
+            const col = Math.random() < 0.45 ? 0xff4500 : (Math.random() < 0.78 ? 0xf97316 : 0xfef08a);
             spawnParticle(
-              player.position.x + Math.cos(ang) * 0.75,
-              player.position.y + 0.3 + Math.random() * 1.1,
-              player.position.z + Math.sin(ang) * 0.75,
-              col, (Math.random() - 0.5) * 3.5, 5.2 + Math.random() * 4.5, (Math.random() - 0.5) * 3.5,
-              0.42, 1.6, -9.0
+              player.position.x + Math.cos(ang) * 0.8,
+              player.position.y + 0.3 + Math.random() * 1.2,
+              player.position.z + Math.sin(ang) * 0.8,
+              col, (Math.random() - 0.5) * 4.0, 5.6 + Math.random() * 4.8, (Math.random() - 0.5) * 4.0,
+              0.45, 1.65, -9.0
             );
           }
         }
 
         if (showLightning) {
-          if (Math.random() < 0.9) spawnLightningStrike();
+          if (Math.random() < 0.95) spawnLightningStrike();
           spawnTrailSegment(
             player.position.x + backX * 1.4,
             player.position.y + 1.0,
             player.position.z + backZ * 1.4,
-            player.rotation.y, 0xe879f9, 0.28, 1.2, 1.4
+            player.rotation.y, 0xe879f9, 0.3, 1.3, 1.5
           );
           for (let k = 0; k < burstCount; k++) {
             spawnParticle(
-              player.position.x + (Math.random() - 0.5) * 1.4,
-              player.position.y + 0.4 + Math.random() * 1.8,
-              player.position.z + (Math.random() - 0.5) * 1.4,
-              Math.random() < 0.55 ? 0xe879f9 : 0xfef08a,
-              (Math.random() - 0.5) * 13, 4.5 + Math.random() * 5, (Math.random() - 0.5) * 13,
-              0.3, 1.5, 7.0
+              player.position.x + (Math.random() - 0.5) * 1.5,
+              player.position.y + 0.4 + Math.random() * 1.9,
+              player.position.z + (Math.random() - 0.5) * 1.5,
+              Math.random() < 0.5 ? 0xe879f9 : 0xfef08a,
+              (Math.random() - 0.5) * 14, 4.8 + Math.random() * 5.2, (Math.random() - 0.5) * 14,
+              0.32, 1.55, 7.0
             );
           }
         }
@@ -3033,17 +3750,17 @@
             player.position.x + backX * 1.5,
             player.position.y + 1.1,
             player.position.z + backZ * 1.5,
-            player.rotation.y, 0x38bdf8, 0.4, 1.8, 1.5
+            player.rotation.y, 0x38bdf8, 0.42, 1.9, 1.6
           );
           for (let k = 0; k < burstCount + 1; k++) {
-            const ang = now * 0.01 + (k / 4) * Math.PI * 2;
+            const ang = now * 0.011 + (k / 5) * Math.PI * 2;
             spawnParticle(
-              player.position.x + Math.cos(ang) * 1.2,
+              player.position.x + Math.cos(ang) * 1.25,
               player.position.y + 0.5 + Math.random() * 1.8,
-              player.position.z + Math.sin(ang) * 1.2,
+              player.position.z + Math.sin(ang) * 1.25,
               k % 2 === 0 ? 0x38bdf8 : 0xf472b6,
-              Math.cos(ang) * 9.5, 3.2 + Math.random() * 4.2, Math.sin(ang) * 9.5,
-              0.44, 1.8, 2.0
+              Math.cos(ang) * 10.0, 3.4 + Math.random() * 4.4, Math.sin(ang) * 10.0,
+              0.46, 1.85, 2.0
             );
           }
         }
@@ -3053,17 +3770,17 @@
             player.position.x + backX * 1.6,
             player.position.y + 1.2,
             player.position.z + backZ * 1.6,
-            player.rotation.y, 0xfef08a, 0.45, 2.2, 1.8
+            player.rotation.y, 0xfef08a, 0.48, 2.3, 1.9
           );
           for (let k = 0; k < burstCount + 1; k++) {
             const ang = Math.random() * Math.PI * 2;
             spawnParticle(
-              player.position.x + Math.cos(ang) * 1.3,
-              player.position.y + 0.5 + Math.random() * 2.0,
-              player.position.z + Math.sin(ang) * 1.3,
+              player.position.x + Math.cos(ang) * 1.35,
+              player.position.y + 0.5 + Math.random() * 2.1,
+              player.position.z + Math.sin(ang) * 1.35,
               k % 2 === 0 ? 0xfef08a : 0xe0f2fe,
-              Math.cos(ang) * 8.0, 4.5 + Math.random() * 4.5, Math.sin(ang) * 8.0,
-              0.45, 1.9, -3.0
+              Math.cos(ang) * 8.5, 4.8 + Math.random() * 4.8, Math.sin(ang) * 8.5,
+              0.48, 1.95, -3.0
             );
           }
         }
@@ -3124,12 +3841,15 @@
       sun.target.position.copy(player.position);
       sun.target.updateMatrixWorld();
 
-      // ---------- Speed-Boost-Punkte & Orbs ----------
+      // ---------- Detaillierte Speed-Boost-Punkte & Orbs ----------
       if (!worldSceneActive) {
         for (const bp of boostPads) {
           if (bp.cooldown > 0) bp.cooldown = Math.max(0, bp.cooldown - dt);
-          bp.ringMesh.rotation.z += dt * 2.5;
-          bp.beamMesh.position.y = 1.9 + Math.sin(now * 0.004 + bp.x) * 0.25;
+          bp.outerRingMesh.rotation.z += dt * 2.2;
+          bp.innerRingMesh.rotation.z -= dt * 3.4;
+          bp.coreGemMesh.rotation.y += dt * 3.2;
+          bp.coreGemMesh.position.y = 1.65 + Math.sin(now * 0.0045 + bp.x) * 0.35;
+          bp.beamMesh.position.y = 2.2 + Math.sin(now * 0.004 + bp.x) * 0.25;
 
           const dx = player.position.x - bp.x;
           const dz = player.position.z - bp.z;
@@ -3142,14 +3862,15 @@
             checkMilestones();
             if (isGrounded) velY = 8.0;
             playSound('boost');
+            saveProgress();
 
-            for (let i = 0; i < 16; i++) {
-              const a = (i / 16) * Math.PI * 2;
+            for (let i = 0; i < 18; i++) {
+              const a = (i / 18) * Math.PI * 2;
               spawnParticle(
                 bp.x, bp.group.position.y + 1.0, bp.z,
                 currentWorld === 2 ? 0xc084fc : 0xfacc15,
-                Math.cos(a) * 9.5, 3.0 + Math.random() * 4.5, Math.sin(a) * 9.5,
-                0.5, 1.35, 10.0
+                Math.cos(a) * 10.0, 3.2 + Math.random() * 4.5, Math.sin(a) * 10.0,
+                0.5, 1.4, 10.0
               );
             }
           }
@@ -3165,7 +3886,8 @@
           const dz = pZ - orb.z;
           if (dx * dx + dz * dz > 1600) continue;
 
-          orb.mesh.rotation.y += dt * 3.0;
+          orb.coreMesh.rotation.y += dt * 3.6;
+          orb.haloMesh.rotation.z += dt * 4.2;
           const dy = pY - orb.mesh.position.y;
           if (dx * dx + dy * dy + dz * dz < 2.8) {
             worldGroup.remove(orb.mesh);
@@ -3178,12 +3900,12 @@
             checkMilestones();
             playSound('orb', steps);
 
-            for (let p = 0; p < 6; p++) {
+            for (let p = 0; p < 7; p++) {
               spawnParticle(
                 orb.mesh.position.x, orb.mesh.position.y, orb.mesh.position.z,
                 currentWorld === 2 ? 0x2dd4bf : 0xfacc15,
-                (Math.random() - 0.5) * 6.0, 2.0 + Math.random() * 3.8, (Math.random() - 0.5) * 6.0,
-                0.36, 1.0, 9.0
+                (Math.random() - 0.5) * 6.5, 2.2 + Math.random() * 4.0, (Math.random() - 0.5) * 6.5,
+                0.38, 1.1, 9.0
               );
             }
 
@@ -3257,10 +3979,18 @@
       camera.fov = THREE.MathUtils.lerp(camera.fov, targetFov, 1 - Math.exp(-8 * dt));
       camera.updateProjectionMatrix();
 
+      // ---------- Automatisches Speichern (alle 2.5s) ----------
+      saveTimer += dt;
+      if (saveTimer >= 2.5 && !worldSceneActive) {
+        saveTimer = 0;
+        saveProgress();
+      }
+
       // ---------- HUD aktualisieren ----------
       hudTimer += dt;
       if (hudTimer >= 0.08) {
         hudTimer = 0;
+        const t = tr();
         ui.steps.textContent = steps;
         ui.orbs.textContent = orbsCollected;
         ui.speed.textContent = currentSpeed.toFixed(1);
@@ -3272,52 +4002,52 @@
         ui.speedFill.style.width = `${pct}%`;
 
         ui.worldBadge.textContent = currentWorld === 1
-          ? '☀️ Welt 1 (Max 5.000)'
-          : (rebirthCount > 0 ? '🌙 Welt 2 (Unendlich ∞)' : '🌙 Welt 2 (Max 10.000)');
+          ? t.world1Badge
+          : (rebirthCount > 0 ? t.world2InfBadge : t.world2CapBadge);
 
         const bInfo = getBiomeInfo(player.position.x, player.position.z);
         ui.biomeBadge.textContent = bInfo.label;
         ui.biomeBadge.style.color = bInfo.color;
 
         if (sprintActiveTimer > 0) {
-          ui.sprintBadge.textContent = `⚡ SPRINT: ${sprintActiveTimer.toFixed(1)}s`;
+          ui.sprintBadge.textContent = t.sprintActive(sprintActiveTimer);
           ui.sprintBadge.className = 'badge active';
           ui.sprintBtn.classList.add('sprinting');
           ui.sprintBtn.classList.remove('cooldown');
           ui.sprintBtnSub.textContent = `${sprintActiveTimer.toFixed(1)}s`;
         } else if (sprintCooldownTimer > 0) {
-          ui.sprintBadge.textContent = `⏳ Cooldown: ${sprintCooldownTimer.toFixed(1)}s`;
+          ui.sprintBadge.textContent = t.sprintCd(sprintCooldownTimer);
           ui.sprintBadge.className = 'badge cooldown';
           ui.sprintBtn.classList.remove('sprinting');
           ui.sprintBtn.classList.add('cooldown');
           ui.sprintBtnSub.textContent = `${sprintCooldownTimer.toFixed(1)}s`;
         } else {
-          ui.sprintBadge.textContent = `⚡ Sprint bereit (5.0s / 10s CD)`;
+          ui.sprintBadge.textContent = t.sprintReady;
           ui.sprintBadge.className = 'badge';
           ui.sprintBtn.classList.remove('sprinting', 'cooldown');
           ui.sprintBtnSub.textContent = '5.0s';
         }
 
         if (trailMode === 'overdrive') {
-          ui.fxBadge.textContent = '👑 Spur: Alle Effekte (10.000+)';
+          ui.fxBadge.textContent = t.fxOverdrive;
           ui.fxBadge.className = 'badge overdrive';
         } else if (trailMode === 'light') {
-          ui.fxBadge.textContent = '☀️ Spur: Licht (7.500+)';
+          ui.fxBadge.textContent = t.fxLight;
           ui.fxBadge.className = 'badge light';
         } else if (trailMode === 'plasma') {
-          ui.fxBadge.textContent = '🌌 Spur: Plasma (5.000+)';
+          ui.fxBadge.textContent = t.fxPlasma;
           ui.fxBadge.className = 'badge plasma';
         } else if (trailMode === 'lightning') {
-          ui.fxBadge.textContent = '⚡ Spur: Blitz (2.500+)';
+          ui.fxBadge.textContent = t.fxLightning;
           ui.fxBadge.className = 'badge lightning';
         } else if (trailMode === 'fire') {
-          ui.fxBadge.textContent = '🔥 Spur: Feuer (1.000+)';
+          ui.fxBadge.textContent = t.fxFire;
           ui.fxBadge.className = 'badge fire';
         } else if (trailMode === 'wind') {
-          ui.fxBadge.textContent = '🌪️ Spur: Wind (100+)';
+          ui.fxBadge.textContent = t.fxWind;
           ui.fxBadge.className = 'badge wind';
         } else {
-          ui.fxBadge.textContent = '✨ Spur: Basis (<100)';
+          ui.fxBadge.textContent = t.fxBase;
           ui.fxBadge.className = 'badge';
         }
       }
@@ -3326,6 +4056,8 @@
     }
 
     requestAnimationFrame(animate);
+
+    window.addEventListener('beforeunload', saveProgress);
 
     window.addEventListener('resize', () => {
       camera.aspect = innerWidth / innerHeight;
